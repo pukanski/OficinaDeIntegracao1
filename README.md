@@ -16,31 +16,63 @@
 ## 1. Introdução
 
 ### Contexto
-Descrever o cenário atual do negócio a ser impactado pela aplicação. Apresentar o tema do projeto, a área abordada e estudos semelhantes. Como funciona a rotina atual do negócio?
+Descrever o cenário atual do negócio a ser impactado pela aplicação. Apresentar o tema do projeto, de forma clara, apresentando ao leitor a área a ser abordada, produtos ou estudos semelhantes. Deixar claro como é a rotina do negócio impactado, como o ambiente de negócio funciona, para visualizar o contexto específico onde a aplicação vai ser inserida.
+
+[]
 
 ### Justificativa
-Propósito e importância da solução. Por que os clientes precisam disso?
-* **Qual é o problema?** [Descreva aqui]
-* **Quem é afetado?** [Descreva aqui]
-* **Qual o impacto?** [Descreva aqui]
+Descrever a abordagem do projeto, de modo a comunicar seu propósito e importância a todas as pessoas envolvidas. Deve ficar claro por que os clientes e usuários finais precisam da solução. Deve-se utilizar o tempo presente para falar do problema atual e tempo futuro para falar da situação do negócio quando a nova solução for implantada.
+Recomenda-se utilizar as seguintes perguntas para este capítulo:
+* **Qual é o problema?** [Ineficiência e o alto custo de tempo na extração, categorização e distribução de questões de bestibulares, somadoo a falta de visibilidade sobre o desempenho real dos alunos]
+* **Quem é afetado?** [Professores que são sobrecarregados pela triagem manual do material, e os alunos, que não conseguem direcionar seus estudos com base em dados reais de sua proficiência]
+* **Qual o impacto?** [O impacto atual é a falta de otimização nesta parte acadêmica. Com a implantaçõa do projeto, a extração e estruturação do material de estudo será semi-automatizado, e a coordenação terá um painel analitico sobre o desempenho dos alunos no banco de questões e nas listas]
 
 ### Proposta
-Descrição global da solução. Como o sistema resolve o problema observado e qual o seu impacto esperado?
+Descrever a solução que será implantada com o desenvolvimento do sistema. Apresentar o impacto do sistema, e como ele soluciona o problema observado.
 
+Apresentar uma descrição em linhas gerais da solução a ser desenvolvida. Independente do que será implementado, este item visa o entendimento global do projeto.
+
+[Uma aplicação web dividida em dois módulos principais. O módulo do professor permitirá a geração de listas de exercícios personalizadas ou para turmas inteiras, extraídas de um banco de questões automatizado, além de fornecer dashboards de análise de desempenho cruzando disciplinas macro e micro. O módulo do aluno oferecerá acesso a essas listas, ao banco geral para estudos independentes e a um painel de autodesempenho. Para o processamento dos dados será utilizado LLMs e OCRs para extrair, converter e pré-categorizar automaticamente as questões]
+
+### Organização do Documento
+Descrever como este documento está organizado.
+
+[]
 ---
 
 ## 2. Descrição Geral do Sistema
 
 ### Objetivos
-* **Geral:** O foco central do projeto e a delimitação da solução.
+Apresentar de forma clara o foco do projeto, com uma descrição em linhas gerais da solução a ser desenvolvida. Deve ser descrita a delimitação da solução, que define o ponto central do projeto. Dentro de uma idéia geral do projeto, ressaltar a idéia específica efetivamente a ser desenvolvida, definindo o objetivo geral.
+
+Para cumprir o objetivo geral é preciso delimitar metas mais específicas dentro do trabalho. São elas que, somadas, conduzirão ao desfecho do objetivo geral. Os objetivos específicos são as ações ou passos que colaboram para alcançar o objetivo geral, e também são delimitadores do escopo do trabalho, ou seja, são ações de interesse que levam ao objetivo geral, restringindo o escopo do trabalho a ser desenvolvido. Enfim, os objetivos específicos devem ser cumpridos para se chegar ao objetivo geral.
+
+* **Geral:** O foco central do projeto e a delimitação da solução. [Desenvolver um sistema web para gestão de desempenho e ?turmas? do Prisma, com um banco de questões dinâmico alimentado por uma cadeia de processamento automatizado de extração e categorização]
 * **Específicos:** Metas e ações que, somadas, permitem alcançar o objetivo geral.
+  * Desenvolver um script offline para análise de layout de PDFs
+  * Implementar um mecanismo de classificação de questões em hierarquias de Disciplinas, macro e micro áreas
+  * Criar o ambiente web dos professores (criação de listas e análise de turmas/alunos) e do aluno (resolução de exercícios e progesso pessoal)
+  * Painel para validação e correção humana dos dados extraídos pelo pipeline antes da persistência no banco de dados
 
 ### Limites e Restrições
+Limitar o escopo da solução a ser desenvolvida, descrevendo as necessidades que, a princípio, podem ser consideradas da alçada da aplicação mas não serão implementadas. Apresentar restrições tecnológicas ou de projeto, como por exemplo para qual ambiente será desenvolvida a solução ou um orçamento/prazo máximo previsto. Descreva aqui todas as restrições que o software apresenta com relação a desenvolvimento, implantação, uso, ou qualquer outra situação detectada. As restrições podem ser de compatibilidade, de segurança, de ambiente, de manutenibilidade, de operacionalidade, etc.
+
 * **Limites:** O que a aplicação **não** fará (mesmo que pareça óbvio).
+  * Autoria Direta de Questões: Professores não utilizarão o sistema para digitar e criar questões do zero, os professores apenas selecionam as questões que já existem no banco
+  * Interação Sincrona: Esta fora do escopo a criação de fóruns, chats em tempo real, ou transmissão de aulas
+  * Integração Externa: O sistema não fará integração com sistemas acadêmicos governamentais ou plataformas externas de vestibulares
+  
 * **Restrições:** Limitações de tecnologia, segurança, orçamento, prazos ou compatibilidade.
+  * É preciso de um alto poder computacional para o processamentos dos dados e para o uso dos modelos. Caso o hardware local não suporte, será exigido uma migração para ambientes em nuvem como o Google Colab
+  * A acurácia de categorização e da extração de caracteres não será de 100%, sendo necessário a intervenção manual humana antes da persistência no banco de dados
+
 
 ### Descrição dos Usuários
-Atores envolvidos, seus papéis no sistema e o perfil das empresas que utilizarão a solução.
+Apresentar os atores que serão envolvidos na solução, bem como o papel de cada ator. Deve ser descrito para qual tipo de empresa se destina o sistema e os tipos de usuários que o utilizarão.
+
+* Aluno: Acessa a plataforma web para resolver as listas designadas pelos professores e acompanha o seu desempenho pessoal nas disciplinas, macro e micro
+* Professor: Acessa a plataforma web para analisar o desempenho da(s) turma(s) por meio do dashboard, identifica discrepâncias no desempenho e gera listas de exercícios personalizados e direcionados consultando o banco de questões
+* Operador de Dados: Usuário responsável por operar o painel de validação, corrigindo erros na formatação e na categorização antes de aprovar a inserção final no banco de dados 
 
 ---
 
