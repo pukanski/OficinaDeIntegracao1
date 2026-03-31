@@ -109,6 +109,7 @@ A applicação será dividida em três frases incrementais:
 Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por semana, definindo o responsável por cada tarefa. O cronograma deve contemplar todas as tarefas previstas no processo de desenvolvimento de software (descrito no item 3.2 Metodologia de desenvolvimento), conforme definido para o desenvolvimento do sistema.
 
 [
+
 | Semana | Atividade | Responsável |
 |--------|-----------|-------------|
 | 1      |           |             |
@@ -126,6 +127,7 @@ Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por se
 | 13     |           |             |
 | 14     |           |             |
 | 15     |           |             |
+
 ]
 ---
 
@@ -139,9 +141,19 @@ Desejável - este tipo de requisito não compromete o funcionamento do sistema.
 
 | ID | Funcionalidade | Prioridade |
 | :--- | :--- | :--- |
-| RF01 | [Ex: O sistema deve permitir login] | Essencial |
-| RF02 | [Ex: Gerar relatório mensal] | Importante |
-| RF03 | [Ex: Enviar notificação por SMS] | Desejável |
+| RF01 | O sistema de extração deve infentificar bounding boxes e separar texto de imagens e gráficos em provas | Essencial? |
+| RF02 | O sistema de extração deve identificar e transcrever equações em texto estruturado | Essencial? |
+| RF03 | O sistema de extração deve categorizar as questões extraídas | Essencial? |
+| RF04 | O sistema web deve prover uma interface para o operadores de dados corrigirem textos, recortes e categorias gerados pela IA | Essencial? |
+| RF05 | O sistema deve permitir a inserção, edição e exclusão de questões no banco de dados | Essencial |
+| RF06 | O sistema deve gerenciar autenticação e autorização para três perfis: Operador de Dados, Professor e Aluno | Essencial |
+| RF07 | O professor deve ser capaz de criar turmas e vincular alunos a elas | Importante |
+| RF08 | O aluno deve acessar suas listas pendentes, registrar respostas e receber gabarito automático | Importante |
+| RF09 | O aluno deve acessar o repositório de questões livre, registrar respostas e receber o gabarito automático | Essencial |
+| RF10 | O aluno deve visualizar suas métricas de acerto segmentadas por áreas de conhecimento e subáreas  | Essencial |
+| RF11 | O professor deve visualziar relatórios de desempenho da turma e individual de alunos | Essencial |
+| RF12 | O professor deve poder filtrar o banco de questões (por áreas e subáreas de conhecimento) e gerar listas vinculadas a turmas ou alunos | Importante |
+| RF13 | O sistema deve permitir acesso para coordenação do crud de alunos, professores e operadores de alunos  | Essencial |
 
 Criar aqui subitens do capítulo para descrever textualmente, com mais detalhes, as funcionalidades previstas.
 
@@ -152,8 +164,11 @@ Descrever os requisitos não-funcionais do sistema, que especificam restrições
 
 | ID | Requisito | Categoria |
 | :--- | :--- | :--- |
-| RNF01 | [Ex: O sistema deve responder em < 2s] | Desempenho |
-| RNF02 | [Ex: Criptografia de senhas] | Segurança |
+| RNF01 | O processamento de PDFs e inferência de IA não deve ocorrer no servidor web, operando em abiente isolado | Ambiente |
+| RNF02 | O front-end do módulo do aluno deve ser responsivo e seguir princípios que garantem o uso no mobile, garantindo usabilidade no mobile | Usabilidade |
+| RNF03 | O banco de dados deve impor restrições de chave estrangeira rígidas entre as micro e macro disciplinas para impedir a categorização para categorias inexistentes | Confiabilidade |
+| RNF04 | A senha dos usuários devem ser salvas utilizando algum algoritmo de hash | Segurança |
+| RNF05 | O tempo de resposta das consultas da API para renderização do dashboard não deve ultrapassar 3 segundos | Desempenho |
 
 ### Diagrama de Casos de Uso
 Inclua aqui os diagramas de Casos de Uso desenvolvidos para o sistema, usando os IDs dos itens anteriores como referência quando necessário.
