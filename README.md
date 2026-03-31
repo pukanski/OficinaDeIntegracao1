@@ -18,7 +18,7 @@
 ### Contexto
 Descrever o cenário atual do negócio a ser impactado pela aplicação. Apresentar o tema do projeto, de forma clara, apresentando ao leitor a área a ser abordada, produtos ou estudos semelhantes. Deixar claro como é a rotina do negócio impactado, como o ambiente de negócio funciona, para visualizar o contexto específico onde a aplicação vai ser inserida.
 
-[]
+[O projeto irá ser implementado no ambiente educacional do projeto de extensão do Cursinho Prisma, focado em pré-vestibular. Atualmente, a rotina de preparação de materiais, montagem de listas e o acompanhamento de rendimento dos alunos é feito de forma manual e descentralizada. Paralelamente, os alunos e a coordenação não possuem métricas automatizadas sobre o desempenho em disciplinas e matérias específicas. O sistema será implementado neste cenário para atuar como uma ponte tecnológica, trasformando PDFs de provas em um banco de dados dinâmico e categorizado, que irá alimentar módulos de desempenho e gestão de turmas]
 
 ### Justificativa
 Descrever a abordagem do projeto, de modo a comunicar seu propósito e importância a todas as pessoas envolvidas. Deve ficar claro por que os clientes e usuários finais precisam da solução. Deve-se utilizar o tempo presente para falar do problema atual e tempo futuro para falar da situação do negócio quando a nova solução for implantada.
@@ -37,7 +37,7 @@ Apresentar uma descrição em linhas gerais da solução a ser desenvolvida. Ind
 ### Organização do Documento
 Descrever como este documento está organizado.
 
-[]
+[O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas poelo processamento de modelos de linguagem e visão, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3... . O capitulo 4... .]
 ---
 
 ## 2. Descrição Geral do Sistema
@@ -79,43 +79,93 @@ Apresentar os atores que serão envolvidos na solução, bem como o papel de cad
 ## 3. Desenvolvimento do Projeto
 
 ### Tecnologias e Ferramentas
-Organize aqui as escolhas técnicas do projeto:
+Apresentar as tecnologias, ferramentas e técnicas que serão utilizadas para desenvolvimento e implantação do sistema (linguagem de programação, sistema gerenciador de banco de dados, ferramentas, etc.). Organize em tópicos (Banco de Dados, Modelagem, Gerenciamento de Projeto, etc.) e apresente as ferramentas que serão utilizadas. Não é preciso descrever detalhadamente a tecnologia/ferramenta, mas deve ficar claro o que vai ser usado no desenvolvimento do projeto.
 
-| Categoria | Ferramenta / Tecnologia |
-| :--- | :--- |
-| **Linguagem de Programação** | [Ex: Java, TypeScript] |
-| **Banco de Dados** | [Ex: PostgreSQL] |
-| **Modelagem UML** | [Ex: Astah, Lucidchart] |
-| **Gerenciamento de Projeto** | [Ex: Trello, Notion] |
+* Motor de extração e Inteligência Artificial:
+* * Linguagem: Python
+* * Análise de Layout e processamento de PDF: PyMuPDF e OpenCV
+  * OCR matemático: Nougat
+  * Categorização Semântica: Ollama
+* Aplicação web E API:
+* * Linguagem backend: python com fastapi
+  * Linguagem frontend: typescript com react.js/next.js
+* Banco de dados e armazenamento:
+* * SGBD relacional: postgreSQL
+* Versionamento e gerenciamento do projeto
+* * Versionamento: Git com repositório no github
+  * Gerenciamento: trello? Jira? Notion?
 
 ### Metodologia
-Descrição do modelo de ciclo de vida (ex: Scrum, Kanban, Cascata) e como ele será aplicado (fases, sprints, protótipos).
+Apresentar o modelo de ciclo de vida ou processo a ser utilizado e o motivo da escolha. Descrever como o modelo vai ser aplicado na realização do projeto (quantidade de protótipos, ou fases, definição de módulos e artefatos, etc.) conforme o modelo escolhido.
 
+[O projeto será baseado em Srum adaptado para o contexto acadêmico, com sprints semanais. O motivo dessa escolha é a incerteza técnica do pipeline de extração de PDFs. Outra abordagem poderia prejudicar o projeto inteiro caso aconteça alguma falha no módulo de extração de e inteligência Artificial.
+
+A applicação será dividida em três frases incrementais:
+1. Prova de conceito do motor de extração: 
+2. Módulo de homologação: 
+3. Aplicação final do professor/aluno: 
+]
+### Cronograma previsto
+Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por semana, definindo o responsável por cada tarefa. O cronograma deve contemplar todas as tarefas previstas no processo de desenvolvimento de software (descrito no item 3.2 Metodologia de desenvolvimento), conforme definido para o desenvolvimento do sistema.
+
+[
+| Semana | Atividade | Responsável |
+|--------|-----------|-------------|
+| 1      |           |             |
+| 2      |           |             |
+| 3      |           |             |
+| 4      |           |             |
+| 5      |           |             |
+| 6      |           |             |
+| 7      |           |             |
+| 8      |           |             |
+| 9      |           |             |
+| 10     |           |             |
+| 11     |           |             |
+| 12     |           |             |
+| 13     |           |             |
+| 14     |           |             |
+| 15     |           |             |
+]
 ---
 
 ## 4. Requisitos do Sistema
 
 ### Requisitos Funcionais (RF)
+Apresentar os requisitos funcionais, que especificam ações que o sistema deve ser capaz de executar, ou seja, as funções do sistema. Classifique as funcionalidades quanto a prioridade:
+Essencial - deve ser implementado para que o sistema funcione.
+Importante - sem este requisito o sistema pode funcionar, mas não da maneira esperada.
+Desejável - este tipo de requisito não compromete o funcionamento do sistema.
+
 | ID | Funcionalidade | Prioridade |
 | :--- | :--- | :--- |
 | RF01 | [Ex: O sistema deve permitir login] | Essencial |
 | RF02 | [Ex: Gerar relatório mensal] | Importante |
 | RF03 | [Ex: Enviar notificação por SMS] | Desejável |
 
+Criar aqui subitens do capítulo para descrever textualmente, com mais detalhes, as funcionalidades previstas.
+
+[]
+
 ### Requisitos Não-Funcionais (RNF)
+Descrever os requisitos não-funcionais do sistema, que especificam restrições sobre os serviços ou funções providas pelo sistema, categorizando de acordo com a característica envolvida, como: Usabilidade, Padronização, Ambiente, Compatibilidade, Recursos, etc.
+
 | ID | Requisito | Categoria |
 | :--- | :--- | :--- |
 | RNF01 | [Ex: O sistema deve responder em < 2s] | Desempenho |
 | RNF02 | [Ex: Criptografia de senhas] | Segurança |
 
 ### Diagrama de Casos de Uso
+Inclua aqui os diagramas de Casos de Uso desenvolvidos para o sistema, usando os IDs dos itens anteriores como referência quando necessário.
 ![Diagrama de Casos de Uso](./docs/imagens/caso_uso.png)
 *Diagrama representando as interações dos atores com o sistema.*
 
 ### Protótipos de Telas
+Apresentar o protótipo do sistema, que consiste na interface preliminar contendo um conjunto de funcionalidades e telas. 
 ![Protótipo de Login](./docs/imagens/prototipo_login.png)
 *Descrição: Objetivo da tela e dinâmica de navegação.*
-
+O protótipo é um recurso que deve ser adotado como estratégia para levantamento, detalhamento, validação de requisitos e modelagem de interface com o usuário (usabilidade).
+As telas do sistema podem ser criadas na própria linguagem de desenvolvimento ou em qualquer outra ferramenta de desenho. Cada tela deve possuir uma descrição do seu funcionamento, constando pelo menos o objetivo da tela e dinâmica de navegação (de onde é chamada e que outras telas pode chamar). A descrição das telas deve registrar informações que possam ser consultadas para facilitar a implementação e a execução de testes, assim como a que requisitos funcionais se referem.
 ---
 
 ## 5. Análise do Sistema
