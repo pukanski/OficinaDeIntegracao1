@@ -35,9 +35,11 @@ Apresentar uma descrição em linhas gerais da solução a ser desenvolvida. Ind
 [Uma aplicação web dividida em dois módulos principais. O módulo do professor permitirá a geração de listas de exercícios personalizadas ou para turmas inteiras, extraídas de um banco de questões automatizado, além de fornecer dashboards de análise de desempenho cruzando disciplinas macro e micro. O módulo do aluno oferecerá acesso a essas listas, ao banco geral para estudos independentes e a um painel de autodesempenho. Para o processamento dos dados será utilizado LLMs e OCRs para extrair, converter e pré-categorizar automaticamente as questões]
 
 ### Organização do Documento
+
 Descrever como este documento está organizado.
 
 [O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas poelo processamento de modelos de linguagem e visão, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3... . O capitulo 4... .]
+
 ---
 
 ## 2. Descrição Geral do Sistema
@@ -102,7 +104,7 @@ Apresentar o modelo de ciclo de vida ou processo a ser utilizado e o motivo da e
 Para otimizar o trabalaho, o desenvolvimento não será estritamente sequencial, sendo dividido em três frentes de trabalho paralelas que se integram ao longo do tempo:
 1. Frente de Dados e IA: Focada em validar o script python, integração com nougat e o ollama 
 2. Frente de Back-End e Banco de Dados: Responsável por modelar o postgre, criar as rotas da api e gerenciar a autenticação e as regras do negócio 
-3. Aplicação final do professor/aluno: Focada na construção das interfacesm, como o painel de homologação e nos módulos do professor e aluno  
+3. Frente de Front-End: Focada na construção das interfacesm, como o painel de homologação e nos módulos do professor e aluno  
 ]
 
 ### Cronograma previsto
@@ -176,10 +178,13 @@ Inclua aqui os diagramas de Casos de Uso desenvolvidos para o sistema, usando os
 
 ### Protótipos de Telas
 Apresentar o protótipo do sistema, que consiste na interface preliminar contendo um conjunto de funcionalidades e telas. 
+
 ![Protótipo de Login](./docs/imagens/prototipo_login.png)
 *Descrição: Objetivo da tela e dinâmica de navegação.*
+
 O protótipo é um recurso que deve ser adotado como estratégia para levantamento, detalhamento, validação de requisitos e modelagem de interface com o usuário (usabilidade).
 As telas do sistema podem ser criadas na própria linguagem de desenvolvimento ou em qualquer outra ferramenta de desenho. Cada tela deve possuir uma descrição do seu funcionamento, constando pelo menos o objetivo da tela e dinâmica de navegação (de onde é chamada e que outras telas pode chamar). A descrição das telas deve registrar informações que possam ser consultadas para facilitar a implementação e a execução de testes, assim como a que requisitos funcionais se referem.
+
 ---
 
 ## 5. Análise do Sistema
