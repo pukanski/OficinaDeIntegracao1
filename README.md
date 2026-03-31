@@ -99,34 +99,33 @@ Apresentar as tecnologias, ferramentas e técnicas que serão utilizadas para de
 Apresentar o modelo de ciclo de vida ou processo a ser utilizado e o motivo da escolha. Descrever como o modelo vai ser aplicado na realização do projeto (quantidade de protótipos, ou fases, definição de módulos e artefatos, etc.) conforme o modelo escolhido.
 
 [O projeto será baseado em Srum adaptado para o contexto acadêmico, com sprints semanais. O motivo dessa escolha é a incerteza técnica do pipeline de extração de PDFs. Outra abordagem poderia prejudicar o projeto inteiro caso aconteça alguma falha no módulo de extração de e inteligência Artificial.
-
-A applicação será dividida em três frases incrementais:
-1. Prova de conceito do motor de extração: 
-2. Módulo de homologação: 
-3. Aplicação final do professor/aluno: 
+Para otimizar o trabalaho, o desenvolvimento não será estritamente sequencial, sendo dividido em três frentes de trabalho paralelas que se integram ao longo do tempo:
+1. Frente de Dados e IA: Focada em validar o script python, integração com nougat e o ollama 
+2. Frente de Back-End e Banco de Dados: Responsável por modelar o postgre, criar as rotas da api e gerenciar a autenticação e as regras do negócio 
+3. Aplicação final do professor/aluno: Focada na construção das interfacesm, como o painel de homologação e nos módulos do professor e aluno  
 ]
+
 ### Cronograma previsto
 Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por semana, definindo o responsável por cada tarefa. O cronograma deve contemplar todas as tarefas previstas no processo de desenvolvimento de software (descrito no item 3.2 Metodologia de desenvolvimento), conforme definido para o desenvolvimento do sistema.
 
 [
 
-| Semana | Atividade | Responsável |
-|--------|-----------|-------------|
-| 1      |           |             |
-| 2      |           |             |
-| 3      |           |             |
-| 4      |           |             |
-| 5      |           |             |
-| 6      |           |             |
-| 7      |           |             |
-| 8      |           |             |
-| 9      |           |             |
-| 10     |           |             |
-| 11     |           |             |
-| 12     |           |             |
-| 13     |           |             |
-| 14     |           |             |
-| 15     |           |             |
+| Semana | Frente Ia e Dados| Frente Back-End | Frente Front-End |
+|--------|-----------|-------------|-------------| 
+| 1      |           |             |             |
+| 2      |           |             |             |
+| 3      |           |             |             |
+| 4      |           |             |             |
+| 5      |           |             |             |
+| 6      |           |             |             |
+| 7      |           |             |             |
+| 8      |           |             |             |
+| 9      |           |             |             |
+| 10     |           |             |             |
+| 11     |           |             |             |
+| 12     |           |             |             |
+| 13     |           |             |             |
+| 14     |           |             |             |
 
 ]
 ---
