@@ -89,7 +89,7 @@ Apresentar as tecnologias, ferramentas e técnicas que serão utilizadas para de
   * OCR matemático: Nougat
   * Categorização Semântica: Ollama
 * Aplicação web E API:
-* * Linguagem backend: python com fastapi
+* * Linguagem backend: Java/.net
   * Linguagem frontend: typescript com react.js/next.js
 * Banco de dados e armazenamento:
 * * SGBD relacional: postgreSQL
@@ -102,9 +102,9 @@ Apresentar o modelo de ciclo de vida ou processo a ser utilizado e o motivo da e
 
 [O projeto será baseado em Srum adaptado para o contexto acadêmico, com sprints semanais. O motivo dessa escolha é a incerteza técnica do pipeline de extração de PDFs. Outra abordagem poderia prejudicar o projeto inteiro caso aconteça alguma falha no módulo de extração de e inteligência Artificial.
 Para otimizar o trabalaho, o desenvolvimento não será estritamente sequencial, sendo dividido em três frentes de trabalho paralelas que se integram ao longo do tempo:
-1. Frente de Dados e IA: Focada em validar o script python, integração com nougat e o ollama 
-2. Frente de Back-End e Banco de Dados: Responsável por modelar o postgre, criar as rotas da api e gerenciar a autenticação e as regras do negócio 
-3. Frente de Front-End: Focada na construção das interfacesm, como o painel de homologação e nos módulos do professor e aluno  
+1. Frente de Dados e IA: Focada em validar o script python, integração com nougat e o ollama (Responsáveis: Igor e Rafael)
+2. Frente de Back-End e Banco de Dados: Responsável por modelar o postgre, criar as rotas da api e gerenciar a autenticação e as regras do negócio (Responsáveis: Gustavo e Luiz)
+3. Frente de Front-End: Focada na construção das interfacesm, como o painel de homologação e nos módulos do professor e aluno (Responsável: Orlando)
 ]
 
 ### Cronograma previsto
