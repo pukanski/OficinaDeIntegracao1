@@ -1,7 +1,7 @@
 # Prisma
 ---
 
-## 📖 Sumário
+## Sumário
 1. [Introdução](#1-introdução)
 2. [Descrição Geral do Sistema](#2-descrição-geral-do-sistema)
 3. [Desenvolvimento do Projeto](#3-desenvolvimento-do-projeto)
@@ -23,7 +23,7 @@ Descrever o cenário atual do negócio a ser impactado pela aplicação. Apresen
 ### Justificativa
 Descrever a abordagem do projeto, de modo a comunicar seu propósito e importância a todas as pessoas envolvidas. Deve ficar claro por que os clientes e usuários finais precisam da solução. Deve-se utilizar o tempo presente para falar do problema atual e tempo futuro para falar da situação do negócio quando a nova solução for implantada.
 Recomenda-se utilizar as seguintes perguntas para este capítulo:
-* **Qual é o problema?** [Ineficiência e o alto custo de tempo na extração, categorização e distribução de questões de bestibulares, somadoo a falta de visibilidade sobre o desempenho real dos alunos]
+* **Qual é o problema?** [Ineficiência e o alto custo de tempo na extração, categorização e distribução de questões de vestibulares, somado a falta de visibilidade sobre o desempenho real dos alunos]
 * **Quem é afetado?** [Professores que são sobrecarregados pela triagem manual do material, e os alunos, que não conseguem direcionar seus estudos com base em dados reais de sua proficiência]
 * **Qual o impacto?** [O impacto atual é a falta de otimização nesta parte acadêmica. Com a implantaçõa do projeto, a extração e estruturação do material de estudo será semi-automatizado, e a coordenação terá um painel analitico sobre o desempenho dos alunos no banco de questões e nas listas]
 
@@ -89,7 +89,7 @@ Apresentar as tecnologias, ferramentas e técnicas que serão utilizadas para de
   * OCR matemático: Nougat
   * Categorização Semântica: Ollama
 * Aplicação web E API:
-* * Linguagem backend: Java/.net
+* * Linguagem backend: Java?.net?
   * Linguagem frontend: typescript com react.js/next.js
 * Banco de dados e armazenamento:
 * * SGBD relacional: postgreSQL
@@ -116,18 +116,18 @@ Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por se
 |--------|-----------|-------------|-------------| 
 | 1      |           |             |             |
 | 2      |           |             |             |
-| 3      |           |             |             |
+| 3 (Entrega 1)|           |             |             |
 | 4      |           |             |             |
 | 5      |           |             |             |
 | 6      |           |             |             |
 | 7      |           |             |             |
-| 8      |           |             |             |
+| 8 (Entrega 2)|           |             |             |
 | 9      |           |             |             |
 | 10     |           |             |             |
 | 11     |           |             |             |
 | 12     |           |             |             |
 | 13     |           |             |             |
-| 14     |           |             |             |
+| 14 (Entrega 3)|           |             |             |
 
 ]
 ---
