@@ -75,12 +75,17 @@ O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do proble
 * Serviço de Inteligência Artificial:
   * Linguagem: Python com FastAPI, atuando como uma API interna
   * Categorização Semântica e de dificuldade: Ollama
+  * Hospedagem: Ngrok
 * Aplicação web E API:
   * Linguagem backend: ASP .NET
   * Linguagem frontend: Angular
+  * Hospedagem front: Vercel
+  * Hospedagem back-end: Render
+  * Conteinerização: Docker 
 * Banco de dados e armazenamento:
-  * SGBD relacional: SQL Server
-  * Armazenamento de imagens: Firebase Storage
+  * SGBD relacional: PostgreSQL
+  * Armazenamento de arquivos: Supabase
+  * Hospedagem: Supabase
 * Gerenciamneto, qualidade e documentação:
   * Versionamento: Git com repositório no GitHub
   * Gerenciamento: Jira
@@ -99,22 +104,22 @@ Para otimizar o trabalho, o desenvolvimento não será estritamente sequencial, 
 
 ### Cronograma previsto
 
-| Semana | Frente Front-End | Frente Back-End | Frente IA | Frente Integração
-|--------|-----------|-------------|-------------| 
-| 1      |           |             |             |
-| 2      |           |             |             |
-| 3 (Entrega 1)|           |             |             |
-| 4      |           |             |             |
-| 5      |           |             |             |
-| 6      |           |             |             |
-| 7      |           |             |             |
-| 8 (Entrega 2)|           |             |             |
-| 9      |           |             |             |
-| 10     |           |             |             |
-| 11     |           |             |             |
-| 12     |           |             |             |
-| 13     |           |             |             |
-| 14 (Entrega 3)|           |             |             |
+| Semana | Frente Front-End | Frente Back-End | Frente IA | Frente Integracao e Infra |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | Entender o escopo e o sistema | Entender o escopo e o sistema | Entender o escopo e o sistema | Entender o escopo e o sistema |
+| 2 | Criar prototipos das telas | Modelar banco de dados | Definir requisitos da IA | Configurar repositorios |
+| 3 (Entrega 1) | Telas base e login | CRUD base e banco rodando | Ajustar retorno da IA em JSON | Conectar Front e Back |
+| 4 | Tela de cadastro de questoes | Endpoint para receber questoes | Tratar erros de texto na IA | Criar Dockerfile e upload de imagens |
+| 5 | Tela de revisao da IA | Conectar C# com Python | Testar IA com questoes reais | Conectar Back com IA |
+| 6 | Telas de filtro e listas | Logica de criacao de listas | Ajustar erros e alucinacoes da IA | Validar fluxo do Front ate a IA |
+| 7 | Tela de visualizacao de turmas | Consultas no banco PostgreSQL | Otimizar tempo de resposta da IA | Resolver problemas de rede e CORS |
+| 8 (Entrega 2) | Corrigir erros visuais | Estabilizar a API e os dados | Congelar a versao do prompt | Testar cadastro completo com IA |
+| 9 | Telas iniciais do aluno | Rotas de listas pendentes | Avaliar erros do cadastro | Preparar contas para o deploy |
+| 10 | Tela de resolucao de exercicios | Endpoint para salvar respostas | Ajustes finais no texto da IA | Subir o banco PostgreSQL na nuvem |
+| 11 | Tela do banco livre de questoes | Filtros de busca e rotas de chamada | Documentar como rodar a IA | Subir a API ASP.NET no Render |
+| 12 | Graficos e percentual de presenca | Consultas de acertos e frequencia | Ajustar parametros do Ollama | Testar sistema na nuvem com IA local |
+| 13 | Dashboard e tela de chamada | Criar indices de banco de dados | Corrigir bugs residuais da IA | Fazer testes de carga |
+| 14 (Entrega 3) | Polimento final para celular | Limpeza de codigo e seguranca | Fechar escopo da IA | Entregar sistema em producao |
 
 ---
 
@@ -135,8 +140,8 @@ Para otimizar o trabalho, o desenvolvimento não será estritamente sequencial, 
 | RF09 | O sistema deve exibir gráficos para o aluno detalhando sua porcentagem de acertos/erros agrupados por macro e micro disciplinas | Essencial |
 | RF10 | O sistema deve exibir relatórios de proficiência mostrando as maiores lacunas de aprendizado da turma e alunos individuais  | Essencial |
 | RF11 | A coordenação deve poder gerenciar contas de usuários e a estrutura de disciplinas do banco | Essencial |
-| RF12 | O professor pode fazer a chamada e o gerenciamento de frequência dos alunos | Desejável |
-| RF13 | O aluno pode consultar o seu percentual de frequência  | Desejável |
+| RF12 | O sistema deve fornecer uma interface rápida para o professor registrar a presença ou falta dos alunos | Desejável |
+| RF13 | No dashboard do aluno deve haver um indicador exibindo seu percentual de presença  | Desejável |
 
 Criar aqui subitens do capítulo para descrever textualmente, com mais detalhes, as funcionalidades previstas.
 
