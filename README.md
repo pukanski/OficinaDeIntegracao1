@@ -54,13 +54,13 @@ O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do proble
   * Integração Externa: O sistema não fará integração com sistemas acadêmicos governamentais ou plataformas externas de vestibulares
   
 * **Restrições:**
-  * Pela falta de recursos a extração automática de questões diretamente de PDFs de provas não será feita nesta etapa, podendo ser uma funcionalidade futura
+  * Pela falta de recursos a extração automática de questões diretamente de PDFs de provas não será feita atualmente, podendo ser uma funcionalidade futura
   * A acurácia de categorização não será de 100%, sendo necessário a intervenção manual humana antes da persistência no banco de dados
   * A API que concecta o sistema ao Ollama exige que o servidor de hospedagem tenha capacidade mínima de processamento para inferência do modelo, ou que a API de IA seja isolada em um serviço em nuvem específico
+  * Pela falta de recursos, o sistema irá se restringir a usar ferramentas gratuitas ou com tiers gratuitos
 
 
 ### Descrição dos Usuários
-Apresentar os atores que serão envolvidos na solução, bem como o papel de cada ator. Deve ser descrito para qual tipo de empresa se destina o sistema e os tipos de usuários que o utilizarão.
 
 * Aluno: Acessa a plataforma web para resolver as listas designadas pelos professores, treina no banco livre e acompanha o seu desempenho pessoal nas disciplinas, macro e micro
 * Professor/Monitor: Acessa a plataforma web para analisar o desempenho das turmas por meio do dashboard, identifica discrepâncias no desempenho, cadastra novas questões no banco, gera listas de exercícios personalizadas e direcionadas consultando o banco de questões
@@ -71,38 +71,35 @@ Apresentar os atores que serão envolvidos na solução, bem como o papel de cad
 ## 3. Desenvolvimento do Projeto
 
 ### Tecnologias e Ferramentas
-Apresentar as tecnologias, ferramentas e técnicas que serão utilizadas para desenvolvimento e implantação do sistema (linguagem de programação, sistema gerenciador de banco de dados, ferramentas, etc.). Organize em tópicos (Banco de Dados, Modelagem, Gerenciamento de Projeto, etc.) e apresente as ferramentas que serão utilizadas. Não é preciso descrever detalhadamente a tecnologia/ferramenta, mas deve ficar claro o que vai ser usado no desenvolvimento do projeto.
 
-* Motor de extração e Inteligência Artificial:
-* * Linguagem: Python
-* * Análise de Layout e processamento de PDF: PyMuPDF e OpenCV
-  * OCR matemático: Nougat
-  * Categorização Semântica: Ollama
+* Serviço de Inteligência Artificial:
+  * Linguagem: Python com FastAPI, atuando como uma API interna
+  * Categorização Semântica e de dificuldade: Ollama
 * Aplicação web E API:
-* * Linguagem backend: Java?.net?
-  * Linguagem frontend: typescript com react.js/next.js
+  * Linguagem backend: ASP .NET
+  * Linguagem frontend: Angular
 * Banco de dados e armazenamento:
-* * SGBD relacional: postgreSQL
-* Versionamento e gerenciamento do projeto
-* * Versionamento: Git com repositório no github
-  * Gerenciamento: trello? Jira? Notion?
+  * SGBD relacional: SQL Server
+  * Armazenamento de imagens: Firebase Storage
+* Gerenciamneto, qualidade e documentação:
+  * Versionamento: Git com repositório no GitHub
+  * Gerenciamento: Jira
+  * Testes de API: Insomnia
+  * Documentação de API: Swagger
 
 ### Metodologia
-Apresentar o modelo de ciclo de vida ou processo a ser utilizado e o motivo da escolha. Descrever como o modelo vai ser aplicado na realização do projeto (quantidade de protótipos, ou fases, definição de módulos e artefatos, etc.) conforme o modelo escolhido.
 
-[O projeto será baseado em Srum adaptado para o contexto acadêmico, com sprints semanais. O motivo dessa escolha é a incerteza técnica do pipeline de extração de PDFs. Outra abordagem poderia prejudicar o projeto inteiro caso aconteça alguma falha no módulo de extração de e inteligência Artificial.
-Para otimizar o trabalaho, o desenvolvimento não será estritamente sequencial, sendo dividido em três frentes de trabalho paralelas que se integram ao longo do tempo:
-1. Frente de Dados e IA: Focada em validar o script python, integração com nougat e o ollama (Responsáveis: Igor e Rafael)
-2. Frente de Back-End e Banco de Dados: Responsável por modelar o postgre, criar as rotas da api e gerenciar a autenticação e as regras do negócio (Responsáveis: Gustavo e Luiz)
-3. Frente de Front-End: Focada na construção das interfacesm, como o painel de homologação e nos módulos do professor e aluno (Responsável: Orlando)
-]
+O projeto usará um Scrum adaptado para o contexto acadêmico com sprints semanais. O motivo dessa escolha é a incerteza técnica entre as diferentes tecnologias. Outra abordagem poderia prejudicar o projeto inteiro caso aconteça alguma falha em algum módulo específico.
+Para otimizar o trabalho, o desenvolvimento não será estritamente sequencial, sendo dividido em quatro frentes de trabalho paralelas que se integram ao longo do tempo:
+1. Frente Front-End (2 pessoas): Responsáveis pelos protótipos de telas, gerenciar o estado da plicação e consumir os endpoints da API ASP.NET
+2. Frente Back-ENd: Responsável por modelar obanco, criar os CRUDs, implementar a segurança e pelo Swagger
+3. Frente Serviço de IA: Responsável por criar a API interna que se comunica com o Ollama, afinar o prompt para garantir que a IA responda sempre no formato correto e garantindo o tempo de resposta da inferência
+4. Frente de Integração e Infraestrutura: Responsável pela configuração das ferramentas, dos testes e da integração entre os diferentes frontes
+
 
 ### Cronograma previsto
-Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por semana, definindo o responsável por cada tarefa. O cronograma deve contemplar todas as tarefas previstas no processo de desenvolvimento de software (descrito no item 3.2 Metodologia de desenvolvimento), conforme definido para o desenvolvimento do sistema.
 
-[
-
-| Semana | Frente Ia e Dados| Frente Back-End | Frente Front-End |
+| Semana | Frente Front-End | Frente Back-End | Frente IA | Frente Integração
 |--------|-----------|-------------|-------------| 
 | 1      |           |             |             |
 | 2      |           |             |             |
@@ -119,32 +116,27 @@ Definir o cronograma de desenvolvimento do projeto. Elaborar o cronograma por se
 | 13     |           |             |             |
 | 14 (Entrega 3)|           |             |             |
 
-]
 ---
 
 ## 4. Requisitos do Sistema
 
 ### Requisitos Funcionais (RF)
-Apresentar os requisitos funcionais, que especificam ações que o sistema deve ser capaz de executar, ou seja, as funções do sistema. Classifique as funcionalidades quanto a prioridade:
-Essencial - deve ser implementado para que o sistema funcione.
-Importante - sem este requisito o sistema pode funcionar, mas não da maneira esperada.
-Desejável - este tipo de requisito não compromete o funcionamento do sistema.
 
 | ID | Funcionalidade | Prioridade |
 | :--- | :--- | :--- |
-| RF01 | O sistema de extração deve infentificar bounding boxes e separar texto de imagens e gráficos em provas | Essencial? |
-| RF02 | O sistema de extração deve identificar e transcrever equações em texto estruturado | Essencial? |
-| RF03 | O sistema de extração deve categorizar as questões extraídas | Essencial? |
-| RF04 | O sistema web deve prover uma interface para o operadores de dados corrigirem textos, recortes e categorias gerados pela IA | Essencial? |
-| RF05 | O sistema deve permitir a inserção, edição e exclusão de questões no banco de dados | Essencial |
-| RF06 | O sistema deve gerenciar autenticação e autorização para três perfis: Operador de Dados, Professor e Aluno | Essencial |
-| RF07 | O professor deve ser capaz de criar turmas e vincular alunos a elas | Importante |
-| RF08 | O aluno deve acessar suas listas pendentes, registrar respostas e receber gabarito automático | Importante |
-| RF09 | O aluno deve acessar o repositório de questões livre, registrar respostas e receber o gabarito automático | Essencial |
-| RF10 | O aluno deve visualizar suas métricas de acerto segmentadas por áreas de conhecimento e subáreas  | Essencial |
-| RF11 | O professor deve visualziar relatórios de desempenho da turma e individual de alunos | Essencial |
-| RF12 | O professor deve poder filtrar o banco de questões (por áreas e subáreas de conhecimento) e gerar listas vinculadas a turmas ou alunos | Importante |
-| RF13 | O sistema deve permitir acesso para coordenação do crud de alunos, professores e operadores de alunos  | Essencial |
+| RF01 | O sistema deve prover uma interface para inserção manual do enunciado, alternativas e gabarito, além de upload de imagem de apoio | Essencial |
+| RF02 | Ao preencher o enunciado, o sistema deve acionar a IA para sugerir a disciplina, matéria e dificuldade (Fácil/Médio/Difícil) | Essencial |
+| RF03 | O usuário criador deve poder aceitar, editar ou recusar as sugestões da IA antes de salvar a questão | Essencial |
+| RF04 | Professores e administradores devem poder listar, editar e desativar questões já salvas no banco | Essencial |
+| RF05 | O sistema deve gerenciar autenticação e autorização para três perfis: Administrador, Professor e Aluno | Essencial |
+| RF06 | Professores devem poder criar turmar e adicionar alunos a elas | Importante |
+| RF07 | Professores devem poder buscar questões no banco através de filtros e agrupa-lás em listas atribuídas a turmas específicas | Importante |
+| RF08 | Alunos devem poder abrir listas ou o banco de livre, selecionar a alternativa e receber a correção automática no sistema | Essencial |
+| RF09 | O sistema deve exibir gráficos para o aluno detalhando sua porcentagem de acertos/erros agrupados por macro e micro disciplinas | Essencial |
+| RF10 | O sistema deve exibir relatórios de proficiência mostrando as maiores lacunas de aprendizado da turma e alunos individuais  | Essencial |
+| RF11 | A coordenação deve poder gerenciar contas de usuários e a estrutura de disciplinas do banco | Essencial |
+| RF12 | O professor pode fazer a chamada e o gerenciamento de frequência dos alunos | Desejável |
+| RF13 | O aluno pode consultar o seu percentual de frequência  | Desejável |
 
 Criar aqui subitens do capítulo para descrever textualmente, com mais detalhes, as funcionalidades previstas.
 
@@ -155,11 +147,12 @@ Descrever os requisitos não-funcionais do sistema, que especificam restrições
 
 | ID | Requisito | Categoria |
 | :--- | :--- | :--- |
-| RNF01 | O processamento de PDFs e inferência de IA não deve ocorrer no servidor web, operando em abiente isolado | Ambiente |
-| RNF02 | O front-end do módulo do aluno deve ser responsivo e seguir princípios que garantem o uso no mobile, garantindo usabilidade no mobile | Usabilidade |
+| RNF01 | O tempo de espera pela sugestão da IA não deve travar a tela, exibindo indicação visual de carregamento | Usabilidade |
+| RNF02 | O front-end deve ser responsivo e seguir princípios que garantem o uso no mobile, sem perda de funcionalidades para telas de smartphones | Usabilidade |
 | RNF03 | O banco de dados deve impor restrições de chave estrangeira rígidas entre as micro e macro disciplinas para impedir a categorização para categorias inexistentes | Confiabilidade |
-| RNF04 | A senha dos usuários devem ser salvas utilizando algum algoritmo de hash | Segurança |
-| RNF05 | O tempo de resposta das consultas da API para renderização do dashboard não deve ultrapassar 3 segundos | Desempenho |
+| RNF04 | O sistema não deve expor a comunicação direta com a IA, o front-end deve apenas fazer requisições à API, que atuará como intermediária segura para o Ollama | Segurança |
+| RNF05 | Senhas devem ser protegidas no banco utilizando algum algoritmo de hashing | Segurança |
+| RNF06 | O tempo de resposta das consultas da API para a renderização do dashboard não deve ultrapassar 3 segundos | Desempenho |
 
 ### Diagrama de Casos de Uso
 Inclua aqui os diagramas de Casos de Uso desenvolvidos para o sistema, usando os IDs dos itens anteriores como referência quando necessário.
