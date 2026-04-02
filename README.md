@@ -16,65 +16,55 @@
 ## 1. Introdução
 
 ### Contexto
-Descrever o cenário atual do negócio a ser impactado pela aplicação. Apresentar o tema do projeto, de forma clara, apresentando ao leitor a área a ser abordada, produtos ou estudos semelhantes. Deixar claro como é a rotina do negócio impactado, como o ambiente de negócio funciona, para visualizar o contexto específico onde a aplicação vai ser inserida.
 
-[O projeto irá ser implementado no ambiente educacional do projeto de extensão do Cursinho Prisma, focado em pré-vestibular. Atualmente, a rotina de preparação de materiais, montagem de listas e o acompanhamento de rendimento dos alunos é feito de forma manual e descentralizada. Paralelamente, os alunos e a coordenação não possuem métricas automatizadas sobre o desempenho em disciplinas e matérias específicas. O sistema será implementado neste cenário para atuar como uma ponte tecnológica, trasformando PDFs de provas em um banco de dados dinâmico e categorizado, que irá alimentar módulos de desempenho e gestão de turmas]
+O projeto irá ser implementado no ambiente educacional do projeto de extensão do Cursinho Prisma, focado em pré-vestibular. Atualmente, a rotina de preparação de materiais, montagem de listas e o acompanhamento de rendimento dos alunos é feito de forma manual e descentralizada. Paralelamente, os alunos e a coordenação não possuem métricas automatizadas sobre o desempenho em disciplinas e matérias específicas. O sistema será implementado neste cenário para atuar como uma plataforma web que reduz o atrito na criação de materiais e forcene inteligência de dados educacionais
 
 ### Justificativa
-Descrever a abordagem do projeto, de modo a comunicar seu propósito e importância a todas as pessoas envolvidas. Deve ficar claro por que os clientes e usuários finais precisam da solução. Deve-se utilizar o tempo presente para falar do problema atual e tempo futuro para falar da situação do negócio quando a nova solução for implantada.
-Recomenda-se utilizar as seguintes perguntas para este capítulo:
-* **Qual é o problema?** [Ineficiência e o alto custo de tempo na extração, categorização e distribução de questões de vestibulares, somado a falta de visibilidade sobre o desempenho real dos alunos]
-* **Quem é afetado?** [Professores que são sobrecarregados pela triagem manual do material, e os alunos, que não conseguem direcionar seus estudos com base em dados reais de sua proficiência]
-* **Qual o impacto?** [O impacto atual é a falta de otimização nesta parte acadêmica. Com a implantaçõa do projeto, a extração e estruturação do material de estudo será semi-automatizado, e a coordenação terá um painel analitico sobre o desempenho dos alunos no banco de questões e nas listas]
+
+O problema central é a ineficiência e o alto custo de tempo na extração, categorização e distribução de questões de vestibulares, somado a falta de visibilidade sobre o desempenho real dos alunos. Atualmente, os professores são sobrecarregados pela triagem manual do material, e os alunos, não conseguem direcionar seus estudos com base em dados reais de sua proficiência. Essa falta de otimização dos materiais e a falta de autoanalise acaba afetando o nivelamento acadêmico e pode acabar gerando uma evasão na parte do aluno. Ao simplificar a criação de questões e automatizar a etapa de categorização, o sistema reduz o esforço do professor. Quando o sistema estiver operante, ele irá ter um banco de questões auto-organizado, que permite a geração rápida de listas e dashboards de desempenho
 
 ### Proposta
-Descrever a solução que será implantada com o desenvolvimento do sistema. Apresentar o impacto do sistema, e como ele soluciona o problema observado.
 
-Apresentar uma descrição em linhas gerais da solução a ser desenvolvida. Independente do que será implementado, este item visa o entendimento global do projeto.
-
-[Uma aplicação web dividida em dois módulos principais. O módulo do professor permitirá a geração de listas de exercícios personalizadas ou para turmas inteiras, extraídas de um banco de questões automatizado, além de fornecer dashboards de análise de desempenho cruzando disciplinas macro e micro. O módulo do aluno oferecerá acesso a essas listas, ao banco geral para estudos independentes e a um painel de autodesempenho. Para o processamento dos dados será utilizado LLMs e OCRs para extrair, converter e pré-categorizar automaticamente as questões]
+Uma aplicação web com um módulo de cadastro de questões na parte do professor, contendo uma interface otimizada onde o professor ou monitor insere o texto e imagens da questão. O sistema realiza uma chamada a um modelo de IA que analisa o texto e sugere automaticamente a classificação correta (Disciplina Macro e Micro) e o nível de dificuldade. Além deste módulo, teremos os módulos do professor, com gestão de turmas, geração dinâmica de listas de exercícios e painéis analiticos, e também do aluno, com o banco de questões, listas dos professores e a visão de autodesempenho
 
 ### Organização do Documento
 
-Descrever como este documento está organizado.
-
-[O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas poelo processamento de modelos de linguagem e visão, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3... . O capitulo 4... .]
+O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas pelo processamento da IA, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3 detalha as tecnologicas, a metodologia ágil paralela e o cronograma. O capitulo 4 especifica os requisitos funcionais e não-funcionais que guiarão o desenvolvimento.
 
 ---
 
 ## 2. Descrição Geral do Sistema
 
 ### Objetivos
-Apresentar de forma clara o foco do projeto, com uma descrição em linhas gerais da solução a ser desenvolvida. Deve ser descrita a delimitação da solução, que define o ponto central do projeto. Dentro de uma idéia geral do projeto, ressaltar a idéia específica efetivamente a ser desenvolvida, definindo o objetivo geral.
 
-Para cumprir o objetivo geral é preciso delimitar metas mais específicas dentro do trabalho. São elas que, somadas, conduzirão ao desfecho do objetivo geral. Os objetivos específicos são as ações ou passos que colaboram para alcançar o objetivo geral, e também são delimitadores do escopo do trabalho, ou seja, são ações de interesse que levam ao objetivo geral, restringindo o escopo do trabalho a ser desenvolvido. Enfim, os objetivos específicos devem ser cumpridos para se chegar ao objetivo geral.
-
-* **Geral:** O foco central do projeto e a delimitação da solução. [Desenvolver um sistema web para gestão de desempenho e ?turmas? do Prisma, com um banco de questões dinâmico alimentado por uma cadeia de processamento automatizado de extração e categorização]
+* **Geral:** Desenvolver e implantar um sistema web para gestão educacional focado em avaliação de desempenho e criação de listas de exercícios, sustentado por um banco de questões alimentado colaborativamente através de uma interface assistida por IA para automação da categorização e da dificuldade
 * **Específicos:** Metas e ações que, somadas, permitem alcançar o objetivo geral.
-  * Desenvolver um script offline para análise de layout de PDFs
-  * Implementar um mecanismo de classificação de questões em hierarquias de Disciplinas, macro e micro áreas
-  * Criar o ambiente web dos professores (criação de listas e análise de turmas/alunos) e do aluno (resolução de exercícios e progesso pessoal)
-  * Painel para validação e correção humana dos dados extraídos pelo pipeline antes da persistência no banco de dados
+  * Desenvolver uma interface web otimizada para inserção rápida de questões (textos e imagens manuais)
+  * Integrar um modelo de IA local, como o Ollama) à API para processar textos de questões inseridas e retornar sugestões estruturadas de categorização e dificuldade
+  * Desenvolver o módulo do professor, permitindo o agrupamento de questões em listas e a gestão de turmas
+  * Desenvolver o módulo do aluno para resolução de exercicios
+  * Implementar dashboards de proficiência baseados no histórico de resoluções
 
 ### Limites e Restrições
-Limitar o escopo da solução a ser desenvolvida, descrevendo as necessidades que, a princípio, podem ser consideradas da alçada da aplicação mas não serão implementadas. Apresentar restrições tecnológicas ou de projeto, como por exemplo para qual ambiente será desenvolvida a solução ou um orçamento/prazo máximo previsto. Descreva aqui todas as restrições que o software apresenta com relação a desenvolvimento, implantação, uso, ou qualquer outra situação detectada. As restrições podem ser de compatibilidade, de segurança, de ambiente, de manutenibilidade, de operacionalidade, etc.
 
 * **Limites:** O que a aplicação **não** fará (mesmo que pareça óbvio).
-  * Autoria Direta de Questões: Professores não utilizarão o sistema para digitar e criar questões do zero, os professores apenas selecionam as questões que já existem no banco
+  * Limitação de extração: O sistema não realiza, atualmente, a extração autônoma, leitura de PDFs e recortes automáticos ou OCR de provas. Toda questão deve ser inserida na interface pelo usuário, seja por digitação ou copiando e colando, com upload manual de imagens pelo usuário
+  * Limitação da IA: A IA atuará estritamente como um assistente de preenchimento. O usuário terá a palavra final para aceitar, alterar ou recusar a categoria e a dificuldade proposta pelo modelo antes de salvar no banco
   * Interação Sincrona: Esta fora do escopo a criação de fóruns, chats em tempo real, ou transmissão de aulas
   * Integração Externa: O sistema não fará integração com sistemas acadêmicos governamentais ou plataformas externas de vestibulares
   
-* **Restrições:** Limitações de tecnologia, segurança, orçamento, prazos ou compatibilidade.
-  * É preciso de um alto poder computacional para o processamentos dos dados e para o uso dos modelos. Caso o hardware local não suporte, será exigido uma migração para ambientes em nuvem como o Google Colab
-  * A acurácia de categorização e da extração de caracteres não será de 100%, sendo necessário a intervenção manual humana antes da persistência no banco de dados
+* **Restrições:**
+  * Pela falta de recursos a extração automática de questões diretamente de PDFs de provas não será feita nesta etapa, podendo ser uma funcionalidade futura
+  * A acurácia de categorização não será de 100%, sendo necessário a intervenção manual humana antes da persistência no banco de dados
+  * A API que concecta o sistema ao Ollama exige que o servidor de hospedagem tenha capacidade mínima de processamento para inferência do modelo, ou que a API de IA seja isolada em um serviço em nuvem específico
 
 
 ### Descrição dos Usuários
 Apresentar os atores que serão envolvidos na solução, bem como o papel de cada ator. Deve ser descrito para qual tipo de empresa se destina o sistema e os tipos de usuários que o utilizarão.
 
-* Aluno: Acessa a plataforma web para resolver as listas designadas pelos professores e acompanha o seu desempenho pessoal nas disciplinas, macro e micro
-* Professor: Acessa a plataforma web para analisar o desempenho da(s) turma(s) por meio do dashboard, identifica discrepâncias no desempenho e gera listas de exercícios personalizados e direcionados consultando o banco de questões
-* Operador de Dados: Usuário responsável por operar o painel de validação, corrigindo erros na formatação e na categorização antes de aprovar a inserção final no banco de dados 
+* Aluno: Acessa a plataforma web para resolver as listas designadas pelos professores, treina no banco livre e acompanha o seu desempenho pessoal nas disciplinas, macro e micro
+* Professor/Monitor: Acessa a plataforma web para analisar o desempenho das turmas por meio do dashboard, identifica discrepâncias no desempenho, cadastra novas questões no banco, gera listas de exercícios personalizadas e direcionadas consultando o banco de questões
+* Administrador (Coordenação): Gerencia os cadastros de professores e alunos, define a árvore de macro e micro disciplinas no banco e administra o sistema
 
 ---
 
