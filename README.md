@@ -131,7 +131,7 @@ Para otimizar o trabalho, o desenvolvimento não será estritamente sequencial, 
 | :--- | :--- | :--- |
 | RF01 | O sistema deve prover uma interface para inserção manual do enunciado, alternativas e gabarito, além de upload de imagem de apoio | Essencial |
 | RF02 | Ao preencher o enunciado, o sistema deve acionar a IA para sugerir a disciplina, matéria e dificuldade (Fácil/Médio/Difícil) | Essencial |
-| RF03 | O usuário criador deve poder aceitar, editar ou recusar as sugestões da IA antes de salvar a questão | Essencial |
+| RF03 | O professor e/ou administrador deve poder aceitar, editar ou recusar as sugestões da IA antes de salvar a questão | Essencial |
 | RF04 | Professores e administradores devem poder listar, editar e desativar questões já salvas no banco | Essencial |
 | RF05 | O sistema deve gerenciar autenticação e autorização para três perfis: Administrador, Professor e Aluno | Essencial |
 | RF06 | Professores devem poder criar turmar e adicionar alunos a elas | Importante |
