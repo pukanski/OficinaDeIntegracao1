@@ -210,6 +210,13 @@ Descrição dos requisitos:
 ![Banco de questões](imagens/prototipos/Banco%20de%20questões.jpeg)
 *Tela do banco de questões*
 
+### Tela de Gerenciamento de Frequência
+- **Objetivo:** Fornecer uma interface para que o professor realize a chamada (registro de presenças e faltas) dos alunos de uma turma em uma data específica. Apresenta indicadores de status (presentes, ausentes e não marcados) e opções rápidas de preenchimento, como "Marcar Todos Presentes".
+- **Dinâmica de Navegação:** Acessada através do menu lateral "Frequência" no ambiente do professor. O professor seleciona a turma e a data nos filtros superiores, marca o status individual de cada aluno na lista abaixo e pode alternar para a aba "Histórico" para consultar chamadas anteriores.
+- **Requisitos Funcionais Atendidos:** **RF12 - Gerenciamento de Frequência**.
+![Gerenciamento Frequência](imagens/prototipos/Gerenciamento%20Frequência.jpeg)
+*Tela de gerenciamento de frequência*
+
 #### Dashboard do Aluno
 - **Objetivo:** Apresentar a área de estudos e autoconhecimento do aluno. Exibe a média geral, exercícios resolvidos, tempo de estudo, melhor disciplina e gráficos de evolução. Abaixo, lista as atividades pendentes a serem feitas.
 - **Dinâmica de Navegação:** Tela inicial do aluno após o login. A partir das "Listas de Exercícios Disponíveis" na parte inferior, o aluno clica em "Continuar", o que o redireciona diretamente para a tela de "Resolução de Exercício".
@@ -223,6 +230,13 @@ Descrição dos requisitos:
 - **Requisitos Funcionais Atendidos:** **RF08 - Resolução de Exercícios**.
 ![Resolução exercicio](imagens/prototipos/Resolução%20exercicio.jpeg)
 *Tela de resolução do exercício*
+
+### Painel Administrativo
+- **Objetivo:** Permitir que a coordenação gerencie os acessos ao sistema e a estrutura curricular da plataforma. A tela oferece controles para adicionar, visualizar, ativar, inativar ou excluir perfis de usuários, além de possuir uma aba dedicada à gestão das disciplinas.
+- **Dinâmica de Navegação:** É a tela inicial acessada após o login com o perfil de administrador. O usuário interage internamente alternando entre as abas "Usuários" e "Disciplinas" para realizar as operações de cadastro e manutenção correspondentes.
+- **Requisitos Funcionais Atendidos:** **RF11 - Gestão Administrativa de Perfis e Estrutura**.
+![Painel Administrativo](imagens/prototipos/Painel%20Admin.jpeg)
+*Painel Administrativo*
 
 ---
 
