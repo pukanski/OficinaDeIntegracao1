@@ -170,18 +170,59 @@ Descrição dos requisitos:
 | RNF06 | O tempo de resposta das consultas da API para a renderização do dashboard não deve ultrapassar 3 segundos | Desempenho |
 
 ### Diagrama de Casos de Uso
-Inclua aqui os diagramas de Casos de Uso desenvolvidos para o sistema, usando os IDs dos itens anteriores como referência quando necessário.
-![Diagrama de Casos de Uso](./docs/imagens/caso_uso.png)
-*Diagrama representando as interações dos atores com o sistema.*
+![DCU - Prisma](imagens/diagramas/DCU%20-%20Prisma.png)
+*Diagrama representando as interações dos alunos, professores e administradores com o sistema cursinho prisma.*
 
 ### Protótipos de Telas
-Apresentar o protótipo do sistema, que consiste na interface preliminar contendo um conjunto de funcionalidades e telas. 
 
-![Protótipo de Login](./docs/imagens/prototipo_login.png)
-*Descrição: Objetivo da tela e dinâmica de navegação.*
+#### Tela de Login
+- **Objetivo:** Autenticar os usuários e direcioná-los para o ambiente correto de acordo com o seu perfil.
+- **Dinâmica de Navegação:** É a tela inicial do sistema. A partir dela, dependendo da aba selecionada e da validação das credenciais, o usuário é redirecionado para o seu respectivo dashboard. Também possui link para a recuperação de senha.
+- **Requisitos Funcionais Atendidos:** **RF05 - Autenticação e Autorização**.
+![Login](imagens/prototipos/Login.jpeg)
+*Tela de login*
 
-O protótipo é um recurso que deve ser adotado como estratégia para levantamento, detalhamento, validação de requisitos e modelagem de interface com o usuário (usabilidade).
-As telas do sistema podem ser criadas na própria linguagem de desenvolvimento ou em qualquer outra ferramenta de desenho. Cada tela deve possuir uma descrição do seu funcionamento, constando pelo menos o objetivo da tela e dinâmica de navegação (de onde é chamada e que outras telas pode chamar). A descrição das telas deve registrar informações que possam ser consultadas para facilitar a implementação e a execução de testes, assim como a que requisitos funcionais se referem.
+#### Dashboard do Professor
+- **Objetivo:** Fornecer um painel gerencial resumido para o educador. Apresenta métricas-chave como total de alunos, questões cadastradas, desempenho médio das turmas e tendências de notas, além de alertas.
+- **Dinâmica de Navegação:** É a tela principal acessada após o login do perfil professor. Através do menu lateral, permite navegar para "Cadastrar Questão", "Banco de Questões" e "Criar Lista". Possui também um botão de atalho rápido "+ Nova Questão" que leva à tela de cadastro.
+- **Requisitos Funcionais Atendidos:** **RF10 - Dashboard de Desempenho e Defasagem (Professor)**.
+![Dashboard professor](imagens/prototipos/Dashboard%20professor.jpeg)
+*Dashboard do professor*
+
+#### Tela de Cadastro de Questões
+- **Objetivo:** Permitir a inserção de novas questões no banco de dados da plataforma. Oferece campos para o enunciado, alternativas, upload de imagem e uma área dedicada à assistência de inteligência artificial para classificação.
+- **Dinâmica de Navegação:** Pode ser acessada pelo menu lateral ou pelo botão de ação rápida no dashboard do professor. Após preencher os dados e clicar no botão de submissão, a tela deve salvar a questão e redirecionar o usuário para o "Banco de Questões" ou limpar o formulário para um novo cadastro.
+- **Requisitos Funcionais Atendidos:** **RF01 - Interface de Cadastro Manual e Upload**; **RF02 - Classificação Assistida por IA**; **RF03 - Revisão Humana**.
+![Cadastrar questão](imagens/prototipos/Cadastrar%20questão.jpeg)
+*Tela de cadastro de questões*
+
+#### Tela de Criar Listas
+- **Objetivo:** Interface para agrupar questões previamente cadastradas e transformá-las em avaliações ou exercícios direcionados a grupos específicos de alunos.
+- **Dinâmica de Navegação:** Acessada pelo menu lateral. O professor preenche o nome da lista, seleciona a turma e visualiza as questões adicionadas. Pode abrir uma sub-tela chamando o "Banco de Questões" para adicionar mais itens. Ao clicar em "Gerar Lista", retorna ao dashboard ou à área de gestão de turmas.
+- **Requisitos Funcionais Atendidos:** **RF06 - Gestão de Turmas**; **RF07 - Criação de Listas de Exercícios**.
+![Criar Lista](imagens/prototipos/Criar%20Lista.jpeg)
+*Tela de criar listas*
+
+#### Tela do Banco de Questões
+- **Objetivo:** Funcionar como um repositório pesquisável e filtrável de todo o acervo da instituição. Permite encontrar questões específicas por disciplina, macro/micro área e dificuldade.
+- **Dinâmica de Navegação:** Acessada pelo menu lateral do perfil professor. Serve como tela de consulta e também atua em conjunto com a tela de "Criar Lista". Clicar em uma questão específica pode abrir uma tela de edição (CRUD) ou exibir seus detalhes.
+- **Requisitos Funcionais Atendidos:** **RF04 - Gestão de Questões**.
+![Banco de questões](imagens/prototipos/Banco%20de%20questões.jpeg)
+*Tela do banco de questões*
+
+#### Dashboard do Aluno
+- **Objetivo:** Apresentar a área de estudos e autoconhecimento do aluno. Exibe a média geral, exercícios resolvidos, tempo de estudo, melhor disciplina e gráficos de evolução. Abaixo, lista as atividades pendentes a serem feitas.
+- **Dinâmica de Navegação:** Tela inicial do aluno após o login. A partir das "Listas de Exercícios Disponíveis" na parte inferior, o aluno clica em "Continuar", o que o redireciona diretamente para a tela de "Resolução de Exercício".
+- **Requisitos Funcionais Atendidos:** **RF09 - Dashboard de Autodesempenho**; **RF13 - Consulta de Frequência**.
+![Dashboard aluno](imagens/prototipos/Dashboard%20aluno.jpeg)
+*Dashboard do aluno*
+
+#### Tela de Resolução do Exercício
+- **Objetivo:** É o ambiente de estudo. Foca inteiramente na leitura do enunciado da questão e seleção da alternativa correta pelo aluno, com indicativos de progresso.
+- **Dinâmica de Navegação:** Chamada a partir do dashboard do aluno. O usuário navega internamente usando os botões "Anterior" e "Próxima". Ao finalizar a última questão, submete as respostas e é redirecionado ao dashboard ou à tela de gabarito.
+- **Requisitos Funcionais Atendidos:** **RF08 - Resolução de Exercícios**.
+![Resolução exercicio](imagens/prototipos/Resolução%20exercicio.jpeg)
+*Tela de resolução do exercício*
 
 ---
 
