@@ -248,6 +248,7 @@ Descrição dos requisitos:
 
 ### Diagramas Técnicos
 * **Diagrama de Classes:** Estrutura das classes e seus relacionamentos.
+![DCU - Prisma](imagens/diagramas/DiagramaDeClassePrisma.png)
 * **Diagrama de Atividades:** Fluxo de tarefas e processos do sistema.
 
 ---
