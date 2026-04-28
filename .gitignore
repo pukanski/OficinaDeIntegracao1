@@ -19,11 +19,12 @@ yarn-error.log*
 bin/
 obj/
 publish/
+.vs/
+*.db
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
-# Evitar commit de segredos locais
 appsettings.Development.json
 UserSecrets/
 
