@@ -248,8 +248,47 @@ Descrição dos requisitos:
 
 ### Diagramas Técnicos
 * **Diagrama de Classes:** Estrutura das classes e seus relacionamentos.
-![DCU - Prisma](imagens/diagramas/DiagramaDeClassePrisma.png)
+![DC - Prisma](imagens/diagramas/DiagramaDeClassePrisma.png)
 * **Diagrama de Atividades:** Fluxo de tarefas e processos do sistema.
+* RF01/RF02/RF03: 
+
+![DA - RF01,02,03](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF01;02;03.png)
+
+* RF04: 
+
+![DA - RF04](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF04.png)
+
+* RF05: 
+
+![DA - RF05](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF05.png)
+
+* RF06: 
+
+![DA - RF06](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF06.png)
+
+* RF07: 
+
+![DA - RF07](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF07.png)
+
+* RF08: 
+
+![DA - RF08](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF08.png)
+
+* RF09/RF13: 
+
+![DA - RF09,13](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF09;13.png)
+
+* RF10: 
+
+![DA - RF10](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF10.png)
+
+* RF11: 
+
+![DA - RF11](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF11.png)
+
+* RF12: 
+
+![DA - RF12](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF12.png)
 
 ---
 
