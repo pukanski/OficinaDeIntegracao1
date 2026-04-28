@@ -3,6 +3,7 @@
 Thumbs.db
 .vscode/
 .idea/
+.env
 
 # Angular / Node.js
 node_modules/
