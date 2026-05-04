@@ -6,29 +6,33 @@ services:
       context: ./backend/GatewayMicroservice
       dockerfile: Dockerfile
     ports:
-      - "5000:8080"
+      - "5050:8080"
     networks:
       - prisma-network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
 
   aluno-api:
     build:
       context: ./backend/AlunoMicroservice
       dockerfile: Dockerfile
-    networks:
-      - prisma-network
-    #environment:
-      #- ConnectionStrings__Supabase=${DATABASE_URL}
-
-  professor-api:
-    build:
-      context: ./backend/ProfessorMicroservice
-      dockerfile: Dockerfile
+    #ports:
+    #  - "5001:8080"
     networks:
       - prisma-network
     environment:
-      - ConnectionStrings__Supabase=${DATABASE_URL}
+    - ASPNETCORE_URLS=http://0.0.0.0:8080
+      #- ConnectionStrings__Supabase=${DATABASE_URL}
+
+  #professor-api:
+  #  build:
+  #    context: ./backend/ProfessorMicroservice
+  #    dockerfile: Dockerfile
+  #  networks:
+  #    - prisma-network
+  #  environment:
+  #    - ConnectionStrings__Supabase=${DATABASE_URL}
 
 networks:
   prisma-network:
