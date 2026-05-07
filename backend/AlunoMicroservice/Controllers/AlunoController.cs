@@ -2,12 +2,14 @@
 using AlunoAPI.Model;
 using AlunoAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlunoAPI.Controllers
 {
     /// <summary>
     /// Gerenciamento de alunos da plataforma.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AlunoController : ControllerBase

@@ -23,7 +23,8 @@ services:
       - prisma-network
     environment:
     - ASPNETCORE_URLS=http://0.0.0.0:8080
-      #- ConnectionStrings__Supabase=${DATABASE_URL}
+    - Supabase__Url=${SUPABASE_URL}
+    - ConnectionStrings__Supabase=${DATABASE_URL}
 
   #professor-api:
   #  build:
