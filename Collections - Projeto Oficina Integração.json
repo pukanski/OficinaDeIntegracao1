@@ -1,0 +1,202 @@
+{
+  "name": "Collections - Projeto Oficina Integração",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "Aluno",
+      "filename": "Aluno",
+      "seq": 2,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Aluno",
+          "seq": 2
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Inativar Aluno",
+          "filename": "Inativar Aluno.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "https://localhost:8000/api/Aluno/{id}",
+            "method": "DELETE",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Listar Aluno Id",
+          "filename": "Listar Aluno Id.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "https://localhost:8000/api/Aluno/{id}",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Listar todos alunos",
+          "filename": "Listar todos alunos.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "https://localhost:8000/api/Aluno/alunos",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Registrar Aluno",
+          "filename": "Registrar Aluno.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "https://localhost:8000/api/Aluno/criar-aluno",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"PrimeiroNome\": \"\",\n  \"UltimoNome\": \"\",\n  \"Email\": \"\",\n  \"RA\": \"\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Update Aluno",
+          "filename": "Update Aluno.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "https://localhost:8000/api/Aluno/{id}",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"PrimeiroNome\": \"\",\n  \"UltimoNome\": \"\",\n  \"Email\": \"\",\n  \"RA\": \"\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "brunoConfig": {
+    "version": "1",
+    "name": "Collections - Projeto Oficina Integração",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.00119781494140625,
+    "filesCount": 6
+  },
+  "exportedAt": "2026-04-05T23:45:45.798Z",
+  "exportedUsing": "Bruno/3.0.2"
+}

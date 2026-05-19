@@ -1,0 +1,300 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\controllers\\professorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\controllers\\professorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CC6A205-F63F-4049-8D18-F79488AD3A6C}|ProfessorAPI.Tests\\ProfessorAPI.Tests.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi.tests\\services\\professorservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CC6A205-F63F-4049-8D18-F79488AD3A6C}|ProfessorAPI.Tests\\ProfessorAPI.Tests.csproj|solutionrelative:professorapi.tests\\services\\professorservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\services\\professorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\services\\professorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\dtos\\professorresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\dtos\\professorresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\mappers\\professormapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\mappers\\professormapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\model\\base\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\model\\base\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\model\\professor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\model\\professor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\middlewares\\requestloggingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\middlewares\\requestloggingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\middlewares\\errorhandlingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\middlewares\\errorhandlingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\services\\iprofessorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\services\\iprofessorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\repositories\\professorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\repositories\\professorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\repositories\\iprofessorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\repositories\\iprofessorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\src\\dtos\\professorrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\src\\dtos\\professorrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|c:\\users\\lfmdo\\documents\\projetos\\oficinadeintegracao1\\professorapi\\professorapi\\professorapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{500D1CE6-F0EC-00CE-F3EB-61734534A7A8}|ProfessorAPI\\ProfessorAPI.csproj|solutionrelative:professorapi\\professorapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProfessorController.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Controllers\\ProfessorController.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Controllers\\ProfessorController.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Controllers\\ProfessorController.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Controllers\\ProfessorController.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAwwBEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T18:05:48.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProfessorServiceTests.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI.Tests\\Services\\ProfessorServiceTests.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI.Tests\\Services\\ProfessorServiceTests.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI.Tests\\Services\\ProfessorServiceTests.cs",
+              "RelativeToolTip": "ProfessorAPI.Tests\\Services\\ProfessorServiceTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T21:45:22.626Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProfessorService.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Services\\ProfessorService.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Services\\ProfessorService.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Services\\ProfessorService.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Services\\ProfessorService.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAcwEgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T17:49:07.279Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProfessorResponseDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\DTOs\\ProfessorResponseDTO.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\DTOs\\ProfessorResponseDTO.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\DTOs\\ProfessorResponseDTO.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\DTOs\\ProfessorResponseDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T02:50:09.292Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAwwAgAAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T03:16:06.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ProfessorMapper.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Mappers\\ProfessorMapper.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Mappers\\ProfessorMapper.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Mappers\\ProfessorMapper.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Mappers\\ProfessorMapper.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAUwBUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T02:52:16.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Model\\Base\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Model\\Base\\BaseEntity.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Model\\Base\\BaseEntity.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Model\\Base\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T02:36:44.442Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Professor.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Model\\Professor.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Model\\Professor.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Model\\Professor.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Model\\Professor.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwBoAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T02:35:55.073Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\Program.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\Program.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\Program.cs",
+              "RelativeToolTip": "ProfessorAPI\\Program.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABcAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T16:19:32.023Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RequestLoggingMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Middlewares\\RequestLoggingMiddleware.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Middlewares\\RequestLoggingMiddleware.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Middlewares\\RequestLoggingMiddleware.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Middlewares\\RequestLoggingMiddleware.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAQwA8AAACBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T20:22:16.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ErrorHandlingMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Middlewares\\ErrorHandlingMiddleware.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Middlewares\\ErrorHandlingMiddleware.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Middlewares\\ErrorHandlingMiddleware.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Middlewares\\ErrorHandlingMiddleware.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwB8AAAC9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T20:13:35.166Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IProfessorService.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Services\\IProfessorService.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Services\\IProfessorService.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Services\\IProfessorService.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Services\\IProfessorService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T17:15:12.621Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ProfessorRepository.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Repositories\\ProfessorRepository.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Repositories\\ProfessorRepository.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Repositories\\ProfessorRepository.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Repositories\\ProfessorRepository.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAAwCcAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T16:58:21.506Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IProfessorRepository.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Repositories\\IProfessorRepository.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\Repositories\\IProfessorRepository.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\Repositories\\IProfessorRepository.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\Repositories\\IProfessorRepository.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvwcAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T16:53:30.155Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "ProfessorAPI\\appsettings.json",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\appsettings.json",
+              "RelativeToolTip": "ProfessorAPI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-10T16:14:51.936Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ProfessorRequestDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\DTOs\\ProfessorRequestDTO.cs",
+              "RelativeDocumentMoniker": "ProfessorAPI\\src\\DTOs\\ProfessorRequestDTO.cs",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\src\\DTOs\\ProfessorRequestDTO.cs",
+              "RelativeToolTip": "ProfessorAPI\\src\\DTOs\\ProfessorRequestDTO.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBkAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-10T02:47:57.055Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ProfessorAPI.csproj",
+              "DocumentMoniker": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\ProfessorAPI.csproj",
+              "RelativeDocumentMoniker": "ProfessorAPI\\ProfessorAPI.csproj",
+              "ToolTip": "C:\\Users\\lfmdo\\Documents\\Projetos\\OficinaDeIntegracao1\\ProfessorAPI\\ProfessorAPI\\ProfessorAPI.csproj",
+              "RelativeToolTip": "ProfessorAPI\\ProfessorAPI.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-10T02:28:25.572Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

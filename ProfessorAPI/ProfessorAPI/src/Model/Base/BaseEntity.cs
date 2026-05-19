@@ -1,0 +1,16 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ProfessorAPI.src.Model.Base
+{
+    public class BaseEntity
+    {
+
+        [Key]
+        [Column("ID")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long id { get; set; }
+        public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
+        public DateTime? AtualizadoEm { get; set; }
+    }
+}
