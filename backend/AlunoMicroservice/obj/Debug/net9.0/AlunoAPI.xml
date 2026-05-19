@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AlunoAPI</name>
+    </assembly>
+    <members>
+        <member name="T:AlunoAPI.Controllers.AlunoController">
+            <summary>
+            Gerenciamento de alunos da plataforma.
+            </summary>
+        </member>
+        <member name="M:AlunoAPI.Controllers.AlunoController.Create(AlunoAPI.DTOs.AlunoRequestDTO)">
+            <summary>Cadastra um novo aluno.</summary>
+            <param name="dto">Dados do aluno a ser cadastrado.</param>
+            <response code="201">Aluno cadastrado com sucesso.</response>
+        </member>
+        <member name="T:AlunoAPI.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:AlunoAPI.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AlunoAPI.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AlunoAPI.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
