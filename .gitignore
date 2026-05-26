@@ -14,6 +14,7 @@ bazel-out/
 .angular/
 npm-debug.log*
 yarn-error.log*
+environment.ts
 
 # .NET / C#
 bin/

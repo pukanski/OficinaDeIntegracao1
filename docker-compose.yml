@@ -26,14 +26,36 @@ services:
     - Supabase__Url=${SUPABASE_URL}
     - ConnectionStrings__Supabase=${DATABASE_URL}
 
-  #professor-api:
-  #  build:
-  #    context: ./backend/ProfessorMicroservice
-  #    dockerfile: Dockerfile
-  #  networks:
-  #    - prisma-network
-  #  environment:
-  #    - ConnectionStrings__Supabase=${DATABASE_URL}
+  professor-api:
+    build:
+      context: ./backend/ProfessorMicroservice/ProfessorAPI
+      dockerfile: Dockerfile
+    ports:
+      - "5002:8080"
+    networks:
+      - prisma-network
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ConnectionStrings__Supabase=${DATABASE_URL}
+      - Supabase__Url=${SUPABASE_URL}
+
+  frontend:
+    build:
+      context: ./frontend/prisma-web
+      dockerfile: Dockerfile
+      args:
+        SUPABASE_URL: ${SUPABASE_URL}
+        SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+        GATEWAY_URL: http://127.0.0.1:5050
+    ports:
+      - "4200:4200"
+    networks:
+      - prisma-network
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - GATEWAY_URL=http://127.0.0.1:5050
+      - CHOKIDAR_USEPOLLING=true
 
 networks:
   prisma-network:
