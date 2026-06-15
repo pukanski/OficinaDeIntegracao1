@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./backend/GatewayMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "5050:8080"
+    networks:
+      - prisma-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+
+  aluno-api:
+    build:
+      context: ./backend/AlunoMicroservice
+      dockerfile: Dockerfile
+    #ports:
+    #  - "5001:8080"
+    networks:
+      - prisma-network
+    environment:
+    - ASPNETCORE_URLS=http://0.0.0.0:8080
+    - Supabase__Url=${SUPABASE_URL}
+    - ConnectionStrings__Supabase=${DATABASE_URL}
+
+  #professor-api:
+  #  build:
+  #    context: ./backend/ProfessorMicroservice
+  #    dockerfile: Dockerfile
+  #  networks:
+  #    - prisma-network
+  #  environment:
+  #    - ConnectionStrings__Supabase=${DATABASE_URL}
+
+networks:
+  prisma-network:
+    driver: bridge

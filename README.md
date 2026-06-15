@@ -17,7 +17,13 @@
 
 ### Contexto
 
-O projeto irá ser implementado no ambiente educacional do projeto de extensão do Cursinho Prisma, focado em pré-vestibular. Atualmente, a rotina de preparação de materiais, montagem de listas e o acompanhamento de rendimento dos alunos é feito de forma manual e descentralizada. Paralelamente, os alunos e a coordenação não possuem métricas automatizadas sobre o desempenho em disciplinas e matérias específicas. O sistema será implementado neste cenário para atuar como uma plataforma web que reduz o atrito na criação de materiais e forcene inteligência de dados educacionais
+O projeto será implementado no Cursinho Prisma, um projeto de extensão voltado à preparação para o vestibular, que opera em um contexto de alta demanda e capacidade limitada. A instituição oferece apenas uma turma por ano, o que torna o processo seletivo rigoroso. A entrada dos alunos é definida com base no desempenho escolar, seguindo uma ordem de prioridade que começa pelos estudantes do 3º ano do Ensino Médio, depois alunos de outros anos e, por último, aqueles que já concluíram o ensino médio.
+
+Depois de ingressar, o aluno passa a fazer parte de um ambiente com regras bem definidas, tanto na parte administrativa quanto na pedagógica. Em relação à administração, existe uma exigência mínima de 75% de frequência, e o não cumprimento pode levar a expulsão do projeto. Hoje, esse controle é feito manualmente, o que aumenta o risco de falhas, como registros incorretos ou até evasão que não é percebida a tempo.
+
+No aspecto pedagógico, há uma limitação importante, o cursinho não oferece atividades de reforço ou turmas extras. Isso faz com que o aluno dependa apenas das aulas regulares e do próprio esforço fora da sala para acompanhar o conteúdo. Ao mesmo tempo, a preparação de materiais e a organização de exercícios são feitas de forma descentralizada pelos professores, sem um padrão ou sistema unificado. Como consequência, não há dados claros sobre o desempenho dos alunos. Dificuldades específicas, como em determinados tópicos mais pontuais, acabam passando despercebidas ao longo do ano.
+
+Nesse contexto, o sistema entra para organizar esses processos. Ele ajuda a automatizar o controle de frequência, reduz o trabalho manual na criação e organização de questões e, principalmente, traz uma camada de dados que antes não existia. Com isso, passa a ser possível acompanhar o desempenho em tempo real e identificar dificuldades com mais precisão. A ideia é que tanto os professores quanto os próprios alunos tenham mais clareza sobre o aprendizado, permitindo ajustes ao longo do processo, mesmo sem a existência de aulas de reforço.
 
 ### Justificativa
 
@@ -25,11 +31,15 @@ O problema central é a ineficiência e o alto custo de tempo na extração, cat
 
 ### Proposta
 
-Uma aplicação web com um módulo de cadastro de questões na parte do professor, contendo uma interface otimizada onde o professor ou monitor insere o texto e imagens da questão. O sistema realiza uma chamada a um modelo de IA que analisa o texto e sugere automaticamente a classificação correta (Disciplina Macro e Micro) e o nível de dificuldade. Além deste módulo, teremos os módulos do professor, com gestão de turmas, geração dinâmica de listas de exercícios e painéis analiticos, e também do aluno, com o banco de questões, listas dos professores e a visão de autodesempenho
+A aplicação é uma plataforma web pensada para reduzir o trabalho operacional na criação de avaliações e melhorar o acompanhamento do desempenho acadêmico. A ideia principal é conectar a rotina dos professores com a prática dos alunos, usando automação para diminuir tarefas manuais, principalmente na organização e categorização de questões.
+
+No módulo do docente, o foco está na gestão e no uso de dados para facilitar o dia a dia. O sistema oferece uma interface para cadastro de questões com suporte a texto e imagens. Um dos recursos é a integração com inteligência artificial, que analisa o conteúdo das questões e sugere automaticamente a classificação por disciplina e nível de dificuldade, ajudando a manter o banco de dados mais organizado. Também há ferramentas para gerenciar turmas (como criar e gerenciar uma turma de alunos com dificuldade em matemática) e montar listas de exercícios de forma rápida, com base em filtros. Além disso, os painéis analíticos permitem acompanhar o desempenho das turmas e dos alunos, ajudando a identificar onde estão as principais dificuldades.
+
+Já o módulo do aluno é voltado para a prática e o acompanhamento do próprio desempenho. O aluno pode acessar tanto o banco geral de questões quanto listas específicas enviadas pelos professores. A proposta é incentivar a resolução contínua e dar mais clareza sobre o progresso. O sistema também conta com um painel individual que mostra a frequência e o histórico de acertos e erros, permitindo que o aluno identifique seus pontos fortes e onde precisa melhorar, considerando disciplinas e níveis de dificuldade.
 
 ### Organização do Documento
 
-O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas pelo processamento da IA, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3 detalha as tecnologicas, a metodologia ágil paralela e o cronograma. O capitulo 4 especifica os requisitos funcionais e não-funcionais que guiarão o desenvolvimento.
+O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas pelo processamento da IA, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3 detalha as tecnologicas, a metodologia ágil paralela e o cronograma. O capitulo 4 especifica os requisitos funcionais e não-funcionais que guiarão o desenvolvimento. O capitulo 5 apresenta a modelagem do banco de dados e os diagramas de classe e de atividade
 
 ---
 
@@ -94,32 +104,25 @@ O capítulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do proble
 
 ### Metodologia
 
-O projeto usará um Scrum adaptado para o contexto acadêmico com sprints semanais. O motivo dessa escolha é a incerteza técnica entre as diferentes tecnologias. Outra abordagem poderia prejudicar o projeto inteiro caso aconteça alguma falha em algum módulo específico.
-Para otimizar o trabalho, o desenvolvimento não será estritamente sequencial, sendo dividido em quatro frentes de trabalho paralelas que se integram ao longo do tempo:
-1. Frente Front-End (2 pessoas): Responsáveis pelos protótipos de telas, gerenciar o estado da plicação e consumir os endpoints da API ASP.NET
-2. Frente Back-ENd: Responsável por modelar obanco, criar os CRUDs, implementar a segurança e pelo Swagger
-3. Frente Serviço de IA: Responsável por criar a API interna que se comunica com o Ollama, afinar o prompt para garantir que a IA responda sempre no formato correto e garantindo o tempo de resposta da inferência
-4. Frente de Integração e Infraestrutura: Responsável pela configuração das ferramentas, dos testes e da integração entre os diferentes frontes
+O projeto segue uma metodologia ágil baseada em Sprints semanais, com foco na entrega contínua de partes funcionais do sistema. Desde o início, a arquitetura é pensada no modelo de microsserviços, o que exige um cuidado com integração contínua para evitar problemas entre front-end, API e o componente de inteligência artificial. A ideia é garantir que tudo evolua de forma integrada, sem criar dependências que travem o progresso mais adiante.
 
+O planejamento parte de um product backlog organizado por áreas do desenvolvimento e funcionalidades. A cada Sprint, as funcionalidades são detalhadas em tarefas que envolvem diferentes áreas do desenvolvimento, e o ciclo se encerra com uma versão funcional e testável do que foi construído. Como há incertezas relacionadas ao uso de modelos de IA (principalmente em relação a tempo de resposta e consistência), esse módulo é tratado de forma isolada. Assim, mesmo que haja instabilidades na geração de classificações, o restante do sistema continua evoluindo normalmente.
+
+A equipe está trabalhando de forma orientada a funcionalidades completas, divida por tarefas para cada equipe. Cada entrega só é considerada pronta quando todas as partes envolvidas (front-end, back-end, integração com IA e infraestrutura) entregam as tarefas referentes a aquela funcionalidade, com tudo integrado e funcionando da maneira correta.
 
 ### Cronograma previsto
 
-| Semana | Frente Front-End | Frente Back-End | Frente IA | Frente Integracao e Infra |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | Entender o escopo e o sistema | Entender o escopo e o sistema | Entender o escopo e o sistema | Entender o escopo e o sistema |
-| 2 | Criar prototipos das telas | Modelar banco de dados | Definir requisitos da IA | Configurar repositorios |
-| 3 (Entrega 1) | Telas base e login | CRUD base e banco rodando | Ajustar retorno da IA em JSON | Conectar Front e Back |
-| 4 | Tela de cadastro de questoes | Endpoint para receber questoes | Tratar erros de texto na IA | Criar Dockerfile e upload de imagens |
-| 5 | Tela de revisao da IA | Conectar C# com Python | Testar IA com questoes reais | Conectar Back com IA |
-| 6 | Telas de filtro e listas | Logica de criacao de listas | Ajustar erros e alucinacoes da IA | Validar fluxo do Front ate a IA |
-| 7 | Tela de visualizacao de turmas | Consultas no banco PostgreSQL | Otimizar tempo de resposta da IA | Resolver problemas de rede e CORS |
-| 8 (Entrega 2) | Corrigir erros visuais | Estabilizar a API e os dados | Congelar a versao do prompt | Testar cadastro completo com IA |
-| 9 | Telas iniciais do aluno | Rotas de listas pendentes | Avaliar erros do cadastro | Preparar contas para o deploy |
-| 10 | Tela de resolucao de exercicios | Endpoint para salvar respostas | Ajustes finais no texto da IA | Subir o banco PostgreSQL na nuvem |
-| 11 | Tela do banco livre de questoes | Filtros de busca e rotas de chamada | Documentar como rodar a IA | Subir a API ASP.NET no Render |
-| 12 | Graficos e percentual de presenca | Consultas de acertos e frequencia | Ajustar parametros do Ollama | Testar sistema na nuvem com IA local |
-| 13 | Dashboard e tela de chamada | Criar indices de banco de dados | Corrigir bugs residuais da IA | Fazer testes de carga |
-| 14 (Entrega 3) | Polimento final para celular | Limpeza de codigo e seguranca | Fechar escopo da IA | Entregar sistema em producao |
+| **Semana** | **Fase**            | **Tarefas**                                                                                                                                              |
+| ---------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 - 2      | Fundação e Planejamento         | Levantamento de requisitos completo. Protótipos de telas definidos. Modelagem do banco de dados. Definição dos requisitos da IA. Setup inicial de repositórios.   |
+| 3 - 4      | Arquitetura e Base Técnica      | Configuração de infraestrutura (Docker, repositórios, ambiente local). Estrutura inicial do front-end (layout, login). Setup da IA local (FastAPI). Base do backend iniciada.      |
+| 5 - 6      | Sprint 1: Base do Sistema       | CRUD inicial e primeiros microservices (Aluno). Integração inicial de front e back. Configuração de banco (Supabase). Estrutura Angular com telas iniciais. Setup da IA preparado. |
+| 6 - 7      | Sprint 2: Módulo Professor      | Microservices de Professor e Turmas. CRUD completo de turmas e usuários. Ajustes no retorno da IA. Evolução das telas de gestão. Preparação da entrega 2.                          |
+| 7 - 8      | Sprint 3 e Entrega 2: Integração com IA     | Microservice de Questões. Integração com FastAPI da IA. Implementação de autenticação JWT. Tratamento de erros da IA. Tela de cadastro de questões com feedback.Fluxo completo de cadastro de questões com IA funcionando. Sistema do professor integrado e validado.                   |
+| 9 - 10       | Sprint 4: Listas e Resolução    | Criação de listas de exercícios com filtros. Tela de resolução de exercícios. Testes iniciais com IA em cenários reais. Tela de frequência.                                        |
+| 10 - 11    | Sprint 5: Dashboards e Métricas | Dashboard do aluno e professor. Métricas de desempenho (acertos, frequência). Estrutura de testes (unitário, integração, E2E).                                                     |
+| 12 - 13    | Otimização e Testes             | Testes de carga e performance. Refinamento da IA (tempo de resposta e precisão). Otimização de queries e backend. Ajustes finais de UX/UI.                                         |
+| 14         | Entrega 3: Produção Final       | Deploy completo do sistema. Documentação final.                                               |
 
 ---
 

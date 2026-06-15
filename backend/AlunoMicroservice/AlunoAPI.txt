@@ -1,0 +1,17 @@
+**Visão Geral**
+Microsserviço responsável por gerenciar a identidade, perfil e preferências dos alunos.
+
+
+**Endpoints**
+
+https://localhost:8000
+
+GET /api/Aluno/alunos - Retorna todos os alunos registrados no sistema.
+
+GET /api/Aluno/{id} - Retorna as informações de um aluno específico com base no ID fornecido.
+
+POST /api/Aluno/criar-aluno - Cria um novo aluno com as informações fornecidas no corpo da requisição.
+
+PUT /api/Aluno/{id} - Atualiza as informações de um aluno específico com base no ID fornecido e nas novas informações no corpo da requisição.
+
+DELETE /api/Aluno/{id} - Exclui um aluno específico com base no ID fornecido.
