@@ -1,29 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Importação obrigatória para usar ngModel
+import { FormsModule } from '@angular/forms';
 import { Questao } from '../../../../core/models/questao.model';
 
 @Component({
   selector: 'app-banco-questoes',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Adicionado FormsModule aqui
+  imports: [CommonModule, FormsModule],
   templateUrl: './banco-questoes.html'
 })
 export class BancoQuestoesComponent implements OnInit {
   questoes: Questao[] = [];
-  
-  // Set para guardar os IDs das questões que o professor marcar no checkbox
   questoesSelecionadas: Set<string> = new Set();
 
-  // Variáveis de estado amarradas aos inputs da tela
   termoBusca: string = '';
   filtroDisciplina: string = 'Todas';
   filtroMacroArea: string = 'Todas';
   filtroMicroArea: string = '';
   filtroDificuldade: string = 'Todas';
 
+  // --- NOVAS VARIÁVEIS PARA O MODAL ---
+  modalAberto: boolean = false;
+  modoModal: 'visualizar' | 'excluir' = 'visualizar';
+  questaoFoco: Questao | null = null;
+
   ngOnInit(): void {
-    // Esse array será substituído por um this.questaoService.getQuestoes().subscribe(...) no futuro
     this.questoes = [
       { id: '1', enunciado: 'Resolver a equação quadrática x² - 5x + 6 = 0', disciplina: 'Matemática', macroArea: 'Álgebra', microArea: 'Equações Quadráticas', dificuldade: 3 },
       { id: '2', enunciado: 'Calcular a área de um triângulo retângulo', disciplina: 'Matemática', macroArea: 'Geometria', microArea: 'Triângulos', dificuldade: 2 },
@@ -32,16 +33,9 @@ export class BancoQuestoesComponent implements OnInit {
     ];
   }
 
-  // Extrai dinamicamente as opções únicas para os Dropdowns não ficarem hardcoded
-  get disciplinasUnicas(): string[] {
-    return [...new Set(this.questoes.map(q => q.disciplina))];
-  }
+  get disciplinasUnicas(): string[] { return [...new Set(this.questoes.map(q => q.disciplina))]; }
+  get macroAreasUnicas(): string[] { return [...new Set(this.questoes.map(q => q.macroArea))]; }
 
-  get macroAreasUnicas(): string[] {
-    return [...new Set(this.questoes.map(q => q.macroArea))];
-  }
-
-  // O "Cérebro" da tela: Aplica todos os filtros em tempo real
   get questoesFiltradas(): Questao[] {
     return this.questoes.filter(q => {
       const matchBusca = q.enunciado.toLowerCase().includes(this.termoBusca.toLowerCase());
@@ -54,17 +48,40 @@ export class BancoQuestoesComponent implements OnInit {
     });
   }
 
-  // Função disparada ao clicar no checkbox
   toggleSelecao(id: string): void {
     if (this.questoesSelecionadas.has(id)) {
       this.questoesSelecionadas.delete(id);
     } else {
       this.questoesSelecionadas.add(id);
     }
-    console.log('Questões selecionadas para a futura lista:', Array.from(this.questoesSelecionadas));
   }
 
   getDificuldadeArray(nivel: number): boolean[] {
     return Array(5).fill(false).map((_, index) => index < nivel);
+  }
+
+  // --- NOVAS FUNÇÕES DO MODAL E AÇÕES ---
+  abrirModal(modo: 'visualizar' | 'excluir'): void {
+    const idPrimeiraSelecionada = Array.from(this.questoesSelecionadas)[0];
+    this.questaoFoco = this.questoes.find(q => q.id === idPrimeiraSelecionada) || null;
+    this.modoModal = modo;
+    this.modalAberto = true;
+  }
+
+  fecharModal(): void {
+    this.modalAberto = false;
+    this.questaoFoco = null;
+  }
+
+  confirmarExclusao(): void {
+    // Remove as questões que estavam no Set
+    this.questoes = this.questoes.filter(q => !this.questoesSelecionadas.has(q.id));
+    this.questoesSelecionadas.clear(); // Limpa a seleção
+    this.fecharModal();
+  }
+
+  editarSelecionada(): void {
+    const id = Array.from(this.questoesSelecionadas)[0];
+    alert(`Redirecionando para edição da questão ID: ${id} (Integração futura com a tela Cadastrar Questão)`);
   }
 }
