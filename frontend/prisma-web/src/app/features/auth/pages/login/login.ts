@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // <-- Importação adicionada
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   perfilSelecionado: 'aluno' | 'professor' | 'admin' = 'professor'; 
 
-  constructor(private fb: FormBuilder) {}
+  // Injetamos o Router no construtor
+  constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -34,7 +36,16 @@ export class LoginComponent implements OnInit {
         email: this.loginForm.value.email,
         senha: this.loginForm.value.senha
       };
-      console.log('Enviando para a API ASP.NET:', payload);
+      
+      console.log('Mock Auth OK, Payload:', payload);
+
+      // Redirecionamento baseado no perfil selecionado
+      if (this.perfilSelecionado === 'professor') {
+        this.router.navigate(['/professor/dashboard']);
+      } else {
+        alert(`A área do ${this.perfilSelecionado} ainda não foi implementada no front-end.`);
+      }
+
     } else {
       this.loginForm.markAllAsTouched(); 
     }
