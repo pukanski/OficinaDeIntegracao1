@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Questao } from '../../../../core/models/questao.model';
 
 @Component({
@@ -23,6 +24,8 @@ export class BancoQuestoesComponent implements OnInit {
   modalAberto: boolean = false;
   modoModal: 'visualizar' | 'excluir' = 'visualizar';
   questaoFoco: Questao | null = null;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.questoes = [
@@ -83,5 +86,11 @@ export class BancoQuestoesComponent implements OnInit {
   editarSelecionada(): void {
     const id = Array.from(this.questoesSelecionadas)[0];
     alert(`Redirecionando para edição da questão ID: ${id} (Integração futura com a tela Cadastrar Questão)`);
+  }
+
+  criarListaAPartirDaSelecao(): void {
+    const ids = Array.from(this.questoesSelecionadas);
+    // Navega enviando os IDs no 'state' da rota
+    this.router.navigate(['/professor/criar-lista'], { state: { questoesPrevias: ids } });
   }
 }

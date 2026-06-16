@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // <-- Importação adicionada
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +12,10 @@ import { Router } from '@angular/router'; // <-- Importação adicionada
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  perfilSelecionado: 'aluno' | 'professor' | 'admin' = 'professor'; 
+  perfilSelecionado: 'aluno' | 'professor' | 'admin' = 'professor';
 
   // Injetamos o Router no construtor
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -36,18 +36,20 @@ export class LoginComponent implements OnInit {
         email: this.loginForm.value.email,
         senha: this.loginForm.value.senha
       };
-      
+
       console.log('Mock Auth OK, Payload:', payload);
 
       // Redirecionamento baseado no perfil selecionado
       if (this.perfilSelecionado === 'professor') {
         this.router.navigate(['/professor/dashboard']);
-      } else {
-        alert(`A área do ${this.perfilSelecionado} ainda não foi implementada no front-end.`);
+      } else if (this.perfilSelecionado === 'aluno') {
+        this.router.navigate(['/aluno/dashboard']);
+      } else if (this.perfilSelecionado === 'admin') {
+        this.router.navigate(['/admin/painel']); // <-- Rota do Admin liberada
       }
 
     } else {
-      this.loginForm.markAllAsTouched(); 
+      this.loginForm.markAllAsTouched();
     }
   }
 }

@@ -8,32 +8,37 @@
     <label class="block text-sm font-semibold text-slate-700 mb-2">Buscar</label>
     <div class="relative">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
-      <input type="text" [(ngModel)]="termoBusca" placeholder="Digite o título ou conteúdo da questão..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+      <input type="text" [(ngModel)]="termoBusca" placeholder="Digite o título ou conteúdo da questão..."
+        class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <div>
       <label class="block text-sm font-semibold text-slate-700 mb-2">Disciplina</label>
-      <select [(ngModel)]="filtroDisciplina" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-600 bg-white">
+      <select [(ngModel)]="filtroDisciplina"
+        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-600 bg-white">
         <option value="Todas">Todas</option>
         <option *ngFor="let disc of disciplinasUnicas" [value]="disc">{{ disc }}</option>
       </select>
     </div>
     <div>
       <label class="block text-sm font-semibold text-slate-700 mb-2">Macro Área</label>
-      <select [(ngModel)]="filtroMacroArea" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-600 bg-white">
+      <select [(ngModel)]="filtroMacroArea"
+        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-600 bg-white">
         <option value="Todas">Todas</option>
         <option *ngFor="let macro of macroAreasUnicas" [value]="macro">{{ macro }}</option>
       </select>
     </div>
     <div>
       <label class="block text-sm font-semibold text-slate-700 mb-2">Micro Área</label>
-      <input type="text" [(ngModel)]="filtroMicroArea" placeholder="Buscar..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+      <input type="text" [(ngModel)]="filtroMicroArea" placeholder="Buscar..."
+        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
     </div>
     <div>
       <label class="block text-sm font-semibold text-slate-700 mb-2">Dificuldade</label>
-      <select [(ngModel)]="filtroDificuldade" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-600 bg-white">
+      <select [(ngModel)]="filtroDificuldade"
+        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-600 bg-white">
         <option value="Todas">Todas</option>
         <option value="1">1 - Muito Fácil</option>
         <option value="2">2 - Fácil</option>
@@ -47,12 +52,15 @@
 
 <p class="text-sm font-bold text-slate-700 mb-4">{{ questoesFiltradas.length }} questão(ões) encontrada(s)</p>
 
-<div class="space-y-4 pb-24"> <div *ngFor="let questao of questoesFiltradas" class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-start hover:border-blue-300 transition-colors">
-    <input type="checkbox" [checked]="questoesSelecionadas.has(questao.id)" (change)="toggleSelecao(questao.id)" class="mt-1 mr-4 w-5 h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer">
-    
+<div class="space-y-4 pb-24">
+  <div *ngFor="let questao of questoesFiltradas"
+    class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-start hover:border-blue-300 transition-colors">
+    <input type="checkbox" [checked]="questoesSelecionadas.has(questao.id)" (change)="toggleSelecao(questao.id)"
+      class="mt-1 mr-4 w-5 h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer">
+
     <div class="flex-1">
       <h3 class="font-bold text-slate-800 text-lg mb-2">{{ questao.enunciado }}</h3>
-      
+
       <div class="flex flex-wrap items-center gap-2 mb-3">
         <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded">{{ questao.disciplina }}</span>
         <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded">{{ questao.macroArea }}</span>
@@ -61,7 +69,8 @@
 
       <div class="flex items-center text-sm text-slate-500">
         <div class="flex mr-2">
-          <span *ngFor="let ativa of getDificuldadeArray(questao.dificuldade)" [ngClass]="ativa ? 'text-yellow-400' : 'text-slate-300'" class="text-xs">●</span>
+          <span *ngFor="let ativa of getDificuldadeArray(questao.dificuldade)"
+            [ngClass]="ativa ? 'text-yellow-400' : 'text-slate-300'" class="text-xs">●</span>
         </div>
         Dificuldade: {{ questao.dificuldade }}/5
       </div>
@@ -69,45 +78,53 @@
   </div>
 </div>
 
-<div *ngIf="questoesSelecionadas.size > 0" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-6 z-40 transition-all">
+<div *ngIf="questoesSelecionadas.size > 0"
+  class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-6 z-40 transition-all">
   <span class="font-bold bg-blue-600 px-3 py-1 rounded-lg">{{ questoesSelecionadas.size }} selecionada(s)</span>
-  
-  <button *ngIf="questoesSelecionadas.size === 1" (click)="abrirModal('visualizar')" class="hover:text-blue-300 flex items-center transition-colors">
+
+  <button *ngIf="questoesSelecionadas.size === 1" (click)="abrirModal('visualizar')"
+    class="hover:text-blue-300 flex items-center transition-colors">
     <span class="mr-2">👁️</span> Visualizar
   </button>
-  
-  <button *ngIf="questoesSelecionadas.size === 1" (click)="editarSelecionada()" class="hover:text-blue-300 flex items-center transition-colors">
+
+  <button *ngIf="questoesSelecionadas.size === 1" (click)="editarSelecionada()"
+    class="hover:text-blue-300 flex items-center transition-colors">
     <span class="mr-2">✏️</span> Editar
   </button>
-  
+
   <button (click)="abrirModal('excluir')" class="hover:text-red-400 flex items-center transition-colors">
     <span class="mr-2">🗑️</span> Excluir
   </button>
-  
+
   <div class="w-px h-6 bg-slate-600"></div>
-  
-  <button class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-semibold transition-colors shadow-md">
+
+  <button (click)="criarListaAPartirDaSelecao()"
+    class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-semibold transition-colors shadow-md">
     📑 Criar Lista
   </button>
 </div>
 
-<div *ngIf="modalAberto" class="fixed inset-0 bg-slate-900 bg-opacity-40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+<div *ngIf="modalAberto"
+  class="fixed inset-0 bg-slate-900 bg-opacity-40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-    
+
     <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
       <h2 class="text-xl font-bold text-slate-800">
         {{ modoModal === 'visualizar' ? 'Detalhes da Questão' : 'Aviso de Exclusão' }}
       </h2>
-      <button (click)="fecharModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold leading-none outline-none">&times;</button>
+      <button (click)="fecharModal()"
+        class="text-slate-400 hover:text-slate-600 text-2xl font-bold leading-none outline-none">&times;</button>
     </div>
-    
+
     <div *ngIf="modoModal === 'visualizar' && questaoFoco" class="p-6 overflow-y-auto">
       <div class="flex gap-2 mb-4">
-        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded">{{ questaoFoco.disciplina }}</span>
-        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded">{{ questaoFoco.macroArea }}</span>
+        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded">{{ questaoFoco.disciplina
+          }}</span>
+        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded">{{ questaoFoco.macroArea
+          }}</span>
       </div>
       <h3 class="text-xl font-bold text-slate-800 mb-6">{{ questaoFoco.enunciado }}</h3>
-      
+
       <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl">
         <p class="text-sm text-blue-800 font-medium">ℹ️ Área reservada para o Gabarito e Imagem.</p>
         <p class="text-xs text-blue-600 mt-1">Estes dados serão carregados da API na versão final.</p>
@@ -118,15 +135,18 @@
       <span class="text-5xl mb-4 block">⚠️</span>
       <h3 class="text-2xl font-bold text-slate-800 mb-2">Tem certeza absoluta?</h3>
       <p class="text-slate-600 text-lg">
-        Você está prestes a excluir <strong>{{ questoesSelecionadas.size }}</strong> questão(ões) do banco de dados.<br>Esta ação não pode ser desfeita.
+        Você está prestes a excluir <strong>{{ questoesSelecionadas.size }}</strong> questão(ões) do banco de
+        dados.<br>Esta ação não pode ser desfeita.
       </p>
     </div>
 
     <div class="p-6 border-t border-slate-200 flex justify-end gap-3 bg-slate-50">
-      <button (click)="fecharModal()" class="px-5 py-2.5 font-medium text-slate-600 hover:bg-slate-200 rounded-xl transition-colors">
+      <button (click)="fecharModal()"
+        class="px-5 py-2.5 font-medium text-slate-600 hover:bg-slate-200 rounded-xl transition-colors">
         {{ modoModal === 'visualizar' ? 'Fechar' : 'Cancelar' }}
       </button>
-      <button *ngIf="modoModal === 'excluir'" (click)="confirmarExclusao()" class="px-5 py-2.5 font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-sm transition-colors">
+      <button *ngIf="modoModal === 'excluir'" (click)="confirmarExclusao()"
+        class="px-5 py-2.5 font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-sm transition-colors">
         Sim, Excluir Definitivamente
       </button>
     </div>

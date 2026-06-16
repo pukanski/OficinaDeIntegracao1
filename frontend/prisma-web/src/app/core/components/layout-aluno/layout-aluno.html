@@ -1,0 +1,47 @@
+<div class="flex h-screen bg-slate-50 font-sans overflow-hidden">
+
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex">
+        <div>
+            <div class="h-16 flex items-center px-6 border-b border-slate-100">
+                <div class="w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center font-bold mr-3">P
+                </div>
+                <span class="text-xl font-bold text-slate-800">Prisma</span>
+            </div>
+            <nav class="p-4 space-y-2">
+                <a routerLink="/aluno/dashboard" routerLinkActive="bg-blue-600 text-white shadow-sm"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    class="flex items-center px-4 py-3 rounded-lg font-medium transition-colors text-slate-600 hover:bg-slate-50">
+                    <span class="mr-3">📊</span> Dashboard
+                </a>
+                <a routerLink="/aluno/exercicios" routerLinkActive="bg-blue-600 text-white shadow-sm"
+                    class="flex items-center px-4 py-3 rounded-lg font-medium transition-colors text-slate-600 hover:bg-slate-50">
+                    <span class="mr-3">📖</span> Exercícios
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-100">
+            <a routerLink="/login"
+                class="flex items-center px-4 py-2 text-slate-500 hover:text-red-600 transition-colors font-medium">
+                <span class="mr-3">🚪</span> Sair
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+            <button class="text-slate-500 hover:text-slate-700 focus:outline-none md:hidden">☰</button>
+            <div class="flex-1"></div>
+            <div class="flex items-center">
+                <div class="text-right mr-3 hidden sm:block">
+                    <p class="text-sm font-bold text-slate-700 leading-none">Nome do Aluno</p>
+                    <p class="text-xs text-green-500 mt-1">Online</p>
+                </div>
+                <div class="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm"></div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+</div>
