@@ -1,29 +1,32 @@
-﻿using TurmaAPI.src.DTOs;
-using TurmaAPI.src.Model;
+using TurmaAPI.DTOs;
+using TurmaAPI.Model;
 
-namespace TurmaAPI.src.Mappers
+namespace TurmaAPI.Mappers
 {
-    public class TurmaMapper
+    public static class TurmaMapper
     {
-
-        public static Turma ToModel(TurmaRequestDTO requestDTO) => new Turma
+        public static Turma ToModel(TurmaRequestDTO dto) => new Turma
         {
-            nome = requestDTO.nome,
-            ano = requestDTO.ano,
-            turno = requestDTO.turno
+            Nome  = dto.Nome.Trim(),
+            Ano   = dto.Ano.Trim(),
+            Turno = dto.Turno.Trim()
         };
 
-        public static TurmaResponseDTO ToResponse(Turma turmaModel, int qtdAlunos = 0) => new TurmaResponseDTO
-        {
-            id = turmaModel.id,
-            nome = turmaModel.nome,
-            ano = turmaModel.ano,
-            turno = turmaModel.turno,
-            qtdAlunos = qtdAlunos,
-            criadoEm = turmaModel.criadoEm
-        };
+        public static TurmaResponseDTO ToResponse(Turma turma, int qtdAlunos = 0, int qtdProfessores = 0) =>
+            new TurmaResponseDTO
+            {
+                Id              = turma.Id,
+                Nome            = turma.Nome,
+                Ano             = turma.Ano,
+                Turno           = turma.Turno,
+                QtdAlunos       = qtdAlunos,
+                QtdProfessores  = qtdProfessores,
+                CriadoEm       = turma.CriadoEm,
+                AtualizadoEm   = turma.AtualizadoEm
+            };
 
-        public static List<TurmaResponseDTO> ToResponseList(List<(Turma turma, int qtd)> turmas) =>
-            turmas.Select(t => ToResponse(t.turma, t.qtd)).ToList();
+        public static List<TurmaResponseDTO> ToResponseList(
+            List<(Turma turma, int qtdAlunos, int qtdProfessores)> turmas) =>
+                turmas.Select(t => ToResponse(t.turma, t.qtdAlunos, t.qtdProfessores)).ToList();
     }
 }

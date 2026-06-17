@@ -1,21 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TurmaAPI.src.Model
+namespace TurmaAPI.Model
 {
-    [Table("professor_turma")]
+    [Table("Professor_Turma")]
     public class ProfessorTurma
     {
         [Required]
-        [Column("professor_id")]
-        public long professor_id { get; set; }
+        public long ProfessorId { get; set; }
 
         [Required]
-        [Column("turma_id")]
-        public long turma_id { get; set; }
+        public long TurmaId { get; set; }
 
-        [Required]
-        [Column("vinculado_em")]
-        public DateTime vinculadoEm { get; set; } = DateTime.UtcNow;
+        public DateTime VinculadoEm { get; set; } = DateTime.UtcNow;
+
+        public Turma Turma { get; set; }
     }
 }

@@ -1,16 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TurmaAPI.src.Model.Base
+namespace TurmaAPI.Model.Base
 {
     public class BaseEntity
     {
-
         [Key]
-        [Column("id")]
+        [Column("ID")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
-        public DateTime criadoEm { get; set; } = DateTime.UtcNow;
-        public DateTime? atualizadoEm { get; set; } 
+        public long Id { get; set; }
+
+        public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
+        public DateTime? AtualizadoEm { get; set; }
     }
 }

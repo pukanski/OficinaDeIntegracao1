@@ -1,30 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TurmaAPI.src.Model.Base;
+using TurmaAPI.Model.Base;
 
-namespace TurmaAPI.src.Model
+namespace TurmaAPI.Model
 {
-    [Table("turmas")]
+    [Table("Turmas")]
     public class Turma : BaseEntity
     {
-
-        [Required(ErrorMessage = "O nome é obrigatório")]
-        [Column("nome")]
+        [Required(ErrorMessage = "O nome da turma é obrigatório.")]
         [MaxLength(80)]
-        public string nome { get; set; }
+        public string Nome { get; set; }
 
-        [Required (ErrorMessage = "O ano é obrigatório")]
-        [Column("ano")]
+        [Required(ErrorMessage = "O ano é obrigatório.")]
         [MaxLength(4)]
-        public string ano { get; set; }
+        public string Ano { get; set; }
 
-        [Required(ErrorMessage = "O turno é obrigatório")]
-        [Column("turno")]
-        [MaxLength(80)]
-        public string turno { get; set; }
-
-        [Required(ErrorMessage = "A quantidade de alunos é obrigatória")]
-        [Column("qtd_alunos")]
-        public int qtdAlunos { get; set; }
+        [Required(ErrorMessage = "O turno é obrigatório.")]
+        [MaxLength(20)]
+        public string Turno { get; set; }
     }
 }
