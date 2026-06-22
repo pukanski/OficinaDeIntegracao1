@@ -70,6 +70,17 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:8080
       - ConnectionStrings__Supabase=${DATABASE_URL}
       - Supabase__Url=${SUPABASE_URL}
+
+  turma-api:
+    build:
+      context: ./backend/TurmaMicroservice
+      dockerfile: Dockerfile
+    networks:
+      - prisma-network
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ConnectionStrings__Supabase=${DATABASE_URL}
+      - Supabase__Url=${SUPABASE_URL}
 networks:
   prisma-network:
     driver: bridge
