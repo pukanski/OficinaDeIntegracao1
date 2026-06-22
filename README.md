@@ -174,9 +174,9 @@ Descrição dos requisitos:
 | RNF03 | O banco de dados deve impor restrições de chave estrangeira rígidas entre as micro e macro disciplinas para impedir a categorização para categorias inexistentes | Confiabilidade |
 | RNF04 | O sistema não deve expor a comunicação direta com a IA, o front-end deve apenas fazer requisições à API, que atuará como intermediária segura para o Ollama | Segurança |
 | RNF05 | Senhas devem ser protegidas no banco utilizando algum algoritmo de hashing | Segurança |
-| RNF06 | O tempo de resposta das consultas da API para a renderização do dashboard não deve ultrapassar 3 segundos | Desempenho |
 
 ### Diagrama de Casos de Uso
+O diagrama de casos de uso abaixo (Figura 1) ilustra as interações dos atores com o sistema, focando nas interações que entregam valor direto aos usuários (excluindo processos de autenticação).
 ![DCU - Prisma](imagens/diagramas/DCU%20-%20Prisma.png)
 *Diagrama representando as interações dos alunos, professores e administradores com o sistema cursinho prisma.*
 
@@ -184,63 +184,63 @@ Descrição dos requisitos:
 
 #### Tela de Login
 - **Objetivo:** Autenticar os usuários e direcioná-los para o ambiente correto de acordo com o seu perfil.
-- **Dinâmica de Navegação:** É a tela inicial do sistema. A partir dela, dependendo da aba selecionada e da validação das credenciais, o usuário é redirecionado para o seu respectivo dashboard. Também possui link para a recuperação de senha.
+- **Dinâmica de Navegação:** É a tela inicial do sistema (Figura 2). A partir dela, dependendo da aba selecionada e da validação das credenciais, o usuário é redirecionado para o seu respectivo dashboard. Também possui link para a recuperação de senha.
 - **Requisitos Funcionais Atendidos:** **RF05 - Autenticação e Autorização**.
 ![Login](imagens/prototipos/Login.jpeg)
 *Tela de login*
 
 #### Dashboard do Professor
 - **Objetivo:** Fornecer um painel gerencial resumido para o educador. Apresenta métricas-chave como total de alunos, questões cadastradas, desempenho médio das turmas e tendências de notas, além de alertas.
-- **Dinâmica de Navegação:** É a tela principal acessada após o login do perfil professor. Através do menu lateral, permite navegar para "Cadastrar Questão", "Banco de Questões" e "Criar Lista". Possui também um botão de atalho rápido "+ Nova Questão" que leva à tela de cadastro.
+- **Dinâmica de Navegação:** É a tela principal acessada após o login do perfil professor (Figura 3). Através do menu lateral, permite navegar para "Cadastrar Questão", "Banco de Questões" e "Criar Lista". Possui também um botão de atalho rápido "+ Nova Questão" que leva à tela de cadastro.
 - **Requisitos Funcionais Atendidos:** **RF10 - Dashboard de Desempenho e Defasagem (Professor)**.
 ![Dashboard professor](imagens/prototipos/Dashboard%20professor.jpeg)
 *Dashboard do professor*
 
 #### Tela de Cadastro de Questões
 - **Objetivo:** Permitir a inserção de novas questões no banco de dados da plataforma. Oferece campos para o enunciado, alternativas, upload de imagem e uma área dedicada à assistência de inteligência artificial para classificação.
-- **Dinâmica de Navegação:** Pode ser acessada pelo menu lateral ou pelo botão de ação rápida no dashboard do professor. Após preencher os dados e clicar no botão de submissão, a tela deve salvar a questão e redirecionar o usuário para o "Banco de Questões" ou limpar o formulário para um novo cadastro.
+- **Dinâmica de Navegação:** Pode ser acessada pelo menu lateral ou pelo botão de ação rápida no dashboard do professor (Figura 4). Após preencher os dados e clicar no botão de submissão, a tela deve salvar a questão e redirecionar o usuário para o "Banco de Questões" ou limpar o formulário para um novo cadastro.
 - **Requisitos Funcionais Atendidos:** **RF01 - Interface de Cadastro Manual e Upload**; **RF02 - Classificação Assistida por IA**; **RF03 - Revisão Humana**.
 ![Cadastrar questão](imagens/prototipos/Cadastrar%20questão.jpeg)
 *Tela de cadastro de questões*
 
 #### Tela de Criar Listas
 - **Objetivo:** Interface para agrupar questões previamente cadastradas e transformá-las em avaliações ou exercícios direcionados a grupos específicos de alunos.
-- **Dinâmica de Navegação:** Acessada pelo menu lateral. O professor preenche o nome da lista, seleciona a turma e visualiza as questões adicionadas. Pode abrir uma sub-tela chamando o "Banco de Questões" para adicionar mais itens. Ao clicar em "Gerar Lista", retorna ao dashboard ou à área de gestão de turmas.
+- **Dinâmica de Navegação:** Acessada pelo menu lateral. O professor preenche o nome da lista (Figura 5), seleciona a turma e visualiza as questões adicionadas. Pode abrir uma sub-tela chamando o "Banco de Questões" para adicionar mais itens. Ao clicar em "Gerar Lista", retorna ao dashboard ou à área de gestão de turmas.
 - **Requisitos Funcionais Atendidos:** **RF06 - Gestão de Turmas**; **RF07 - Criação de Listas de Exercícios**.
 ![Criar Lista](imagens/prototipos/Criar%20Lista.jpeg)
 *Tela de criar listas*
 
 #### Tela do Banco de Questões
 - **Objetivo:** Funcionar como um repositório pesquisável e filtrável de todo o acervo da instituição. Permite encontrar questões específicas por disciplina, macro/micro área e dificuldade.
-- **Dinâmica de Navegação:** Acessada pelo menu lateral do perfil professor. Serve como tela de consulta e também atua em conjunto com a tela de "Criar Lista". Clicar em uma questão específica pode abrir uma tela de edição (CRUD) ou exibir seus detalhes.
+- **Dinâmica de Navegação:** Acessada pelo menu lateral do perfil professor. Serve como tela de consulta (Figura 6) e também atua em conjunto com a tela de "Criar Lista". Clicar em uma questão específica pode abrir uma tela de edição (CRUD) ou exibir seus detalhes.
 - **Requisitos Funcionais Atendidos:** **RF04 - Gestão de Questões**.
 ![Banco de questões](imagens/prototipos/Banco%20de%20questões.jpeg)
 *Tela do banco de questões*
 
 ### Tela de Gerenciamento de Frequência
 - **Objetivo:** Fornecer uma interface para que o professor realize a chamada (registro de presenças e faltas) dos alunos de uma turma em uma data específica. Apresenta indicadores de status (presentes, ausentes e não marcados) e opções rápidas de preenchimento, como "Marcar Todos Presentes".
-- **Dinâmica de Navegação:** Acessada através do menu lateral "Frequência" no ambiente do professor. O professor seleciona a turma e a data nos filtros superiores, marca o status individual de cada aluno na lista abaixo e pode alternar para a aba "Histórico" para consultar chamadas anteriores.
+- **Dinâmica de Navegação:** Acessada através do menu lateral "Frequência" no ambiente do professor. O professor seleciona a turma e a data nos filtros superiores (Figura 7), marca o status individual de cada aluno na lista abaixo e pode alternar para a aba "Histórico" para consultar chamadas anteriores.
 - **Requisitos Funcionais Atendidos:** **RF12 - Gerenciamento de Frequência**.
 ![Gerenciamento Frequência](imagens/prototipos/Gerenciamento%20Frequência.jpeg)
 *Tela de gerenciamento de frequência*
 
 #### Dashboard do Aluno
 - **Objetivo:** Apresentar a área de estudos e autoconhecimento do aluno. Exibe a média geral, exercícios resolvidos, tempo de estudo, melhor disciplina e gráficos de evolução. Abaixo, lista as atividades pendentes a serem feitas.
-- **Dinâmica de Navegação:** Tela inicial do aluno após o login. A partir das "Listas de Exercícios Disponíveis" na parte inferior, o aluno clica em "Continuar", o que o redireciona diretamente para a tela de "Resolução de Exercício".
+- **Dinâmica de Navegação:** Tela inicial do aluno após o login (Figura 8). A partir das "Listas de Exercícios Disponíveis" na parte inferior, o aluno clica em "Continuar", o que o redireciona diretamente para a tela de "Resolução de Exercício".
 - **Requisitos Funcionais Atendidos:** **RF09 - Dashboard de Autodesempenho**; **RF13 - Consulta de Frequência**.
 ![Dashboard aluno](imagens/prototipos/Dashboard%20aluno.jpeg)
 *Dashboard do aluno*
 
 #### Tela de Resolução do Exercício
 - **Objetivo:** É o ambiente de estudo. Foca inteiramente na leitura do enunciado da questão e seleção da alternativa correta pelo aluno, com indicativos de progresso.
-- **Dinâmica de Navegação:** Chamada a partir do dashboard do aluno. O usuário navega internamente usando os botões "Anterior" e "Próxima". Ao finalizar a última questão, submete as respostas e é redirecionado ao dashboard ou à tela de gabarito.
+- **Dinâmica de Navegação:** Chamada a partir do dashboard do aluno (Figura 9). O usuário navega internamente usando os botões "Anterior" e "Próxima". Ao finalizar a última questão, submete as respostas e é redirecionado ao dashboard ou à tela de gabarito.
 - **Requisitos Funcionais Atendidos:** **RF08 - Resolução de Exercícios**.
 ![Resolução exercicio](imagens/prototipos/Resolução%20exercicio.jpeg)
 *Tela de resolução do exercício*
 
 ### Painel Administrativo
 - **Objetivo:** Permitir que a coordenação gerencie os acessos ao sistema e a estrutura curricular da plataforma. A tela oferece controles para adicionar, visualizar, ativar, inativar ou excluir perfis de usuários, além de possuir uma aba dedicada à gestão das disciplinas.
-- **Dinâmica de Navegação:** É a tela inicial acessada após o login com o perfil de administrador. O usuário interage internamente alternando entre as abas "Usuários" e "Disciplinas" para realizar as operações de cadastro e manutenção correspondentes.
+- **Dinâmica de Navegação:** É a tela inicial acessada após o login com o perfil de administrador (Figura 10). O usuário interage internamente alternando entre as abas "Usuários" e "Disciplinas" para realizar as operações de cadastro e manutenção correspondentes.
 - **Requisitos Funcionais Atendidos:** **RF11 - Gestão Administrativa de Perfis e Estrutura**.
 ![Painel Administrativo](imagens/prototipos/Painel%20Admin.jpeg)
 *Painel Administrativo*
