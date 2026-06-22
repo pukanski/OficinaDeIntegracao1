@@ -1,9 +1,11 @@
-﻿namespace AlunoAPI.DTOs
+﻿using System;
+
+namespace AlunoAPI.DTOs
 {
     public class AlunoResponseDTO
     {
-    
         public long Id { get; set; }
+        public Guid AuthId { get; set; }
         public string PrimeiroNome { get; set; }
         public string UltimoNome { get; set; }
         public string Email { get; set; }

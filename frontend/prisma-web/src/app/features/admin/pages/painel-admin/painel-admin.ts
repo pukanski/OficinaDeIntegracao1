@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TurmaService } from '../../services/turma.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 
-interface UsuarioDTO { id: string; nome: string; email: string; tipo: 'Professor' | 'Aluno'; status: 'Ativo' | 'Inativo'; }
+interface UsuarioDTO { id: string | number; nome: string; email: string; tipo: 'Professor' | 'Aluno'; status: 'Ativo' | 'Inativo'; }
 interface DisciplinaDTO { id: string; nome: string; macroArea: string; }
 
 @Component({
@@ -14,33 +15,29 @@ interface DisciplinaDTO { id: string; nome: string; macroArea: string; }
 })
 export class PainelAdminComponent implements OnInit {
   abaAtual: 'usuarios' | 'disciplinas' = 'usuarios';
-
   usuarioForm!: FormGroup;
   disciplinaForm!: FormGroup;
 
-  // Mocks espelhando o payload da API
-  usuarios: UsuarioDTO[] = [
-    { id: 'u1', nome: 'João Silva', email: 'joao@example.com', tipo: 'Professor', status: 'Ativo' },
-    { id: 'u2', nome: 'Maria Santos', email: 'maria@example.com', tipo: 'Aluno', status: 'Ativo' },
-    { id: 'u3', nome: 'Carlos Oliveira', email: 'carlos@example.com', tipo: 'Professor', status: 'Inativo' }
-  ];
+  usuarios: UsuarioDTO[] = [];
+  disciplinas: DisciplinaDTO[] = [];
 
-  disciplinas: DisciplinaDTO[] = [
-    { id: 'd1', nome: 'Matemática', macroArea: 'Ciências da Natureza' },
-    { id: 'd2', nome: 'Física', macroArea: 'Ciências da Natureza' }
-  ];
+  carregando = false;
+  mensagem = '';
+  erro = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private turmaService: TurmaService
-  ) { }
+  private apiUrl = `${environment.gatewayUrl}/api/Admin`;
+
+  constructor(private fb: FormBuilder, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.usuarioForm = this.fb.group({
       nome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
-      tipo: ['Aluno', Validators.required]
+      tipo: ['Aluno', Validators.required],
+      ra: [''],
+      siape: [''],
+      disciplina: ['']
     });
 
     this.disciplinaForm = this.fb.group({
@@ -48,62 +45,88 @@ export class PainelAdminComponent implements OnInit {
       macroArea: ['', Validators.required]
     });
 
-    console.log('Iniciando teste de conexão com o Gateway...');
-    this.turmaService.getTurmas().subscribe({
-      next: (dados) => {
-        console.log(' SUCESSO: O Front-end perfurou o Gateway e chegou ao Banco de Dados.');
-        console.log('Payload retornado:', dados);
+    this.carregarUsuarios();
+  }
+
+  carregarUsuarios(): void {
+    this.http.get<any>(`${this.apiUrl}/usuarios`).subscribe({
+      next: (data) => {
+        const profs: UsuarioDTO[] = (data.professores || []).map((p: any) => ({
+          id: p.id, nome: p.nome, email: p.email, tipo: 'Professor', status: 'Ativo'
+        }));
+        const alunos: UsuarioDTO[] = (data.alunos || []).map((a: any) => ({
+          id: a.id, nome: a.nome, email: a.email, tipo: 'Aluno', status: 'Ativo'
+        }));
+        this.usuarios = [...profs, ...alunos];
       },
-      error: (erro) => {
-        console.error('FALHA ESTRUTURAL: A conexão foi rejeitada.');
-        console.error('Motivo da falha:', erro);
-      }
+      error: () => { this.usuarios = []; }
     });
   }
 
-  // --- Ações de Usuários ---
   adicionarUsuario(): void {
     if (this.usuarioForm.invalid) {
       this.usuarioForm.markAllAsTouched();
       return;
     }
-    const payload = this.usuarioForm.value;
-    console.log('POST /api/admin/usuarios ->', payload);
-    alert('Usuário criado. Verifique o payload no console.');
-    this.usuarioForm.reset({ tipo: 'Aluno' });
+
+    this.carregando = true;
+    this.erro = '';
+    this.mensagem = '';
+
+    const raw = this.usuarioForm.value;
+    const nomes = (raw.nome as string).trim().split(' ');
+
+    const payload = {
+      email: raw.email,
+      senha: raw.senha,
+      primeiroNome: nomes[0],
+      ultimoNome: nomes.slice(1).join(' ') || nomes[0],
+      tipo: raw.tipo,
+      ra: raw.tipo === 'Aluno' ? raw.ra : null,
+      siape: raw.tipo === 'Professor' ? raw.siape : null,
+      disciplina: raw.tipo === 'Professor' ? raw.disciplina : null
+    };
+
+    this.http.post(`${this.apiUrl}/criar-usuario`, payload).subscribe({
+      next: () => {
+        this.mensagem = `${raw.tipo} criado com sucesso!`;
+        this.usuarioForm.reset({ tipo: 'Aluno' });
+        this.carregarUsuarios();
+        this.carregando = false;
+      },
+      error: (err) => {
+        this.erro = err.error?.error || 'Erro ao criar usuário.';
+        this.carregando = false;
+      }
+    });
   }
 
-  alternarStatusUsuario(id: string): void {
+  alternarStatusUsuario(id: string | number): void {
     const user = this.usuarios.find(u => u.id === id);
     if (user) {
       user.status = user.status === 'Ativo' ? 'Inativo' : 'Ativo';
-      console.log(`PUT /api/admin/usuarios/${id}/status ->`, { status: user.status });
     }
   }
 
-  excluirUsuario(id: string): void {
+  excluirUsuario(id: string | number): void {
     if (confirm('Tem certeza que deseja excluir este usuário?')) {
       this.usuarios = this.usuarios.filter(u => u.id !== id);
-      console.log(`DELETE /api/admin/usuarios/${id}`);
     }
   }
 
-  // --- Ações de Disciplinas ---
   adicionarDisciplina(): void {
     if (this.disciplinaForm.invalid) {
       this.disciplinaForm.markAllAsTouched();
       return;
     }
-    const payload = this.disciplinaForm.value;
-    console.log('POST /api/admin/disciplinas ->', payload);
-    alert('Disciplina adicionada à árvore. Verifique o console.');
+    const val = this.disciplinaForm.value;
+    this.disciplinas.push({ id: Date.now().toString(), nome: val.nome, macroArea: val.macroArea });
     this.disciplinaForm.reset();
   }
 
   excluirDisciplina(id: string): void {
-    if (confirm('Aviso: Excluir uma disciplina pode impactar questões existentes. Deseja continuar?')) {
+    if (confirm('Deseja excluir esta disciplina?')) {
       this.disciplinas = this.disciplinas.filter(d => d.id !== id);
-      console.log(`DELETE /api/admin/disciplinas/${id}`);
     }
   }
 }

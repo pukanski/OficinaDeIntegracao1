@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService, UserRole } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +13,14 @@ import { AuthService } from '../../../../core/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  perfilSelecionado: 'aluno' | 'professor' | 'admin' = 'professor';
+  perfilSelecionado: UserRole = 'professor';
+  carregando = false;
+  erro = '';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService // <-- Injeção do motor real do Supabase
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -28,40 +30,40 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  alterarPerfil(perfil: 'aluno' | 'professor' | 'admin'): void {
+  alterarPerfil(perfil: UserRole): void {
     this.perfilSelecionado = perfil;
+    this.erro = '';
     this.loginForm.reset();
   }
 
-  // O método agora é assíncrono para aguardar a resposta da nuvem
   async onSubmit(): Promise<void> {
-    if (this.loginForm.valid) {
-      const email = this.loginForm.value.email;
-      const senha = this.loginForm.value.senha;
-
-      try {
-        console.log('Iniciando handshake com o Supabase...');
-
-        // 1. O disparo real para a nuvem
-        await this.authService.login(email, senha);
-        console.log('✅ Token JWT recebido e ancorado no navegador.');
-
-        // 2. O roteamento tático provisório
-        if (this.perfilSelecionado === 'professor') {
-          this.router.navigate(['/professor/dashboard']);
-        } else if (this.perfilSelecionado === 'aluno') {
-          this.router.navigate(['/aluno/dashboard']);
-        } else if (this.perfilSelecionado === 'admin') {
-          this.router.navigate(['/admin/painel']);
-        }
-
-      } catch (error: any) {
-        console.error('❌ Falha na barreira de entrada:', error.message);
-        alert('Credenciais rejeitadas. Verifique se este usuário existe no painel do Supabase.');
-      }
-
-    } else {
+    if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.carregando = true;
+    this.erro = '';
+
+    try {
+      const role = await this.authService.login(
+        this.loginForm.value.email,
+        this.loginForm.value.senha,
+        this.perfilSelecionado
+      );
+
+      if (role === 'professor') {
+        this.router.navigate(['/professor/dashboard']);
+      } else if (role === 'aluno') {
+        this.router.navigate(['/aluno/dashboard']);
+      } else {
+        this.router.navigate(['/admin/painel']);
+      }
+    } catch (error: any) {
+      this.erro = 'Credenciais inválidas. Verifique seu e-mail e senha.';
+      console.error(error);
+    } finally {
+      this.carregando = false;
     }
   }
 }

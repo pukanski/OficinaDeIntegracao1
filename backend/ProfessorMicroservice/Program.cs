@@ -12,9 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 1. TRAVA DE SEGURANÇA E JWT (Supabase OIDC)
 var supabaseUrl = builder.Configuration["Supabase:Url"]
                   ?? throw new InvalidOperationException("Supabase URL não configurado. O contêiner não pode iniciar.");
+
+var supabaseServiceKey = builder.Configuration["Supabase:ServiceKey"]
+                  ?? throw new InvalidOperationException("Supabase ServiceKey não configurado.");
+
+builder.Services.AddHttpClient();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -34,21 +38,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// 2. CONEXÃO COM O BANCO DE DADOS (PostgreSQL / Supabase)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Supabase")));
 
-// 3. INJEÇÃO DE DEPENDÊNCIAS
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 builder.Services.AddScoped<IProfessorService, ProfessorService>();
 
 var app = builder.Build();
 
-// 4. MIDDLEWARES DA SUA EQUIPE
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// IMPORTANTE: HttpsRedirection REMOVIDO para não quebrar o tráfego interno do Docker.
 app.UseAuthentication();
 app.UseAuthorization();
 

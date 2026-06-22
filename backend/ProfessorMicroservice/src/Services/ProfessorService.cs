@@ -18,9 +18,9 @@ namespace ProfessorAPI.src.Services
         {
 
             //validações de unicidade
-            if (await _repository.ExisteSiapeAsync(professorRequest.siape))
+            if (await _repository.ExisteSiapeAsync(professorRequest.Siape))
                 throw new InvalidOperationException("SIAPE já cadastrado.");
-            if (await _repository.ExisteEmailAsync(professorRequest.email))
+            if (await _repository.ExisteEmailAsync(professorRequest.Email))
                 throw new InvalidOperationException("EMAIL já cadastrado.");
 
             var professor = ProfessorMapper.ToModel(professorRequest);
@@ -50,10 +50,10 @@ namespace ProfessorAPI.src.Services
             if (professor == null) throw new KeyNotFoundException($"Professor com ID {id} não encontrado.");
 
             //validações de unicidade
-            if (await _repository.ExisteSiapeAsync(professorRequest.siape, id))
+            if (await _repository.ExisteSiapeAsync(professorRequest.Siape, id))
                 throw new InvalidOperationException("SIAPE já cadastrado.");
 
-            if (await _repository.ExisteEmailAsync(professorRequest.email, id))
+            if (await _repository.ExisteEmailAsync(professorRequest.Email, id))
                 throw new InvalidOperationException("EMAIL já cadastrado.");
 
             var atualizadoProfessor = ProfessorMapper.ToModel(professorRequest);

@@ -7,6 +7,9 @@ namespace AlunoAPI.Model
     [Table("Aluno")]
     public class Aluno : Base.BaseEntity
     {
+        [Required]
+        [Column("AuthId")]
+        public Guid AuthId { get; set; }
         [Required(ErrorMessage = "O primeiro nome deve ser informado obrigatoriamente.")]
         [MaxLength(80)]
         public string PrimeiroNome { get; set; }
