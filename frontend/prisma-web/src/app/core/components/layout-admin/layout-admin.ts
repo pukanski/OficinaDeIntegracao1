@@ -1,11 +1,19 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-layout-admin',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './layout-admin.html'
 })
-export class LayoutAdminComponent { }
+export class LayoutAdminComponent {
+
+  constructor(private authService: AuthService, private router: Router) { }
+
+  sair(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+}

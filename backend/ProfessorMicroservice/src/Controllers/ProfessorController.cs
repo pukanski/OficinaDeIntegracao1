@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProfessorAPI.src.DTOs;
 using ProfessorAPI.src.Model;
 using ProfessorAPI.src.Services;
+using ProfessorAPI.src.Data;
+using ProfessorAPI.src.Mappers;
 
 namespace ProfessorAPI.src.Controllers
 {
@@ -13,10 +16,12 @@ namespace ProfessorAPI.src.Controllers
     public class ProfessorController : ControllerBase
     {
         private readonly IProfessorService _service;
+        private readonly AppDbContext _context;
 
-        public ProfessorController(IProfessorService service)
+        public ProfessorController(IProfessorService service, AppDbContext context)
         {
             _service = service;
+            _context = context;
         }
 
 
@@ -101,6 +106,21 @@ namespace ProfessorAPI.src.Controllers
             var deletado = await _service.DeleteProfessorAsync(id);
             if (!deletado) return NotFound(new { mensagem = "Professor não encontrado." });
             return NoContent();
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<ActionResult<ProfessorResponseDTO>> GetMe()
+        {
+            var authIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(authIdClaim)) return Unauthorized("Token inválido ou sem sub claim.");
+
+            var authId = Guid.Parse(authIdClaim);
+            var professor = await _context.Professores.FirstOrDefaultAsync(p => p.AuthId == authId);
+
+            if (professor == null) return NotFound("Perfil de professor não encontrado no banco de dados.");
+
+            return Ok(ProfessorMapper.ToResponse(professor));
         }
     }
 }

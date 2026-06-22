@@ -1,8 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { firstValueFrom } from 'rxjs';
 
 export type UserRole = 'professor' | 'aluno' | 'admin';
 
@@ -30,18 +29,20 @@ export class AuthService {
         if (error) throw error;
         if (!data.session) throw new Error('Sessão não criada.');
 
-        this._currentUser = data.user;
-        localStorage.setItem('jwt_token', data.session.access_token);
-
-        // Admin é identificado pelo perfil selecionado (não tem tabela própria)
         if (perfilSelecionado === 'admin') {
+            if (email !== 'admin@oficina.com') {
+                this.supabase.auth.signOut();
+                throw new Error('Acesso negado: Este email não tem privilégios de administrador.');
+            }
+            this._currentUser = data.user;
             this._role = 'admin';
+            localStorage.setItem('jwt_token', data.session.access_token);
             localStorage.setItem('user_role', 'admin');
             return 'admin';
         }
 
-        // Para professor e aluno, confirma pelo perfil selecionado
-        // (o admin criou o usuário com o tipo correto)
+        this._currentUser = data.user;
+        localStorage.setItem('jwt_token', data.session.access_token);
         this._role = perfilSelecionado;
         localStorage.setItem('user_role', perfilSelecionado);
         localStorage.setItem('user_id', data.user.id);

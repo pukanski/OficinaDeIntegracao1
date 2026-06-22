@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
 
 interface UsuarioDTO { id: string | number; nome: string; email: string; tipo: 'Professor' | 'Aluno'; status: 'Ativo' | 'Inativo'; }
@@ -27,7 +27,7 @@ export class PainelAdminComponent implements OnInit {
 
   private apiUrl = `${environment.gatewayUrl}/api/Admin`;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  constructor(private fb: FormBuilder, private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.usuarioForm = this.fb.group({
@@ -49,17 +49,33 @@ export class PainelAdminComponent implements OnInit {
   }
 
   carregarUsuarios(): void {
-    this.http.get<any>(`${this.apiUrl}/usuarios`).subscribe({
+    this.http.get<any>(`${environment.gatewayUrl}/api/Admin/usuarios`).subscribe({
       next: (data) => {
         const profs: UsuarioDTO[] = (data.professores || []).map((p: any) => ({
-          id: p.id, nome: p.nome, email: p.email, tipo: 'Professor', status: 'Ativo'
+          id: p.authId || p.id,
+          nome: p.primeiroNome ? `${p.primeiroNome} ${p.ultimoNome}` : p.nome,
+          email: p.email,
+          tipo: 'Professor',
+          status: 'Ativo'
         }));
+
         const alunos: UsuarioDTO[] = (data.alunos || []).map((a: any) => ({
-          id: a.id, nome: a.nome, email: a.email, tipo: 'Aluno', status: 'Ativo'
+          id: a.authId || a.id,
+          nome: a.primeiroNome ? `${a.primeiroNome} ${a.ultimoNome}` : a.nome,
+          email: a.email,
+          tipo: 'Aluno',
+          status: 'Ativo'
         }));
+
         this.usuarios = [...profs, ...alunos];
+
+        this.cdr.detectChanges();
       },
-      error: () => { this.usuarios = []; }
+      error: (err) => {
+        console.error('Erro estrutural ao carregar usuários:', err);
+        this.usuarios = [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -69,49 +85,56 @@ export class PainelAdminComponent implements OnInit {
       return;
     }
 
-    this.carregando = true;
-    this.erro = '';
-    this.mensagem = '';
-
-    const raw = this.usuarioForm.value;
-    const nomes = (raw.nome as string).trim().split(' ');
+    const rawValue = this.usuarioForm.value;
+    const nomes = rawValue.nome.split(' ');
 
     const payload = {
-      email: raw.email,
-      senha: raw.senha,
+      email: rawValue.email,
+      senha: rawValue.senha,
       primeiroNome: nomes[0],
-      ultimoNome: nomes.slice(1).join(' ') || nomes[0],
-      tipo: raw.tipo,
-      ra: raw.tipo === 'Aluno' ? raw.ra : null,
-      siape: raw.tipo === 'Professor' ? raw.siape : null,
-      disciplina: raw.tipo === 'Professor' ? raw.disciplina : null
+      ultimoNome: nomes.slice(1).join(' ') || ' ',
+      tipo: rawValue.tipo,
+      ra: rawValue.tipo === 'Aluno' ? rawValue.ra : null,
+      siape: rawValue.tipo === 'Professor' ? rawValue.siape : null,
+      disciplina: rawValue.tipo === 'Professor' ? rawValue.disciplina : null
     };
 
-    this.http.post(`${this.apiUrl}/criar-usuario`, payload).subscribe({
+    this.http.post(`${environment.gatewayUrl}/api/Admin/criar-usuario`, payload).subscribe({
       next: () => {
-        this.mensagem = `${raw.tipo} criado com sucesso!`;
+        alert('Usuário criado com sucesso no Supabase e no PostgreSQL!');
         this.usuarioForm.reset({ tipo: 'Aluno' });
-        this.carregarUsuarios();
-        this.carregando = false;
       },
       error: (err) => {
-        this.erro = err.error?.error || 'Erro ao criar usuário.';
-        this.carregando = false;
+        console.error('Erro ao criar usuário', err);
+        alert('Falha ao criar usuário. Verifique o console.');
       }
     });
   }
 
-  alternarStatusUsuario(id: string | number): void {
-    const user = this.usuarios.find(u => u.id === id);
-    if (user) {
-      user.status = user.status === 'Ativo' ? 'Inativo' : 'Ativo';
-    }
+  prepararEdicao(user: any): void {
+    // Esse método vai pegar os dados da linha clicada e jogar para cima no formulário
+    alert(`A lógica de edição para ${user.nome} será montada aqui. Precisaremos transformar o formulário de "Adicionar" para "Atualizar".`);
+    console.log('Dados para edição:', user);
   }
 
-  excluirUsuario(id: string | number): void {
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
-      this.usuarios = this.usuarios.filter(u => u.id !== id);
+  excluirUsuario(user: any): void {
+    if (!confirm(`Alerta Crítico: Tem certeza que deseja excluir permanentemente o ${user.tipo} ${user.nome}? Isso pode corromper históricos vinculados.`)) {
+      return;
     }
+
+    // O C# espera o ID numérico (long), garanta que está passando a propriedade correta
+    const endpoint = user.tipo === 'Aluno' ? `/api/Aluno/${user.id}` : `/api/Professor/${user.id}`;
+
+    this.http.delete(`${environment.gatewayUrl}${endpoint}`).subscribe({
+      next: () => {
+        alert('Usuário aniquilado do banco de dados local com sucesso.');
+        this.carregarUsuarios(); // Atualiza a tabela imediatamente
+      },
+      error: (err) => {
+        console.error('Falha de exclusão estrutural:', err);
+        alert('Falha ao excluir. O usuário possui dependências (listas, respostas) amarradas a ele no banco de dados.');
+      }
+    });
   }
 
   adicionarDisciplina(): void {

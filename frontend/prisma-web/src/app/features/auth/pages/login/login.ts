@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, UserRole } from '../../../../core/services/auth.service';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +16,13 @@ import { AuthService, UserRole } from '../../../../core/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  perfilSelecionado: UserRole = 'professor';
-  carregando = false;
-  erro = '';
+  perfilSelecionado: 'aluno' | 'professor' | 'admin' = 'professor';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -30,9 +32,8 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  alterarPerfil(perfil: UserRole): void {
+  alterarPerfil(perfil: 'aluno' | 'professor' | 'admin'): void {
     this.perfilSelecionado = perfil;
-    this.erro = '';
     this.loginForm.reset();
   }
 
@@ -42,28 +43,34 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.carregando = true;
-    this.erro = '';
+    const { email, senha } = this.loginForm.value;
 
     try {
-      const role = await this.authService.login(
-        this.loginForm.value.email,
-        this.loginForm.value.senha,
-        this.perfilSelecionado
-      );
+      await this.authService.login(email, senha, this.perfilSelecionado);
 
-      if (role === 'professor') {
-        this.router.navigate(['/professor/dashboard']);
-      } else if (role === 'aluno') {
-        this.router.navigate(['/aluno/dashboard']);
-      } else {
+      if (this.perfilSelecionado === 'admin') {
         this.router.navigate(['/admin/painel']);
+        return;
       }
+
+      const endpoint = this.perfilSelecionado === 'aluno' ? '/api/Aluno/me' : '/api/Professor/me';
+
+      await firstValueFrom(this.http.get(`${environment.gatewayUrl}${endpoint}`));
+
+      const rotaDash = this.perfilSelecionado === 'aluno' ? '/aluno/dashboard' : '/professor/dashboard';
+      this.router.navigate([rotaDash]);
+
     } catch (error: any) {
-      this.erro = 'Credenciais inválidas. Verifique seu e-mail e senha.';
-      console.error(error);
-    } finally {
-      this.carregando = false;
+      console.error('Falha no login ou validação de perfil:', error);
+      this.authService.logout();
+
+      if (error.message && error.message.includes('Acesso negado')) {
+        alert(error.message);
+      } else if (error.status === 404) {
+        alert(`O usuário não está cadastrado como ${this.perfilSelecionado} no banco de dados.`);
+      } else {
+        alert('Credenciais rejeitadas pelo Supabase.');
+      }
     }
   }
 }

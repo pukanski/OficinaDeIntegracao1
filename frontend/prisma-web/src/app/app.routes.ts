@@ -1,18 +1,19 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './features/auth/pages/login/login';
-import { LayoutComponent } from './core/components/layout/layout';
+import { LayoutAdminComponent } from './core/components/layout-admin/layout-admin';
 import { LayoutAlunoComponent } from './core/components/layout-aluno/layout-aluno';
-import { DashboardProfessorComponent } from './features/professor/pages/dashboard-professor/dashboard-professor';
+import { LayoutComponent } from './core/components/layout/layout';
+import { authGuard } from './core/guards/auth.guard';
+import { PainelAdminComponent } from './features/admin/pages/painel-admin/painel-admin';
+import { DashboardAlunoComponent } from './features/aluno/pages/dashboard-aluno/dashboard-aluno';
+import { GabaritoListaComponent } from './features/aluno/pages/gabarito-lista/gabarito-lista';
+import { MeusExerciciosComponent } from './features/aluno/pages/meus-exercicios/meus-exercicios';
+import { ResolucaoExercicioComponent } from './features/aluno/pages/resolucao-exercicio/resolucao-exercicio';
+import { LoginComponent } from './features/auth/pages/login/login';
 import { BancoQuestoesComponent } from './features/professor/pages/banco-questoes/banco-questoes';
 import { CadastrarQuestaoComponent } from './features/professor/pages/cadastrar-questao/cadastrar-questao';
 import { CriarListaComponent } from './features/professor/pages/criar-lista/criar-lista';
+import { DashboardProfessorComponent } from './features/professor/pages/dashboard-professor/dashboard-professor';
 import { FrequenciaComponent } from './features/professor/pages/frequencia/frequencia';
-import { DashboardAlunoComponent } from './features/aluno/pages/dashboard-aluno/dashboard-aluno';
-import { MeusExerciciosComponent } from './features/aluno/pages/meus-exercicios/meus-exercicios';
-import { ResolucaoExercicioComponent } from './features/aluno/pages/resolucao-exercicio/resolucao-exercicio';
-import { GabaritoListaComponent } from './features/aluno/pages/gabarito-lista/gabarito-lista';
-import { LayoutAdminComponent } from './core/components/layout-admin/layout-admin';
-import { PainelAdminComponent } from './features/admin/pages/painel-admin/painel-admin';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -22,6 +23,8 @@ export const routes: Routes = [
   {
     path: 'professor',
     component: LayoutComponent,
+    canActivate: [authGuard],
+    data: { role: 'professor' },
     children: [
       { path: 'dashboard', component: DashboardProfessorComponent },
       { path: 'banco-questoes', component: BancoQuestoesComponent },
@@ -35,6 +38,8 @@ export const routes: Routes = [
   {
     path: 'aluno',
     component: LayoutAlunoComponent,
+    canActivate: [authGuard],
+    data: { role: 'aluno' },
     children: [
       { path: 'dashboard', component: DashboardAlunoComponent },
       { path: 'exercicios', component: MeusExerciciosComponent },
@@ -47,6 +52,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: LayoutAdminComponent,
+    canActivate: [authGuard],
+    data: { role: 'admin' },
     children: [
       { path: 'painel', component: PainelAdminComponent }
     ]

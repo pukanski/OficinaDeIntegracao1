@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -7,4 +8,11 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule], // Necessário para o router-outlet funcionar
   templateUrl: './layout.html'
 })
-export class LayoutComponent {}
+export class LayoutComponent {
+  constructor(private authService: AuthService, private router: Router) { }
+
+  sair(): void {
+    this.authService.logout(); // Limpa o localStorage e desloga do Supabase
+    this.router.navigate(['/login']); // Chuta para a tela de login
+  }
+}
