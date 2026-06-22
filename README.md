@@ -267,12 +267,12 @@ A estrutura lógica do sistema e as associações entre os módulos de Usuário,
 * RF01/RF02/RF03: 
 O fluxo de cadastro de questões, que integra a sugestão da IA com a validação humana, é detalhado na Figura 13.
 ![DA - RF01,02,03](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF01;02;03.png)
-*Diagrama de Classes detalhando a estrutura lógica das entidades e as associações entre os módulos do sistema.*
+*Fluxo de cadastro de questões assistido pela IA, demonstrando as etapas de sugestão e validação humana.*
   
 * RF04: 
 A operação de manutenção do banco de questões (CRUD), abrangendo consulta, edição e desativação, está ilustrada na Figura 14.
 ![DA - RF04](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF04.png)
-*Fluxo de cadastro de questões assistido pela IA, demonstrando as etapas de sugestão e validação humana.*
+*Fluxo de gestão de questões (CRUD), abrangendo a consulta, edição e desativação de itens do banco.*
 
 * RF06: 
 A gestão de turmas, detalhando a criação de grupos e a alocação de alunos, segue o fluxo definido na Figura 15.
