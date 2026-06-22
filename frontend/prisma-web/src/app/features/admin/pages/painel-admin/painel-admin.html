@@ -1,0 +1,152 @@
+<div class="p-8 max-w-6xl mx-auto w-full space-y-6 pb-20">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-slate-800">Painel Administrativo</h1>
+        <p class="text-slate-500 text-sm mt-1">Gerenciamento de usuários e disciplinas</p>
+    </div>
+
+    <div class="flex space-x-2 mb-6 bg-slate-50 p-1 rounded-lg w-fit border border-slate-200">
+        <button (click)="abaAtual = 'usuarios'"
+            [ngClass]="abaAtual === 'usuarios' ? 'bg-white shadow-sm text-slate-800 font-bold' : 'text-slate-500 hover:text-slate-700'"
+            class="px-8 py-2 rounded-md transition-all text-sm">
+            Usuários
+        </button>
+        <button (click)="abaAtual = 'disciplinas'"
+            [ngClass]="abaAtual === 'disciplinas' ? 'bg-white shadow-sm text-slate-800 font-bold' : 'text-slate-500 hover:text-slate-700'"
+            class="px-8 py-2 rounded-md transition-all text-sm">
+            Disciplinas
+        </button>
+    </div>
+
+    <div *ngIf="abaAtual === 'usuarios'" class="space-y-6">
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-800 mb-4">Adicionar Novo Usuário</h3>
+            <form [formGroup]="usuarioForm" (ngSubmit)="adicionarUsuario()">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Nome</label>
+                        <input type="text" formControlName="nome" placeholder="Nome completo"
+                            class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                        <input type="email" formControlName="email" placeholder="email@example.com"
+                            class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Senha</label>
+                        <input type="password" formControlName="senha" placeholder="••••••••"
+                            class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Tipo</label>
+                        <select formControlName="tipo"
+                            class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500 bg-white">
+                            <option value="Aluno">Aluno</option>
+                            <option value="Professor">Professor</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors">
+                    + Adicionar Usuário
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800">Usuários Cadastrados</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 border-b border-slate-100 font-bold">
+                        <tr>
+                            <th class="p-4">Nome</th>
+                            <th class="p-4">Email</th>
+                            <th class="p-4 text-center">Tipo</th>
+                            <th class="p-4 text-center">Status</th>
+                            <th class="p-4 text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr *ngFor="let user of usuarios" class="hover:bg-slate-50">
+                            <td class="p-4 font-medium text-slate-800">{{ user.nome }}</td>
+                            <td class="p-4">{{ user.email }}</td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                                    [ngClass]="user.tipo === 'Professor' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'">
+                                    {{ user.tipo }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                                    [ngClass]="user.status === 'Ativo' ? 'bg-green-50 text-green-600 border border-green-200' : 'bg-red-50 text-red-600 border border-red-200'">
+                                    {{ user.status }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center space-x-2">
+                                <button (click)="alternarStatusUsuario(user.id)"
+                                    class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-xs font-bold transition-colors">
+                                    {{ user.status === 'Ativo' ? 'Desativar' : 'Ativar' }}
+                                </button>
+                                <button (click)="excluirUsuario(user.id)"
+                                    class="px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100 border border-red-200 transition-colors"
+                                    title="Excluir">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="abaAtual === 'disciplinas'" class="space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-800 mb-4">Adicionar à Árvore de Disciplinas</h3>
+            <form [formGroup]="disciplinaForm" (ngSubmit)="adicionarDisciplina()"
+                class="flex flex-col md:flex-row gap-4 items-end">
+                <div class="flex-1 w-full">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Nome da Matéria (Micro)</label>
+                    <input type="text" formControlName="nome" placeholder="Ex: Equações Quadráticas"
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500">
+                </div>
+                <div class="flex-1 w-full">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Macro Área</label>
+                    <input type="text" formControlName="macroArea" placeholder="Ex: Matemática"
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-blue-500">
+                </div>
+                <button type="submit"
+                    class="w-full md:w-auto bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                    Adicionar
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left text-sm text-slate-600">
+                <thead class="bg-slate-50 border-b border-slate-100 font-bold">
+                    <tr>
+                        <th class="p-4">Matéria (Micro)</th>
+                        <th class="p-4">Macro Área</th>
+                        <th class="p-4 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr *ngFor="let disc of disciplinas" class="hover:bg-slate-50">
+                        <td class="p-4 font-medium text-slate-800">{{ disc.nome }}</td>
+                        <td class="p-4"><span class="bg-slate-100 px-2 py-1 rounded text-xs font-bold">{{ disc.macroArea
+                                }}</span></td>
+                        <td class="p-4 text-center">
+                            <button (click)="excluirDisciplina(disc.id)"
+                                class="text-red-500 hover:text-red-700 font-bold text-xs">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

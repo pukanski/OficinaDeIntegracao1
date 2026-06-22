@@ -1,0 +1,100 @@
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">Criar Lista de Exercícios</h1>
+    <p class="text-slate-500 text-sm mt-1">Organize questões e publique para suas turmas</p>
+</div>
+
+<form [formGroup]="listaForm" (ngSubmit)="gerarLista()" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <div class="lg:col-span-2 space-y-6">
+
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <label class="block text-sm font-bold text-slate-800 mb-4">Nome da Lista</label>
+            <input type="text" formControlName="nomeLista" placeholder="Ex: Revisão Equações Quadráticas"
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+            <p *ngIf="listaForm.get('nomeLista')?.touched && listaForm.get('nomeLista')?.invalid"
+                class="text-red-500 text-xs mt-2">
+                O nome da lista é obrigatório.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <label class="block text-sm font-bold text-slate-800 mb-4">Selecione a(s) Turma(s)</label>
+
+            <div class="space-y-3">
+                <label *ngFor="let turma of turmas"
+                    class="flex items-center p-4 border rounded-lg cursor-pointer transition-colors hover:bg-slate-50"
+                    [ngClass]="{'border-blue-500 bg-blue-50': turmasFormArray.value.includes(turma.id), 'border-slate-200': !turmasFormArray.value.includes(turma.id)}">
+
+                    <input type="checkbox" [value]="turma.id" (change)="toggleTurma($event)"
+                        class="w-5 h-5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
+
+                    <div class="ml-4">
+                        <p class="font-bold text-slate-800">{{ turma.nome }}</p>
+                        <p class="text-sm text-slate-500">{{ turma.qtdAlunos }} alunos</p>
+                    </div>
+                </label>
+            </div>
+
+            <p *ngIf="listaForm.get('turmasIds')?.touched && turmasFormArray.length === 0"
+                class="text-red-500 text-xs mt-2">
+                Selecione pelo menos uma turma para prosseguir.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-800 mb-4">
+                Questões Selecionadas ({{ questoesSelecionadas.length }})
+            </h3>
+
+            <div *ngIf="questoesSelecionadas.length === 0"
+                class="p-6 border-2 border-dashed border-slate-200 rounded-lg text-center">
+                <p class="text-slate-500 text-sm">Nenhuma questão selecionada no momento.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div *ngFor="let questao of questoesSelecionadas; let i = index"
+                    class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-lg hover:border-slate-300 transition-colors">
+
+                    <div class="flex items-start">
+                        <div
+                            class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                            {{ i + 1 }}
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-bold text-slate-800 text-sm mb-1">{{ questao.enunciado }}</p>
+                            <p class="text-xs text-slate-500">{{ questao.disciplina }}</p>
+                        </div>
+                    </div>
+
+                    <button type="button" (click)="removerQuestao(questao.id)"
+                        class="ml-4 p-2 text-slate-400 hover:text-red-500 transition-colors" title="Remover da lista">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col gap-4">
+            <button type="submit" [disabled]="questoesSelecionadas.length === 0"
+                class="w-full py-3 px-4 rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                [ngClass]="questoesSelecionadas.length > 0 ? 'bg-green-400 hover:bg-green-500 text-white shadow-sm' : 'bg-slate-300 text-slate-500'">
+                ✓ Gerar Lista
+            </button>
+
+            <button type="button" (click)="adicionarMaisQuestoes()"
+                class="w-full py-3 px-4 bg-white border-2 border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-lg transition-colors">
+                Adicionar Mais Questões
+            </button>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-6">
+            <h4 class="font-bold text-blue-800 mb-2">Dica</h4>
+            <p class="text-sm text-blue-700">
+                Você pode adicionar questões do banco de questões antes de gerar a lista. Certifique-se de selecionar
+                pelo menos uma questão.
+            </p>
+        </div>
+    </div>
+</form>

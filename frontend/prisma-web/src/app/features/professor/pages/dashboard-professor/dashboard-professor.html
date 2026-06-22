@@ -1,0 +1,71 @@
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-800">Dashboard do Professor</h1>
+    <p class="text-slate-500 text-sm mt-1">Bem-vindo! Aqui está seu resumo de ensino.</p>
+  </div>
+  <button routerLink="/professor/cadastrar-questao"
+    class="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center">
+    <span class="mr-2">+</span> Nova Questão
+  </button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+    <div>
+      <p class="text-sm text-slate-500 mb-1">Total de Alunos</p>
+      <h3 class="text-2xl font-bold text-slate-800">{{ dadosGerais?.totalAlunos || 0 }}</h3>
+      <p class="text-xs text-slate-400 mt-1">Em 3 turmas</p>
+    </div>
+    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl">👥</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+    <div>
+      <p class="text-sm text-slate-500 mb-1">Questões Cadastradas</p>
+      <h3 class="text-2xl font-bold text-slate-800">{{ dadosGerais?.questoesCadastradas || 0 }}</h3>
+      <p class="text-xs text-slate-400 mt-1">6 esta semana</p>
+    </div>
+    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl">📖</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+    <div>
+      <p class="text-sm text-slate-500 mb-1">Desempenho Médio</p>
+      <h3 class="text-2xl font-bold text-slate-800">{{ dadosGerais?.desempenhoMedio || 0 }}%</h3>
+      <p class="text-xs text-green-500 mt-1">+5% em relação à semana passada</p>
+    </div>
+    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl">🏅</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center justify-between">
+    <div>
+      <p class="text-sm text-slate-500 mb-1">Listas de Exercícios</p>
+      <h3 class="text-2xl font-bold text-slate-800">{{ dadosGerais?.listasAtivas || 0 }}</h3>
+      <p class="text-xs text-slate-400 mt-1">2 ativas</p>
+    </div>
+    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl">📈</div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm lg:col-span-2">
+    <h3 class="text-lg font-bold text-slate-800 mb-1">Tendência de Desempenho</h3>
+    <p class="text-sm text-slate-500 mb-6">Scores médios dos alunos nas últimas 6 semanas</p>
+    <div class="h-64">
+      <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" type="line"></canvas>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+    <h3 class="text-lg font-bold text-slate-800 mb-1">Distribuição de Alunos</h3>
+    <p class="text-sm text-slate-500 mb-6">Alunos por turma</p>
+    <div class="h-64 flex items-center justify-center">
+      <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions" type="doughnut"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 flex items-start">
+  <div class="text-yellow-600 mr-3 text-xl">⚠️</div>
+  <div>
+    <h4 class="font-bold text-yellow-800">Insights de Desempenho</h4>
+    <p class="text-sm text-yellow-700 mt-1">• Baixo desempenho em Álgebra Linear na Turma B (65%)</p>
+  </div>
+</div>

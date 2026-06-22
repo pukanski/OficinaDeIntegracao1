@@ -1,8 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
@@ -13,10 +10,12 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
 var app = builder.Build();
 
 app.UseCors("CorsPolicy");
-
 app.MapReverseProxy();
 
 app.Run();
