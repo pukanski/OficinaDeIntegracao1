@@ -100,34 +100,34 @@ O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problem
   * SGBD relacional: PostgreSQL
   * Armazenamento de arquivos: Supabase
   * Hospedagem: Supabase
-* Gerenciamneto, qualidade e documentação:
+* Gerenciamento, qualidade e documentação:
   * Versionamento: Git com repositório no GitHub
-  * Gerenciamento: Jira
+  * Gerenciamento, gestão e acompanhamento do cronograma: Jira
   * Testes de API: Insomnia
   * Documentação de API: Swagger
+  * Comunicação: Whatsapp e reuniões presenciais
 
 ### Metodologia
 
-O projeto segue uma metodologia ágil baseada em Sprints semanais, com foco na entrega contínua de partes funcionais do sistema. Desde o início, a arquitetura é pensada no modelo de microsserviços, o que exige um cuidado com integração contínua para evitar problemas entre front-end, API e o componente de inteligência artificial. A ideia é garantir que tudo evolua de forma integrada, sem criar dependências que travem o progresso mais adiante.
+O projeto adota a metodologia de Desenvolvimento Iterativo e Incremental, gerenciado através de um fluxo contínuo baseado em Kanban. Após reavaliação do contexto da equipe, optou-se por descartar frameworks ágeis. A exigência de rituais síncronos fixos (como reuniões diárias ou cerimônias de revisão com datas marcadas) mostrou-se totalmente incompatível com a realidade da equipe, que é composta por integrantes que trabalham em período integral (manhã e tarde) e frequentam as aulas da graduação no período noturno.
 
-O planejamento parte de um product backlog organizado por áreas do desenvolvimento e funcionalidades. A cada Sprint, as funcionalidades são detalhadas em tarefas que envolvem diferentes áreas do desenvolvimento, e o ciclo se encerra com uma versão funcional e testável do que foi construído. Como há incertezas relacionadas ao uso de modelos de IA (principalmente em relação a tempo de resposta e consistência), esse módulo é tratado de forma isolada. Assim, mesmo que haja instabilidades na geração de classificações, o restante do sistema continua evoluindo normalmente.
+Para contornar essa limitação de disponibilidade, a equipe opera em um regime de desenvolvimento assíncrono. O escopo do projeto foi desmembrado no Jira, mas o fluxo de integração não ocorre em dias engessados da semana; em vez disso, funciona sob demanda. A comunicação diária e a resolução de impedimentos são realizadas de forma assíncrona via grupo de mensagens instantâneas (WhatsApp).
 
-A equipe está trabalhando de forma orientada a funcionalidades completas, divida por tarefas para cada equipe. Cada entrega só é considerada pronta quando todas as partes envolvidas (front-end, back-end, integração com IA e infraestrutura) entregam as tarefas referentes a aquela funcionalidade, com tudo integrado e funcionando da maneira correta.
+À medida que os desenvolvedores possuem tempo hábil (madrugadas e finais de semana) para concluir suas respectivas tarefas, o código é submetido ao repositório central no GitHub. A integração das partes é testada continuamente conforme os pacotes funcionais ficam prontos, garantindo que o sistema evolua de forma orgânica e atenda aos prazos inegociáveis dos marcos (Fases) estabelecidos pelo cronograma da disciplina.
 
 ### Cronograma previsto
 
-| **Semana** | **Fase**            | **Tarefas**                                                                                                                                              |
-| ---------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1 - 2      | Fundação e Planejamento         | Levantamento de requisitos completo. Protótipos de telas definidos. Modelagem do banco de dados. Definição dos requisitos da IA. Setup inicial de repositórios.   |
-| 3 - 4      | Arquitetura e Base Técnica      | Configuração de infraestrutura (Docker, repositórios, ambiente local). Estrutura inicial do front-end (layout, login). Setup da IA local (FastAPI). Base do backend iniciada.      |
-| 5 - 6      | Sprint 1: Base do Sistema       | CRUD inicial e primeiros microservices (Aluno). Integração inicial de front e back. Configuração de banco (Supabase). Estrutura Angular com telas iniciais. Setup da IA preparado. |
-| 6 - 7      | Sprint 2: Módulo Professor      | Microservices de Professor e Turmas. CRUD completo de turmas e usuários. Ajustes no retorno da IA. Evolução das telas de gestão. Preparação da entrega 2.                          |
-| 7 - 8      | Sprint 3 e Entrega 2: Integração com IA     | Microservice de Questões. Integração com FastAPI da IA. Implementação de autenticação JWT. Tratamento de erros da IA. Tela de cadastro de questões com feedback.Fluxo completo de cadastro de questões com IA funcionando. Sistema do professor integrado e validado.                   |
-| 9 - 10       | Sprint 4: Listas e Resolução    | Criação de listas de exercícios com filtros. Tela de resolução de exercícios. Testes iniciais com IA em cenários reais. Tela de frequência.                                        |
-| 10 - 11    | Sprint 5: Dashboards e Métricas | Dashboard do aluno e professor. Métricas de desempenho (acertos, frequência). Estrutura de testes (unitário, integração, E2E).                                                     |
-| 12 - 13    | Otimização e Testes             | Testes de carga e performance. Refinamento da IA (tempo de resposta e precisão). Otimização de queries e backend. Ajustes finais de UX/UI.                                         |
-| 14         | Entrega 3: Produção Final       | Deploy completo do sistema. Documentação final.                                               |
-
+| Período | Atividades |
+|----------|------------|
+| 23/03 a 05/04 | **Fundação e Planejamento:** Levantamento de requisitos completo. Protótipos de telas definidos. Modelagem do banco de dados. Definição dos requisitos da IA. Setup inicial de repositórios. |
+| 06/04 a 19/04 | **Arquitetura e Base Técnica (Entrega 1 - 07/04):** Configuração de infraestrutura (Docker, repositórios, ambiente local). Estrutura inicial do front-end (layout, login). Setup da IA local (FastAPI). Base do backend iniciada. |
+| 20/04 a 03/05 | **Base do Sistema:** CRUD inicial e primeiros microsserviços (Aluno). Integração inicial de front e back. Configuração de banco (Supabase). Estrutura Angular com telas iniciais. Setup da IA preparado. |
+| 04/05 a 10/05 | **Módulo Professor:** Microsserviços de Professor e Turmas. CRUD completo de turmas e usuários. Ajustes no retorno da IA. Evolução das telas de gestão. Preparação da entrega 2. |
+| 11/05 a 17/05 | **Integração com IA (Entrega 2 - 12/05):** Microsserviço de Questões. Integração com FastAPI da IA. Implementação de autenticação JWT. Tratamento de erros da IA. Tela de cadastro de questões com feedback. Fluxo completo de cadastro de questões com IA funcionando. Sistema do professor integrado e validado. |
+| 18/05 a 24/05 | **Listas e Resolução:** Criação de listas de exercícios com filtros. Tela de resolução de exercícios. Testes iniciais com IA em cenários reais. Tela de frequência. |
+| 25/05 a 07/06 | **Dashboards e Métricas:** Dashboard do aluno e professor. Métricas de desempenho (acertos, frequência). Estrutura de testes (unitário, integração, E2E). |
+| 08/06 a 21/06 | **Otimização e Testes:** Testes de carga e performance. Refinamento da IA (tempo de resposta e precisão). Otimização de queries e backend. Ajustes finais de UX/UI. |
+| 22/06 a 28/06 | **Produção Final (Entrega 3 - 23/06):** Deploy completo do sistema. Documentação final. |
 ---
 
 ## 4. Requisitos do Sistema
