@@ -313,28 +313,33 @@ Por fim, o registro de frequência escolar, detalhando a presença por turma e d
 
 ## 6. Implementação
 
-### Estrutura do Código
-Explicação da organização de arquivos e pacotes.
-src/
- ├── controllers/    # Lógica de controle
- ├── models/         # Entidades e Banco de Dados
- ├── views/          # Interface do usuário
- └── services/       # Regras de negócio
+## 6.1 Descrição do Código
 
-Siga os passos abaixo para executar o projeto localmente:
-1. **Requisitos:** Certifique-se de ter instalado o [Ex: Node.js / Docker / Python].
-2. **Configuração:** - Clone o repositório: `git clone [URL_DO_REPO]`
-   - Configure as variáveis de ambiente no arquivo `.env`.
-3. **Comandos de Inicialização:**
+O sistema foi projetado seguindo uma arquitetura de microsserviços, o que permite o desenvolvimento independente de cada funcionalidade.
 
-   # Instalar dependências
-   npm install 
-   
-   # Rodar migrações do banco
-   npm run migrate 
-   
-   # Iniciar aplicação
-   npm start
+## Estrutura de Microsserviços (Backend)
+
+Os serviços de negócio (como *AlunoMicroservice* e *ProfessorMicroservice*) foram desenvolvidos em ASP.NET, estruturados em **Controllers**, **Services**, **Repositories** **Models**, **DTOs** e **Mappers** para garantir a separação de responsabilidades.
+
+## Módulo de Inteligência Artificial (`ia/`)
+
+Este módulo funciona como uma API independente em Python utilizando FastAPI. A estrutura de arquivos dentro de `ia/` reflete sua especialização técnica:
+
+- **main.py**: Ponto de entrada da API que gerencia as requisições.
+- **classifier.py** e **validator.py**: Implementam a lógica principal para processamento e validação das sugestões semânticas.
+- **prompt_builder.py**: Responsável pela construção dos *prompts* enviados ao modelo Ollama.
+- **schemas.py**: Define os modelos de dados (JSON) utilizados na comunicação entre os serviços.
+
+## Frontend (Angular)
+
+A aplicação web está organizada sob a pasta `frontend/prisma-web`, utilizando uma estrutura modular composta por:
+
+- **core/**: Serviços globais e *interceptors*.
+- **features/**: Páginas e módulos de negócio, como `admin`, `auth`, `professor` e `aluno`.
+
+##Implantação
+
+
 
 ### Telas Principais
 Apresente aqui os prints do sistema finalizado (não mais o protótipo).
@@ -344,14 +349,15 @@ Apresente aqui os prints do sistema finalizado (não mais o protótipo).
 ---
 
 ## 7. Considerações Finais
-Nesta seção, discuta os resultados obtidos:
+### Sucessos
+
+### Limitações
+
+### Futuro
+
+
 * **Sucessos:** O que foi atingido conforme o planejado?
 * **Limitações:** O que não foi possível implementar e por quê?
 * **Futuro:** Possíveis integrações e melhorias para versões posteriores.
 
 ---
-
-## 8. Bibliografia
-* Autor, Título da Obra, Edição, Local, Editora, Ano.
-* Documentação técnica de [Tecnologia X].
-* Links e referências externas consultadas.
