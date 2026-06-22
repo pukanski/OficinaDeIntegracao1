@@ -250,52 +250,64 @@ O diagrama de casos de uso abaixo (Figura 1) ilustra as interações dos atores 
 ## 5. Análise do Sistema
 
 ### Modelo do Banco de Dados
+A modelagem de dados foi projetada para garantir a integridade entre as entidades do Cursinho Prisma. A estrutura lógica do banco de dados relacional, que conecta o acervo de questões ao histórico de respostas dos alunos, está apresentada na Figura 11.
 * **Conceitual/Lógico:** [Link ou Imagem do MER]
+*Modelo Entidade-Relacionamento do sistema Prisma, detalhando as chaves primárias e estrangeiras.*
+
+*Modelo Entidade-Relacionamento do sistema Prisma, detalhando as chaves primárias e estrangeiras.*
 * **Dicionário de Dados:** Detalhamento de tabelas, atributos, tipos e chaves.
 
 ### Diagramas Técnicos
 * **Diagrama de Classes:** Estrutura das classes e seus relacionamentos.
+A estrutura lógica do sistema e as associações entre os módulos de Usuário, Turma, Questão e Resposta são evidenciadas na Figura 12.
 ![DC - Prisma](imagens/diagramas/DiagramaDeClassePrisma.png)
+*Diagrama de Classes detalhando a estrutura lógica das entidades e as associações entre os módulos do sistema.*
+
 * **Diagrama de Atividades:** Fluxo de tarefas e processos do sistema.
 * RF01/RF02/RF03: 
-
+O fluxo de cadastro de questões, que integra a sugestão da IA com a validação humana, é detalhado na Figura 13.
 ![DA - RF01,02,03](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF01;02;03.png)
-
+*Diagrama de Classes detalhando a estrutura lógica das entidades e as associações entre os módulos do sistema.*
+  
 * RF04: 
-
+A operação de manutenção do banco de questões (CRUD), abrangendo consulta, edição e desativação, está ilustrada na Figura 14.
 ![DA - RF04](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF04.png)
-
-* RF05: 
-
-![DA - RF05](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF05.png)
+*Fluxo de cadastro de questões assistido pela IA, demonstrando as etapas de sugestão e validação humana.*
 
 * RF06: 
-
+A gestão de turmas, detalhando a criação de grupos e a alocação de alunos, segue o fluxo definido na Figura 15.
 ![DA - RF06](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF06.png)
+*Fluxo de gestão de turmas, detalhando a criação de grupos e a alocação de alunos.*
 
 * RF07: 
-
+O procedimento para a montagem de listas de exercícios, desde o filtro por disciplina até a vinculação da lista às turmas, é descrito na Figura 16.
 ![DA - RF07](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF07.png)
+*Fluxo de montagem de listas de exercícios, conectando a curadoria do professor às turmas alvo.*
 
 * RF08: 
-
+O processo de prática e resolução por parte dos alunos, que abrange a submissão de respostas e consulta de gabarito, é demonstrado na Figura 17.
 ![DA - RF08](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF08.png)
+*Fluxo de resolução de exercícios, abrangendo a submissão de respostas e consulta de gabarito.*
 
 * RF09/RF13: 
-
+A visualização de dados de desempenho pelo aluno, incluindo o histórico de respostas e métricas de presença, está ilustrada na Figura 18.
 ![DA - RF09,13](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF09;13.png)
+*Fluxo de acompanhamento do dashboard do aluno, incluindo a consulta de histórico e métricas.*
 
 * RF10: 
-
+A análise de performance da turma pelo professor, que permite identificar defasagens, está detalhada na Figura 19.
 ![DA - RF10](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF10.png)
+*Fluxo de visualização do dashboard do professor, permitindo a análise de defasagens.*
 
 * RF11: 
-
+A gestão da estrutura de disciplinas e usuários realizada pela coordenação é apresentada na Figura 20.
 ![DA - RF11](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF11.png)
+*Fluxo da gestão administrativa, focada na manutenção de usuários e da árvore de conhecimentos.*
 
 * RF12: 
-
+Por fim, o registro de frequência escolar, detalhando a presença por turma e data, é descrito na Figura 21.
 ![DA - RF12](imagens/diagramas/Diagramas%20de%20Atividade/DiagramaDeAtividadeRF12.png)
+*Fluxo de gerenciamento de frequência, detalhando o registro de presença por turma e data.*
 
 ---
 
