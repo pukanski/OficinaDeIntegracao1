@@ -16,18 +16,21 @@
 ## 1. Introdução
 
 ### Contexto
+O projeto será implementado no Cursinho Prisma, um projeto de extensão da Universidade Tecnológica Federal do Paraná (UTFPR - Câmpus Cornélio Procópio) focado na preparação gratuita de estudantes para o vestibular e o ENEM. A instituição opera em um cenário de alta demanda social e capacidade estrutural limitada, ofertando apenas uma turma por semestre de 40 a 45 alunos, com cerca de 80 a 90 alunos aplicando para o projeto.
 
-O projeto será implementado no Cursinho Prisma, um projeto de extensão voltado à preparação para o vestibular, que opera em um contexto de alta demanda e capacidade limitada. A instituição oferece apenas uma turma por ano, o que torna o processo seletivo rigoroso. A entrada dos alunos é definida com base no desempenho escolar, seguindo uma ordem de prioridade que começa pelos estudantes do 3º ano do Ensino Médio, depois alunos de outros anos e, por último, aqueles que já concluíram o ensino médio.
+Devido a essa limitação, o processo de admissão é rigoroso. Historicamente o critério era a de maior média escolar, a triagem evoluiu, a partir da edição de 2026/02, para a aplicação de uma prova classificatória de múltipla escolha. A alocação das vagas obedece a um sistema de prioridades: a preferência é destinada aos alunos matriculados no 3º ano do Ensino Médio, seguidos por alunos de outras séries do ensino médio e, por fim, estudantes egressos.
 
-Depois de ingressar, o aluno passa a fazer parte de um ambiente com regras bem definidas, tanto na parte administrativa quanto na pedagógica. Em relação à administração, existe uma exigência mínima de 75% de frequência, e o não cumprimento pode levar a expulsão do projeto. Hoje, esse controle é feito manualmente, o que aumenta o risco de falhas, como registros incorretos ou até evasão que não é percebida a tempo.
-
-No aspecto pedagógico, há uma limitação importante, o cursinho não oferece atividades de reforço ou turmas extras. Isso faz com que o aluno dependa apenas das aulas regulares e do próprio esforço fora da sala para acompanhar o conteúdo. Ao mesmo tempo, a preparação de materiais e a organização de exercícios são feitas de forma descentralizada pelos professores, sem um padrão ou sistema unificado. Como consequência, não há dados claros sobre o desempenho dos alunos. Dificuldades específicas, como em determinados tópicos mais pontuais, acabam passando despercebidas ao longo do ano.
-
-Nesse contexto, o sistema entra para organizar esses processos. Ele ajuda a automatizar o controle de frequência, reduz o trabalho manual na criação e organização de questões e, principalmente, traz uma camada de dados que antes não existia. Com isso, passa a ser possível acompanhar o desempenho em tempo real e identificar dificuldades com mais precisão. A ideia é que tanto os professores quanto os próprios alunos tenham mais clareza sobre o aprendizado, permitindo ajustes ao longo do processo, mesmo sem a existência de aulas de reforço.
+Uma vez inserido no projeto, o aluno ingressa em um ecossistema com regras administrativas e pedagógicas rígidas. Administrativamente, exige-se uma frequência mínima obrigatória de 75%, o descumprimento desta meta resulta na expulsão sumária do estudante. Pedagogicamente, a instituição não dispõe de infraestrutura e/ou recursos humanos para oferecer atividades de reforço ou turmas extras de nivelamento. O aluno depende exclusivamente da carga horária regular e de sua própria capacidade de autodidatismo para superar defasagens nas disciplinas. Atualmente, os processos de controle (frequência) e apoio (materiais) operam de forma puramente manual e descentralizada.
 
 ### Justificativa
 
-O problema central é a ineficiência e o alto custo de tempo na extração, categorização e distribução de questões de vestibulares, somado a falta de visibilidade sobre o desempenho real dos alunos. Atualmente, os professores são sobrecarregados pela triagem manual do material, e os alunos, não conseguem direcionar seus estudos com base em dados reais de sua proficiência. Essa falta de otimização dos materiais e a falta de autoanalise acaba afetando o nivelamento acadêmico e pode acabar gerando uma evasão na parte do aluno. Ao simplificar a criação de questões e automatizar a etapa de categorização, o sistema reduz o esforço do professor. Quando o sistema estiver operante, ele irá ter um banco de questões auto-organizado, que permite a geração rápida de listas e dashboards de desempenho
+O desenvolvimento deste software justifica-se pela necessidade de mitigar dois riscos críticos da operação atual do Cursinho Prisma: a "cegueira de dados" pedagógica e a vulnerabilidade do controle administrativo manual.
+
+No aspecto pedagógico, o problema central é a ineficiência no processo de curadoria de exercícios e a total ausência de telemetria sobre o aprendizado. As questões são extraídas manualmente pelos professores a partir de provas anteriores de diversos vestibulares e do ENEM. Esse processo de triagem, categorização e formatação gera uma sobrecarga que inviabiliza a criação constante de listas personalizadas. Sem aulas de reforço para diagnosticar defasagens, os alunos e a coordenação operam no escuro. Um estudante pode ter um déficit em uma matéria específica (ex: Logaritmos), mas essa lacuna passará despercebida até o dia da prova final, resultando em nivelamento acadêmico deficiente e provável evasão.
+
+No aspecto administrativo, o controle da regra de 75% de frequência feito manualmente aumenta o risco de falhas operacionais, registros incorretos e expulsões indevidas (ou a não detecção de evasão iminente).
+
+Ao automatizar o fluxo de avaliações e instituir uma cultura de dados, o sistema converte a simples ação de "responder questões" em um motor de telemetria educacional. Isso elimina o atrito operacional do professor na criação de listas direcionadas e fornece ao aluno métricas de suas dificuldades, compensando tecnologicamente a ausência de tutoria individualizada.
 
 ### Proposta
 
@@ -39,7 +42,7 @@ Já o módulo do aluno é voltado para a prática e o acompanhamento do próprio
 
 ### Organização do Documento
 
-O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas pelo processamento da IA, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3 detalha as tecnologicas, a metodologia ágil paralela e o cronograma. O capitulo 4 especifica os requisitos funcionais e não-funcionais que guiarão o desenvolvimento. O capitulo 5 apresenta a modelagem do banco de dados e os diagramas de classe e de atividade
+O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problema a ser resolvido e a proposta de solução beaseada em IA e gestão de dados. O capitulo 2 detalha os objetivos gerais especificos do sistema, expõe as limitações técnicas impostas pelo processamento da IA, e define os papéis dos usuários envolvidos na operação do sistema. O capitulo 3 detalha as tecnologicas, a metodologia ágil paralela e o cronograma. O capitulo 4 especifica os requisitos funcionais e não-funcionais que guiarão o desenvolvimento. O capitulo 5 apresenta a modelagem do banco de dados e os diagramas de classe e de atividade e por último o capítulo 6 detalha sobre a implementação do projeto a partir de diagramas, instruções para implantação e configuração local, e as telas principais já finalizadas
 
 ---
 
