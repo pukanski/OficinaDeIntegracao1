@@ -59,6 +59,17 @@ services:
       - OLLAMA_HOST=http://host.docker.internal:11434
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  dados-api:
+    build:
+      context: ./backend/DadosMicroservice
+      dockerfile: Dockerfile
+    networks:
+      - prisma-network
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ConnectionStrings__Supabase=${DATABASE_URL}
+      - Supabase__Url=${SUPABASE_URL}
 networks:
   prisma-network:
     driver: bridge
