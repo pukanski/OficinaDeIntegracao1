@@ -27,6 +27,7 @@ publish/
 *.sln.docstates
 appsettings.Development.json
 appsettings.json
+!backend/GatewayMicroservice/appsettings.json
 UserSecrets/
 
 # Python 
