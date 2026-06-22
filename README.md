@@ -53,7 +53,7 @@ O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problem
 * **Geral:** Desenvolver e implantar um sistema web para gestão educacional focado em avaliação de desempenho e criação de listas de exercícios, sustentado por um banco de questões alimentado colaborativamente através de uma interface assistida por IA para automação da categorização e da dificuldade
 * **Específicos:** Metas e ações que, somadas, permitem alcançar o objetivo geral.
   * Desenvolver uma interface web otimizada para inserção rápida de questões (textos e imagens manuais)
-  * Integrar um modelo de IA local, como o Ollama) à API para processar textos de questões inseridas e retornar sugestões estruturadas de categorização e dificuldade
+  * Integrar um modelo de IA local (como o Ollama) à API para processar textos de questões inseridas e retornar sugestões estruturadas de categorização e dificuldade. A categorização será dividida conceitualmente em Macrodisciplina (grandes áreas do conhecimento, ex: Matemática, Física) e Microdisciplina (tópicos específicos daquela área, ex: Funções de 1º Grau, Cinemática);
   * Desenvolver o módulo do professor, permitindo o agrupamento de questões em listas e a gestão de turmas
   * Desenvolver o módulo do aluno para resolução de exercicios
   * Implementar dashboards de proficiência baseados no histórico de resoluções
@@ -61,8 +61,9 @@ O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problem
 ### Limites e Restrições
 
 * **Limites:** O que a aplicação **não** fará (mesmo que pareça óbvio).
-  * Limitação de extração: O sistema não realiza, atualmente, a extração autônoma, leitura de PDFs e recortes automáticos ou OCR de provas. Toda questão deve ser inserida na interface pelo usuário, seja por digitação ou copiando e colando, com upload manual de imagens pelo usuário
+  * Limitação de extração: O sistema não realizará, em sua versão inicial, a extração autônoma, leitura de PDFs e recortes automáticos ou OCR de provas. Toda questão deve ser inserida na interface pelo usuário, seja por digitação ou copiando e colando, com upload manual de imagens pelo usuário
   * Limitação da IA: A IA atuará estritamente como um assistente de preenchimento. O usuário terá a palavra final para aceitar, alterar ou recusar a categoria e a dificuldade proposta pelo modelo antes de salvar no banco
+  * Foco do Material Gerenciado: O escopo do sistema foca exclusivamente em avaliação e diagnóstico. O material oferecido pela plataforma resume-se a bancos de questões, listas de exercícios interativas e o controle de desempenho e frequência. O sistema não atua como um repositório de conteúdo passivo, ou seja, não haverá hospedagem de apostilas em PDF, slides ou videoaulas.
   * Interação Sincrona: Esta fora do escopo a criação de fóruns, chats em tempo real, ou transmissão de aulas
   * Integração Externa: O sistema não fará integração com sistemas acadêmicos governamentais ou plataformas externas de vestibulares
   
@@ -75,7 +76,7 @@ O capitulo 1 apresenta o contexto do Cursinho Prisma, a justificativa do problem
 
 ### Descrição dos Usuários
 
-* Aluno: Acessa a plataforma web para resolver as listas designadas pelos professores, treina no banco livre e acompanha o seu desempenho pessoal nas disciplinas, macro e micro
+* Aluno: Acessa a plataforma web para resolver as listas designadas pelos professores, treina no banco livre (um repositório geral contendo todas as questões já cadastradas que não estão necessariamente associadas a uma lista, permitindo a resolução de maneira individual e autônoma) e acompanha o suas métricas em nível macrodisciplina e microdisciplina 
 * Professor/Monitor: Acessa a plataforma web para analisar o desempenho das turmas por meio do dashboard, identifica discrepâncias no desempenho, cadastra novas questões no banco, gera listas de exercícios personalizadas e direcionadas consultando o banco de questões
 * Administrador (Coordenação): Gerencia os cadastros de professores e alunos, define a árvore de macro e micro disciplinas no banco e administra o sistema
 
