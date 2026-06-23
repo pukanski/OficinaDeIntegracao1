@@ -1,12 +1,11 @@
 <div class="p-4 md:p-8 max-w-4xl mx-auto w-full space-y-6 pb-20">
-    
+
     <div class="flex items-center justify-between mb-2">
         <div>
             <h1 class="text-2xl font-bold text-slate-800">Gabarito e Correção</h1>
-            <p class="text-slate-500 text-sm mt-1">{{ tituloLista }}</p>
         </div>
-        <a routerLink="/aluno/dashboard" class="px-5 py-2 bg-white border border-slate-300 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm text-sm">
-            Voltar ao Dashboard
+        <a routerLink="/aluno/exercicios" class="px-5 py-2 bg-white border border-slate-300 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm text-sm">
+            Voltar às Listas
         </a>
     </div>
 
@@ -28,41 +27,49 @@
 
     <div class="space-y-6">
         <div *ngFor="let q of questoes; let i = index" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-            
+
             <div class="flex items-center gap-3 mb-4">
                 <span class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm text-white"
-                      [ngClass]="q.gabaritoOficial === q.respostaAluno ? 'bg-green-500' : 'bg-red-500'">
+                      [ngClass]="acertou(q) ? 'bg-green-500' : 'bg-red-500'">
                     {{ i + 1 }}
                 </span>
-                <span *ngIf="q.gabaritoOficial === q.respostaAluno" class="text-sm font-bold text-green-600">Acertou</span>
-                <span *ngIf="q.gabaritoOficial !== q.respostaAluno" class="text-sm font-bold text-red-600">Errou</span>
+                <span *ngIf="acertou(q)" class="text-sm font-bold text-green-600">Acertou</span>
+                <span *ngIf="!acertou(q)" class="text-sm font-bold text-red-600">Errou</span>
             </div>
 
             <h3 class="text-lg font-bold text-slate-800 mb-6 leading-relaxed">{{ q.enunciado }}</h3>
 
             <div class="space-y-3">
-                <div *ngFor="let alt of q.alternativas" 
-                     [ngClass]="{
-                        'bg-green-50 border-green-500 text-green-900 ring-1 ring-green-500': alt.letra === q.gabaritoOficial,
-                        'bg-red-50 border-red-300 text-red-900 opacity-80': alt.letra === q.respostaAluno && alt.letra !== q.gabaritoOficial,
-                        'border-slate-200 text-slate-500 opacity-60': alt.letra !== q.gabaritoOficial && alt.letra !== q.respostaAluno
-                     }"
-                     class="p-4 border rounded-lg flex items-center transition-colors">
-                    
+                <div *ngFor="let alt of q.alternativas"
+                     class="p-4 border rounded-lg flex items-center transition-colors"
+                     [class.bg-green-50]="alt.correta"
+                     [class.border-green-500]="alt.correta"
+                     [class.text-green-900]="alt.correta"
+                     [class.ring-1]="alt.correta"
+                     [class.ring-green-500]="alt.correta"
+                     [class.bg-red-50]="respostaAluno(q)?.id === alt.id && !alt.correta"
+                     [class.border-red-300]="respostaAluno(q)?.id === alt.id && !alt.correta"
+                     [class.opacity-60]="!alt.correta && respostaAluno(q)?.id !== alt.id"
+                     [class.border-slate-200]="!alt.correta && respostaAluno(q)?.id !== alt.id">
+
                     <span class="font-bold w-8 shrink-0">{{ alt.letra }})</span>
                     <span class="flex-1">{{ alt.texto }}</span>
 
-                    <span *ngIf="alt.letra === q.gabaritoOficial" class="ml-4 text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded shrink-0">
+                    <span *ngIf="alt.correta" class="ml-4 text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded shrink-0">
                         ✓ Resposta Correta
                     </span>
-                    <span *ngIf="alt.letra === q.respostaAluno && alt.letra !== q.gabaritoOficial" class="ml-4 text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded shrink-0">
+                    <span *ngIf="respostaAluno(q)?.id === alt.id && !alt.correta" class="ml-4 text-xs font-bold text-red-600 bg-red-100 px-2 py-1 rounded shrink-0">
                         ✕ Você marcou
                     </span>
-                    <span *ngIf="alt.letra === q.respostaAluno && alt.letra === q.gabaritoOficial" class="ml-2 text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded shrink-0">
+                    <span *ngIf="respostaAluno(q)?.id === alt.id && alt.correta" class="ml-2 text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded shrink-0">
                         (Sua resposta)
                     </span>
                 </div>
             </div>
+        </div>
+
+        <div *ngIf="questoes.length === 0" class="text-center py-12 text-slate-400">
+            Nenhum dado de gabarito disponível.
         </div>
     </div>
 </div>

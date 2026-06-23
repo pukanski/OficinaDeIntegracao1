@@ -1,8 +1,18 @@
+export interface AlternativaDTO {
+  id: number;
+  letra: string;
+  texto: string;
+  correta: boolean;
+}
+
 export interface Questao {
-  id: string;
+  id: number;
+  provaId?: number;
+  provaDescricao?: string;
   enunciado: string;
-  disciplina: string;
-  macroArea: string;
-  microArea: string;
-  dificuldade: number; // 1 a 5
+  disciplina: string;   // macro-área
+  materia?: string;     // micro-área
+  dificuldade?: string; // "Muito Fácil" | "Fácil" | "Médio" | "Difícil" | "Muito Difícil"
+  numero: number;
+  alternativas: AlternativaDTO[];
 }

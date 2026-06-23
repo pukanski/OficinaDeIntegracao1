@@ -3,172 +3,191 @@
     <p class="text-slate-500 text-sm mt-1">Registre a presença dos seus alunos</p>
 </div>
 
-<!-- Abas de Navegação -->
+<div *ngIf="mensagem" class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">{{ mensagem }}</div>
+<div *ngIf="erro" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{{ erro }}</div>
+
+<!-- Abas -->
 <div class="flex space-x-2 mb-6 bg-slate-50 p-1 rounded-lg w-fit border border-slate-200">
     <button (click)="abaAtual = 'registrar'"
-        [ngClass]="abaAtual === 'registrar' ? 'bg-white shadow-sm text-slate-800 font-bold' : 'text-slate-500 hover:text-slate-700'"
+        [class.bg-white]="abaAtual === 'registrar'" [class.shadow-sm]="abaAtual === 'registrar'"
+        [class.font-bold]="abaAtual === 'registrar'" [class.text-slate-800]="abaAtual === 'registrar'"
+        [class.text-slate-500]="abaAtual !== 'registrar'"
         class="px-6 py-2 rounded-md transition-all text-sm">
         Registrar Presença
     </button>
     <button (click)="abaAtual = 'historico'"
-        [ngClass]="abaAtual === 'historico' ? 'bg-white shadow-sm text-slate-800 font-bold' : 'text-slate-500 hover:text-slate-700'"
+        [class.bg-white]="abaAtual === 'historico'" [class.shadow-sm]="abaAtual === 'historico'"
+        [class.font-bold]="abaAtual === 'historico'" [class.text-slate-800]="abaAtual === 'historico'"
+        [class.text-slate-500]="abaAtual !== 'historico'"
         class="px-6 py-2 rounded-md transition-all text-sm">
         Histórico
     </button>
 </div>
 
-<!-- Oculta a área de registro se estiver no histórico -->
+<!-- ABA: Registrar -->
 <div *ngIf="abaAtual === 'registrar'" class="space-y-6">
 
-    <!-- Cabeçalho de Filtros -->
     <form [formGroup]="frequenciaForm"
         class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
             <label class="block text-sm font-bold text-slate-800 mb-2">Selecione a Turma</label>
             <select formControlName="turmaId"
-                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 bg-white">
-                <option value="" disabled selected>Selecione uma turma...</option>
-                <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                <option value="" disabled>Selecione uma turma...</option>
+                <option *ngFor="let turma of turmas" [value]="turma.id">
+                    {{ turma.nome }} · {{ turma.ano }} · {{ turma.turno }}
+                </option>
             </select>
         </div>
         <div>
             <label class="block text-sm font-bold text-slate-800 mb-2">Selecione a Data</label>
             <input type="date" formControlName="dataChamada"
-                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 bg-white">
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
     </form>
 
-    <!-- Cards de Contagem -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col items-center justify-center">
-            <span class="text-green-600 font-bold text-sm mb-1">Presentes</span>
-            <span class="text-3xl font-extrabold text-green-700">{{ presentes }}</span>
-        </div>
-        <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex flex-col items-center justify-center">
-            <span class="text-red-600 font-bold text-sm mb-1">Ausentes</span>
-            <span class="text-3xl font-extrabold text-red-700">{{ ausentes }}</span>
-        </div>
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex flex-col items-center justify-center">
-            <span class="text-yellow-700 font-bold text-sm mb-1">Não Marcados</span>
-            <span class="text-3xl font-extrabold text-yellow-800">{{ naoMarcados }}</span>
-        </div>
+    <!-- Sem turma selecionada -->
+    <div *ngIf="!frequenciaForm.get('turmaId')?.value"
+        class="bg-slate-50 border border-dashed border-slate-200 rounded-xl p-10 text-center text-slate-400">
+        Selecione uma turma para ver a lista de alunos.
     </div>
 
-    <!-- Ações em Lote -->
-    <div class="flex flex-col sm:flex-row gap-4">
-        <button (click)="marcarTodosPresentes()"
-            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center shadow-sm">
-            <span class="mr-2">✓</span> Marcar Todos Presentes
-        </button>
-        <button (click)="limparMarcacoes()"
-            class="flex-1 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-bold py-3 rounded-lg transition-colors shadow-sm">
-            Limpar
-        </button>
-    </div>
+    <!-- Com turma selecionada -->
+    <ng-container *ngIf="frequenciaForm.get('turmaId')?.value">
 
-    <!-- Lista de Alunos Dinâmica -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 bg-slate-50">
-            <h3 class="font-bold text-slate-800">Lista de Alunos</h3>
+        <!-- Contadores -->
+        <div class="grid grid-cols-3 gap-4">
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                <span class="text-green-600 font-bold text-sm">Presentes</span>
+                <p class="text-3xl font-extrabold text-green-700">{{ presentes }}</p>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                <span class="text-red-600 font-bold text-sm">Ausentes</span>
+                <p class="text-3xl font-extrabold text-red-700">{{ ausentes }}</p>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
+                <span class="text-yellow-700 font-bold text-sm">Não Marcados</span>
+                <p class="text-3xl font-extrabold text-yellow-800">{{ naoMarcados }}</p>
+            </div>
         </div>
 
-        <div class="divide-y divide-slate-100">
-            <div *ngFor="let aluno of alunos"
-                class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                <span class="font-medium text-slate-700">{{ aluno.nome }}</span>
+        <!-- Ações em lote -->
+        <div class="flex gap-4">
+            <button (click)="marcarTodosPresentes()"
+                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors">
+                ✓ Marcar Todos Presentes
+            </button>
+            <button (click)="limparMarcacoes()"
+                class="flex-1 bg-white border border-slate-300 text-slate-700 font-bold py-3 rounded-lg transition-colors hover:bg-slate-50">
+                Limpar
+            </button>
+        </div>
 
-                <div class="flex space-x-2">
-                    <button (click)="marcarStatus(aluno.id, 'Presente')"
-                        [ngClass]="aluno.status === 'Presente' ? 'bg-green-100 text-green-800 border-green-300 font-bold' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'"
-                        class="px-4 py-2 border rounded-md text-sm transition-colors flex items-center">
-                        <span class="mr-2"
-                            [ngClass]="aluno.status === 'Presente' ? 'text-green-600' : 'text-slate-400'">✓</span>
-                        Presente
-                    </button>
+        <!-- Lista de alunos -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                <h3 class="font-bold text-slate-800">Lista de Alunos ({{ alunos.length }})</h3>
+                <span *ngIf="alunos.length > 0 && naoMarcados < alunos.length"
+                    class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
+                    ✓ Chamada já registrada para esta data
+                </span>
+                <span *ngIf="carregandoAlunos" class="text-xs text-slate-400">Carregando...</span>
+            </div>
 
-                    <button (click)="marcarStatus(aluno.id, 'Ausente')"
-                        [ngClass]="aluno.status === 'Ausente' ? 'bg-red-100 text-red-800 border-red-300 font-bold' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'"
-                        class="px-4 py-2 border rounded-md text-sm transition-colors flex items-center">
-                        <span class="mr-2"
-                            [ngClass]="aluno.status === 'Ausente' ? 'text-red-600' : 'text-slate-400'">✕</span> Ausente
-                    </button>
+            <div *ngIf="alunos.length === 0" class="p-8 text-center text-slate-400">
+                Nenhum aluno matriculado nesta turma.
+            </div>
+
+            <div class="divide-y divide-slate-100">
+                <div *ngFor="let aluno of alunos"
+                    class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div>
+                        <span class="font-medium text-slate-700">{{ aluno.nome }}</span>
+                        <span class="text-xs text-slate-400 ml-2">RA: {{ aluno.ra }}</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button (click)="marcarStatus(aluno.id, true)"
+                            class="px-4 py-2 border rounded-md text-sm transition-colors flex items-center"
+                            [class.bg-green-100]="aluno.status === true"
+                            [class.text-green-800]="aluno.status === true"
+                            [class.border-green-300]="aluno.status === true"
+                            [class.font-bold]="aluno.status === true"
+                            [class.bg-white]="aluno.status !== true"
+                            [class.text-slate-600]="aluno.status !== true"
+                            [class.border-slate-200]="aluno.status !== true">
+                            ✓ Presente
+                        </button>
+                        <button (click)="marcarStatus(aluno.id, false)"
+                            class="px-4 py-2 border rounded-md text-sm transition-colors flex items-center"
+                            [class.bg-red-100]="aluno.status === false"
+                            [class.text-red-800]="aluno.status === false"
+                            [class.border-red-300]="aluno.status === false"
+                            [class.font-bold]="aluno.status === false"
+                            [class.bg-white]="aluno.status !== false"
+                            [class.text-slate-600]="aluno.status !== false"
+                            [class.border-slate-200]="aluno.status !== false">
+                            ✕ Ausente
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Botão Final de Submissão -->
-    <div class="flex justify-end pt-4 pb-10">
-        <button (click)="salvarChamada()"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition-colors text-lg">
-            Salvar Chamada
-        </button>
-    </div>
+        <div class="flex justify-end pb-10">
+            <button (click)="salvarChamada()" [disabled]="salvando"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition-colors text-lg disabled:opacity-50">
+                {{ salvando ? 'Salvando...' : 'Salvar Chamada' }}
+            </button>
+        </div>
+    </ng-container>
 </div>
 
-<!-- Mock visual para a aba Histórico -->
+<!-- ABA: Histórico -->
 <div *ngIf="abaAtual === 'historico'" class="space-y-6">
 
-    <div
-        class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex-1 max-w-md">
             <label class="block text-sm font-bold text-slate-800 mb-2">Filtrar por Turma</label>
             <select [(ngModel)]="filtroTurmaHistorico"
-                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 bg-white">
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
                 <option value="Todas">Todas as Turmas</option>
                 <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
             </select>
         </div>
-        <p class="text-sm text-slate-500 font-medium">Mostrando {{ historicoFiltrado.length }} chamada(s) anterior(es)
-        </p>
+        <p class="text-sm text-slate-500">{{ historicoFiltrado.length }} chamada(s) registrada(s)</p>
     </div>
 
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-10">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-bold">
-                        <th class="p-4">Data da Chamada</th>
-                        <th class="p-4">Turma / Componente</th>
-                        <th class="p-4 text-center">Presentes</th>
-                        <th class="p-4 text-center">Ausentes</th>
-                        <th class="p-4 text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
-                    <tr *ngFor="let item of historicoFiltrado" class="hover:bg-slate-50 transition-colors">
-                        <td class="p-4 font-semibold text-slate-600">
-                            {{ item.data.split('-').reverse().join('/') }}
-                        </td>
-                        <td class="p-4 font-bold text-slate-800">{{ item.turmaNome }}</td>
-                        <td class="p-4 text-center">
-                            <span
-                                class="bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full font-bold text-xs">
-                                {{ item.presentes }} aln
-                            </span>
-                        </td>
-                        <td class="p-4 text-center">
-                            <span
-                                class="bg-red-50 text-red-700 border border-red-200 px-3 py-1 rounded-full font-bold text-xs">
-                                {{ item.ausentes }} aln
-                            </span>
-                        </td>
-                        <td class="p-4 text-center">
-                            <button type="button" (click)="visualizarDetalhesHistorico(item.id)"
-                                class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg font-bold transition-colors text-xs">
-                                🔍 Detalhes
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr *ngIf="historicoFiltrado.length === 0">
-                        <td colspan="5" class="p-8 text-center text-slate-400 font-medium">
-                            Nenhum registro de chamada encontrado para esta turma.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-bold">
+                    <th class="p-4">Data</th>
+                    <th class="p-4 text-center">Presentes</th>
+                    <th class="p-4 text-center">Ausentes</th>
+                    <th class="p-4 text-center">Total</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+                <tr *ngFor="let item of historicoFiltrado" class="hover:bg-slate-50">
+                    <td class="p-4 font-semibold">{{ formatarData(item.data) }}</td>
+                    <td class="p-4 text-center">
+                        <span class="bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full font-bold text-xs">
+                            {{ item.presentes }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center">
+                        <span class="bg-red-50 text-red-700 border border-red-200 px-3 py-1 rounded-full font-bold text-xs">
+                            {{ item.ausentes }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center text-slate-500">{{ item.presentes + item.ausentes }}</td>
+                </tr>
+                <tr *ngIf="historicoFiltrado.length === 0">
+                    <td colspan="4" class="p-8 text-center text-slate-400">
+                        Nenhuma chamada registrada. Selecione uma turma na aba "Registrar Presença" para começar.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
 </div>

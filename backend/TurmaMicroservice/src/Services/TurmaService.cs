@@ -28,7 +28,16 @@ namespace TurmaAPI.Services
         public async Task<List<TurmaResponseDTO>> GetAllAsync()
         {
             var turmas = await _repository.GetAllAsync();
-            return TurmaMapper.ToResponseList(turmas);
+            var result = new List<TurmaResponseDTO>();
+
+            foreach (var (turma, qtdAlunos, qtdProfessores) in turmas)
+            {
+                var alunosIds = await _repository.GetAlunosIdsDaTurmaAsync(turma.Id);
+                var professoresIds = await _repository.GetProfessoresIdsDaTurmaAsync(turma.Id);
+                result.Add(TurmaMapper.ToResponse(turma, qtdAlunos, qtdProfessores, alunosIds, professoresIds));
+            }
+
+            return result;
         }
 
         public async Task<TurmaResponseDTO> GetByIdAsync(long id)

@@ -7,8 +7,7 @@ namespace QuestaoAPI.Model
     [Table("Questoes")]
     public class Questao : BaseEntity
     {
-        [Required(ErrorMessage = "O ID da prova é obrigatório.")]
-        [Column("ProvaId")] public long ProvaId { get; set; }
+        [Column("ProvaId")] public long? ProvaId { get; set; }
 
         [Required(ErrorMessage = "A disciplina é obrigatória.")]
         [MaxLength(80)]
@@ -26,7 +25,7 @@ namespace QuestaoAPI.Model
         [Column("Numero")] public int Numero { get; set; }
 
         // Navegação
-        public Prova Prova { get; set; }
+        public Prova? Prova { get; set; }
         public ICollection<Alternativa> Alternativas { get; set; } = new List<Alternativa>();
     }
 }

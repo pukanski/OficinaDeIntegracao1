@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Questao } from '../../../../core/models/questao.model';
+import { environment } from '../../../../../environments/environment';
+
+const DIFICULDADE_ORDEM: Record<string, number> = {
+  'Muito Fácil': 1, 'Fácil': 2, 'Médio': 3, 'Difícil': 4, 'Muito Difícil': 5
+};
 
 @Component({
   selector: 'app-banco-questoes',
@@ -12,46 +18,87 @@ import { Questao } from '../../../../core/models/questao.model';
 })
 export class BancoQuestoesComponent implements OnInit {
   questoes: Questao[] = [];
-  questoesSelecionadas: Set<string> = new Set();
+  questoesSelecionadas: Set<number> = new Set();
+  idsNoRascunho: Set<number> = new Set();
 
-  termoBusca: string = '';
-  filtroDisciplina: string = 'Todas';
-  filtroMacroArea: string = 'Todas';
-  filtroMicroArea: string = '';
-  filtroDificuldade: string = 'Todas';
+  termoBusca = '';
+  filtroDisciplina = 'Todas';
+  filtroMicroArea = '';
+  filtroDificuldade = 'Todas';
+  filtroProva = 'Todas';
 
-  // --- NOVAS VARIÁVEIS PARA O MODAL ---
-  modalAberto: boolean = false;
+  modalAberto = false;
   modoModal: 'visualizar' | 'excluir' = 'visualizar';
   questaoFoco: Questao | null = null;
 
-  constructor(private router: Router) {}
+  carregando = false;
+  erro = '';
+
+  private apiUrl = `${environment.gatewayUrl}/api/Questao/Questoes`;
+
+  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.questoes = [
-      { id: '1', enunciado: 'Resolver a equação quadrática x² - 5x + 6 = 0', disciplina: 'Matemática', macroArea: 'Álgebra', microArea: 'Equações Quadráticas', dificuldade: 3 },
-      { id: '2', enunciado: 'Calcular a área de um triângulo retângulo', disciplina: 'Matemática', macroArea: 'Geometria', microArea: 'Triângulos', dificuldade: 2 },
-      { id: '3', enunciado: 'Explicar a Lei de Newton', disciplina: 'Física', macroArea: 'Mecânica', microArea: 'Dinâmica', dificuldade: 4 },
-      { id: '4', enunciado: 'Balancear equação química de combustão', disciplina: 'Química', macroArea: 'Reações Químicas', microArea: 'Combustão', dificuldade: 3 }
-    ];
+    // Carrega IDs que já estão no rascunho da lista
+    const rascunhoRaw = sessionStorage.getItem('criar_lista_rascunho');
+    if (rascunhoRaw) {
+      const rascunho = JSON.parse(rascunhoRaw);
+      this.idsNoRascunho = new Set<number>(rascunho.questoesIds || []);
+    }
+    this.carregarQuestoes();
   }
 
-  get disciplinasUnicas(): string[] { return [...new Set(this.questoes.map(q => q.disciplina))]; }
-  get macroAreasUnicas(): string[] { return [...new Set(this.questoes.map(q => q.macroArea))]; }
-
-  get questoesFiltradas(): Questao[] {
-    return this.questoes.filter(q => {
-      const matchBusca = q.enunciado.toLowerCase().includes(this.termoBusca.toLowerCase());
-      const matchDisciplina = this.filtroDisciplina === 'Todas' || q.disciplina === this.filtroDisciplina;
-      const matchMacroArea = this.filtroMacroArea === 'Todas' || q.macroArea === this.filtroMacroArea;
-      const matchMicroArea = q.microArea.toLowerCase().includes(this.filtroMicroArea.toLowerCase());
-      const matchDificuldade = this.filtroDificuldade === 'Todas' || q.dificuldade.toString() === this.filtroDificuldade;
-
-      return matchBusca && matchDisciplina && matchMacroArea && matchMicroArea && matchDificuldade;
+  carregarQuestoes(): void {
+    this.carregando = true;
+    this.erro = '';
+    this.http.get<Questao[]>(this.apiUrl).subscribe({
+      next: (data) => {
+        this.questoes = data;
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.erro = 'Erro ao carregar questões.';
+        this.carregando = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  toggleSelecao(id: string): void {
+  get disciplinasUnicas(): string[] {
+    return [...new Set(this.questoes.map(q => q.disciplina).filter(Boolean))];
+  }
+
+  get provasUnicas(): string[] {
+    return [...new Set(
+      this.questoes
+        .map(q => q.provaDescricao)
+        .filter((p): p is string => !!p)
+    )];
+  }
+
+  get questoesFiltradas(): Questao[] {
+    return this.questoes.filter(q => {
+      const matchBusca = !this.termoBusca ||
+        q.enunciado.toLowerCase().includes(this.termoBusca.toLowerCase());
+      const matchDisciplina = this.filtroDisciplina === 'Todas' ||
+        q.disciplina === this.filtroDisciplina;
+      const matchMicro = !this.filtroMicroArea ||
+        (q.materia || '').toLowerCase().includes(this.filtroMicroArea.toLowerCase());
+      const matchDificuldade = this.filtroDificuldade === 'Todas' ||
+        q.dificuldade === this.filtroDificuldade;
+      const matchProva = this.filtroProva === 'Todas' ||
+        (this.filtroProva === 'Avulsa' ? !q.provaDescricao : q.provaDescricao === this.filtroProva);
+      return matchBusca && matchDisciplina && matchMicro && matchDificuldade && matchProva;
+    });
+  }
+
+  getDificuldadeStars(dificuldade?: string): boolean[] {
+    const nivel = DIFICULDADE_ORDEM[dificuldade || ''] || 0;
+    return Array(5).fill(false).map((_, i) => i < nivel);
+  }
+
+  toggleSelecao(id: number): void {
     if (this.questoesSelecionadas.has(id)) {
       this.questoesSelecionadas.delete(id);
     } else {
@@ -59,14 +106,9 @@ export class BancoQuestoesComponent implements OnInit {
     }
   }
 
-  getDificuldadeArray(nivel: number): boolean[] {
-    return Array(5).fill(false).map((_, index) => index < nivel);
-  }
-
-  // --- NOVAS FUNÇÕES DO MODAL E AÇÕES ---
   abrirModal(modo: 'visualizar' | 'excluir'): void {
-    const idPrimeiraSelecionada = Array.from(this.questoesSelecionadas)[0];
-    this.questaoFoco = this.questoes.find(q => q.id === idPrimeiraSelecionada) || null;
+    const id = Array.from(this.questoesSelecionadas)[0];
+    this.questaoFoco = this.questoes.find(q => q.id === id) || null;
     this.modoModal = modo;
     this.modalAberto = true;
   }
@@ -77,20 +119,23 @@ export class BancoQuestoesComponent implements OnInit {
   }
 
   confirmarExclusao(): void {
-    // Remove as questões que estavam no Set
-    this.questoes = this.questoes.filter(q => !this.questoesSelecionadas.has(q.id));
-    this.questoesSelecionadas.clear(); // Limpa a seleção
-    this.fecharModal();
+    const ids = Array.from(this.questoesSelecionadas);
+    const deletes = ids.map(id =>
+      this.http.delete(`${this.apiUrl}/${id}`).toPromise().catch(() => null)
+    );
+    Promise.all(deletes).then(() => {
+      this.questoes = this.questoes.filter(q => !this.questoesSelecionadas.has(q.id));
+      this.questoesSelecionadas.clear();
+      this.fecharModal();
+    });
   }
 
   editarSelecionada(): void {
-    const id = Array.from(this.questoesSelecionadas)[0];
-    alert(`Redirecionando para edição da questão ID: ${id} (Integração futura com a tela Cadastrar Questão)`);
+    // TODO: navegar para edição
   }
 
   criarListaAPartirDaSelecao(): void {
     const ids = Array.from(this.questoesSelecionadas);
-    // Navega enviando os IDs no 'state' da rota
     this.router.navigate(['/professor/criar-lista'], { state: { questoesPrevias: ids } });
   }
 }

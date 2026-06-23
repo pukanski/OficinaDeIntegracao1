@@ -79,6 +79,7 @@ def validate_discipline(raw_value, disciplines):
 def validate_subject(raw_value, discipline, subjects):
     if not raw_value or raw_value == "null":
         return None
+    # Tenta validar contra a lista conhecida primeiro
     valid_subjects = subjects.get(discipline, [])
     if raw_value in valid_subjects:
         return raw_value
@@ -86,19 +87,22 @@ def validate_subject(raw_value, discipline, subjects):
     for subject in valid_subjects:
         if subject.lower() == raw_lower:
             return subject
-    print(f"[VALIDATOR] Matéria '{raw_value}' não encontrada")
-    return None
+    # Se não encontrou na lista, aceita mesmo assim — micro-área é campo livre
+    print(f"[VALIDATOR] Matéria '{raw_value}' não está na lista pré-definida, mas será aceita")
+    return raw_value
 
 
 def validate_difficulty(raw_value):
-    valid = ["Fácil", "Médio", "Difícil"]
+    valid = ["Muito Fácil", "Fácil", "Médio", "Difícil", "Muito Difícil"]
     if not raw_value or raw_value == "null":
         return None
     if raw_value in valid:
         return raw_value
     mapping = {
+        "muito fácil": "Muito Fácil", "muito facil": "Muito Fácil", "very easy": "Muito Fácil",
         "fácil": "Fácil", "facil": "Fácil", "easy": "Fácil",
         "médio": "Médio", "medio": "Médio", "medium": "Médio",
-        "difícil": "Difícil", "dificil": "Difícil", "hard": "Difícil"
+        "difícil": "Difícil", "dificil": "Difícil", "hard": "Difícil",
+        "muito difícil": "Muito Difícil", "muito dificil": "Muito Difícil", "very hard": "Muito Difícil"
     }
     return mapping.get(raw_value.lower().strip(), None)

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 
-// DTOs para comunicação com a API
-interface AlternativaDTO { letra: string; texto: string; }
-interface QuestaoResolucaoDTO { id: string; enunciado: string; alternativas: AlternativaDTO[]; }
+interface AlternativaDTO { id: number; letra: string; texto: string; correta: boolean; }
+interface QuestaoDTO { id: number; enunciado: string; disciplina: string; materia?: string; dificuldade?: string; provaDescricao?: string; vestibular?: string; anoProva?: number; alternativas: AlternativaDTO[]; }
 
 @Component({
   selector: 'app-resolucao-exercicio',
@@ -13,94 +14,130 @@ interface QuestaoResolucaoDTO { id: string; enunciado: string; alternativas: Alt
   templateUrl: './resolucao-exercicio.html'
 })
 export class ResolucaoExercicioComponent implements OnInit {
-  listaId!: string;
-  tituloLista: string = 'Revisão - Equações Quadráticas';
+  listaId!: number;
+  tituloLista = '';
+  questoes: QuestaoDTO[] = [];
+  indiceAtual = 0;
+  respostasSalvas = new Map<number, number>(); // questaoId -> alternativaId
+  alunoId: number | null = null;
+  carregando = false;
+  enviando = false;
 
-  // Estado local
-  questoes: QuestaoResolucaoDTO[] = [];
-  indiceAtual: number = 0;
+  private api = environment.gatewayUrl;
 
-  // Mapa para guardar as respostas (Chave: ID da questão, Valor: Letra selecionada)
-  respostasSalvas: Map<string, string> = new Map();
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
+  ) {}
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  private atualizar(fn: () => void): void {
+    this.zone.run(() => { fn(); this.cdr.detectChanges(); });
+  }
 
   ngOnInit(): void {
-    // 1. Pega o ID da lista que veio na URL
-    this.listaId = this.route.snapshot.paramMap.get('id') || '';
+    this.listaId = +this.route.snapshot.paramMap.get('id')!;
+    const state = history.state;
+    this.alunoId = state?.alunoId || null;
+    this.tituloLista = state?.lista?.titulo || 'Lista de Exercícios';
 
-    // 2. Simula o GET /api/listas/{id}/questoes
-    this.questoes = [
-      {
-        id: 'q1',
-        enunciado: 'Resolver a equação quadrática: x² - 5x + 6 = 0',
-        alternativas: [
-          { letra: 'A', texto: 'x = 2 ou x = 3' },
-          { letra: 'B', texto: 'x = 1 ou x = 4' },
-          { letra: 'C', texto: 'x = 2 ou x = 4' },
-          { letra: 'D', texto: 'x = 3 ou x = 6' },
-          { letra: 'E', texto: 'x = 1 ou x = 2' }
-        ]
-      },
-      {
-        id: 'q2',
-        enunciado: 'Qual a raiz quadrada de 144?',
-        alternativas: [
-          { letra: 'A', texto: '10' }, { letra: 'B', texto: '12' }, { letra: 'C', texto: '14' }, { letra: 'D', texto: '16' }, { letra: 'E', texto: '18' }
-        ]
-      },
-      {
-        id: 'q3',
-        enunciado: 'A soma dos ângulos internos de um triângulo é:',
-        alternativas: [
-          { letra: 'A', texto: '90 graus' }, { letra: 'B', texto: '180 graus' }, { letra: 'C', texto: '270 graus' }, { letra: 'D', texto: '360 graus' }, { letra: 'E', texto: 'Nenhuma das anteriores' }
-        ]
-      }
-    ];
+    if (!this.alunoId) {
+      this.http.get<any>(`${this.api}/api/Aluno/me`).subscribe({
+        next: (a) => { this.alunoId = a.id; }
+      });
+    }
+
+    this.carregarQuestoes();
   }
 
-  // Getters para a Interface
-  get questaoAtual(): QuestaoResolucaoDTO { return this.questoes[this.indiceAtual]; }
+  carregarQuestoes(): void {
+    this.carregando = true;
+    this.http.get<any>(`${this.api}/api/Lista/${this.listaId}`).subscribe({
+      next: (lista) => {
+        this.tituloLista = lista.titulo;
+        const ids: number[] = lista.questoesIds;
+        const questoesTemp: QuestaoDTO[] = [];
+        let pendentes = ids.length;
+
+        if (pendentes === 0) { this.atualizar(() => { this.carregando = false; }); return; }
+
+        ids.forEach(id => {
+          this.http.get<QuestaoDTO>(`${this.api}/api/Questao/Questoes/${id}`).subscribe({
+            next: (q) => {
+              questoesTemp.push(q);
+              pendentes--;
+              if (pendentes === 0) {
+                // Ordena pela ordem original dos IDs
+                this.atualizar(() => {
+                  this.questoes = ids.map(i => questoesTemp.find(q => q.id === i)!).filter(Boolean);
+                  this.carregando = false;
+                });
+              }
+            },
+            error: () => { pendentes--; if (pendentes === 0) this.atualizar(() => { this.carregando = false; }); }
+          });
+        });
+      },
+      error: () => this.atualizar(() => { this.carregando = false; })
+    });
+  }
+
+  get questaoAtual(): QuestaoDTO { return this.questoes[this.indiceAtual]; }
   get totalRespondidas(): number { return this.respostasSalvas.size; }
-  get progressoPercentual(): number { return (this.totalRespondidas / this.questoes.length) * 100; }
+  get progressoPercentual(): number { return this.questoes.length ? (this.totalRespondidas / this.questoes.length) * 100 : 0; }
   get ehUltimaQuestao(): boolean { return this.indiceAtual === this.questoes.length - 1; }
 
-  // Ações
-  selecionarAlternativa(letra: string): void {
-    this.respostasSalvas.set(this.questaoAtual.id, letra);
+  alternativaSelecionada(questaoId: number): number | undefined { return this.respostasSalvas.get(questaoId); }
+  estaSelecionada(questaoId: number, altId: number): boolean { return this.respostasSalvas.get(questaoId) === altId; }
+
+  selecionarAlternativa(altId: number): void {
+    this.atualizar(() => { this.respostasSalvas.set(this.questaoAtual.id, altId); });
   }
 
-  alternativaEstaSelecionada(letra: string): boolean {
-    return this.respostasSalvas.get(this.questaoAtual.id) === letra;
-  }
+  irPara(i: number): void { this.atualizar(() => { this.indiceAtual = i; }); }
+  anterior(): void { if (this.indiceAtual > 0) this.atualizar(() => { this.indiceAtual--; }); }
+  proxima(): void { if (!this.ehUltimaQuestao) this.atualizar(() => { this.indiceAtual++; }); }
 
-  irPara(indice: number): void { this.indiceAtual = indice; }
-  anterior(): void { if (this.indiceAtual > 0) this.indiceAtual--; }
-  proxima(): void { if (!this.ehUltimaQuestao) this.indiceAtual++; }
-
-  obterStatusNavegador(indice: number): 'atual' | 'respondida' | 'pendente' {
-    if (indice === this.indiceAtual) return 'atual';
-    if (this.respostasSalvas.has(this.questoes[indice].id)) return 'respondida';
+  obterStatus(i: number): 'atual' | 'respondida' | 'pendente' {
+    if (i === this.indiceAtual) return 'atual';
+    if (this.questoes[i] && this.respostasSalvas.has(this.questoes[i].id)) return 'respondida';
     return 'pendente';
   }
 
   finalizarLista(): void {
     if (this.totalRespondidas < this.questoes.length) {
-      const confirma = confirm('Você não respondeu todas as questões. Deseja finalizar mesmo assim?');
-      if (!confirma) return;
+      if (!confirm('Você não respondeu todas as questões. Deseja finalizar mesmo assim?')) return;
     }
 
-    // Estrutura o DTO final para o back-end efetuar a correção automática (RF08)
-    const payloadCorrecao = {
-      listaId: this.listaId,
-      respostas: Array.from(this.respostasSalvas.entries()).map(([questaoId, alternativa]) => ({
-        questaoId,
-        alternativaSelecionada: alternativa
-      }))
-    };
+    if (!this.alunoId) { alert('Não foi possível identificar o aluno.'); return; }
 
-    console.log('Enviando para o C# corrigir:', payloadCorrecao);
-    alert('Respostas enviadas! A tela de correção com o gabarito será carregada em seguida (Próxima etapa).');
-    this.router.navigate(['/aluno/gabarito', this.listaId]);
+    this.enviando = true;
+    const respostas = this.questoes.map(q => {
+      const altId = this.respostasSalvas.get(q.id);
+      const alt = q.alternativas.find(a => a.id === altId);
+      return {
+        alunoId: this.alunoId,
+        questaoId: q.id,
+        alternativaId: altId || 0,
+        disciplina: q.disciplina || 'Geral',
+        vestibular: q.provaDescricao || 'Avulsa',
+        anoProva: q.anoProva || new Date().getFullYear(),
+        dificuldade: q.dificuldade || null,
+        acertou: alt?.correta ?? false
+      };
+    }).filter(r => r.alternativaId > 0);
+
+    // Envia todas as respostas
+    Promise.all(
+      respostas.map(r => this.http.post(`${this.api}/api/Dados/responder`, r).toPromise().catch(() => null))
+    ).then(() => {
+      this.enviando = false;
+      // Navega para o gabarito passando o mapa de respostas
+      this.router.navigate(['/aluno/gabarito', this.listaId], {
+        state: { questoes: this.questoes, respostasSalvas: Object.fromEntries(this.respostasSalvas) }
+      });
+    });
   }
 }

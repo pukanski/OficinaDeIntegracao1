@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
+import { Questao } from '../../../../core/models/questao.model';
 
-interface TurmaMock { id: string; nome: string; qtdAlunos: number; }
-interface QuestaoListaMock { id: string; enunciado: string; disciplina: string; }
+interface Turma { id: number; nome: string; ano: string; turno: string; qtdAlunos: number; }
 
 @Component({
   selector: 'app-criar-lista',
@@ -15,90 +17,172 @@ interface QuestaoListaMock { id: string; enunciado: string; disciplina: string; 
 export class CriarListaComponent implements OnInit {
   listaForm!: FormGroup;
 
-  turmas: TurmaMock[] = [
-    { id: 't1', nome: 'Turma A - Matemática', qtdAlunos: 28 },
-    { id: 't2', nome: 'Turma B - Física', qtdAlunos: 32 },
-    { id: 't3', nome: 'Turma C - Química', qtdAlunos: 25 }
-  ];
+  turmas: Turma[] = [];
+  questoesSelecionadas: Questao[] = [];
 
-  questoesSelecionadas: QuestaoListaMock[] = [];
+  professorId: number | null = null;
+  carregandoTurmas = false;
+  salvando = false;
+  mensagem = '';
+  erro = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    // 1. RECEBE AS QUESTÕES VINDAS DO BANCO DE QUESTÕES VIA ROTA
-    const navegacao = this.router.getCurrentNavigation();
-    const idsRecebidos = navegacao?.extras?.state?.['questoesPrevias'] as string[];
+  private gatewayUrl = environment.gatewayUrl;
 
-    if (idsRecebidos && idsRecebidos.length > 0) {
-      // Como não temos a API ainda, crio um mock rápido só pra mostrar que chegou
-      this.questoesSelecionadas = idsRecebidos.map((id, index) => ({
-        id: id,
-        enunciado: `Questão Importada do Banco (ID: ${id})`,
-        disciplina: 'Disciplina Genérica'
-      }));
-    }
-  }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.listaForm = this.fb.group({
-      nomeLista: ['', [Validators.required, Validators.minLength(3)]],
-      // Cria um FormArray para armazenar os checkboxes marcados
-      turmasIds: this.fb.array([], Validators.required) 
+      titulo: ['', [Validators.required, Validators.minLength(3)]],
+      dataVencimento: [''],
+      turmasIds: this.fb.array([])
     });
+
+    // IDs vindos do banco de questões via navegação
+    const navState = history.state;
+    const idsNavegacao = (navState?.questoesPrevias as number[]) || [];
+
+    // Rascunho salvo antes de ir ao banco de questões
+    const rascunhoRaw = sessionStorage.getItem('criar_lista_rascunho');
+    if (rascunhoRaw) {
+      const rascunho = JSON.parse(rascunhoRaw);
+      sessionStorage.removeItem('criar_lista_rascunho');
+
+      // Restaura título e data
+      this.listaForm.patchValue({
+        titulo: rascunho.titulo || '',
+        dataVencimento: rascunho.dataVencimento || ''
+      });
+
+      // Restaura turmas selecionadas
+      (rascunho.turmasIds || []).forEach((id: number) =>
+        this.turmasFormArray.push(new FormControl(id))
+      );
+
+      // Mescla IDs do rascunho com os novos vindos do banco
+      const idsMesclados = [...new Set([...(rascunho.questoesIds || []), ...idsNavegacao])] as number[];
+      if (idsMesclados.length) this._carregarQuestoesPorIds(idsMesclados);
+
+    } else if (idsNavegacao.length) {
+      this._carregarQuestoesPorIds(idsNavegacao);
+    }
+
+    this.carregarTurmas();
+    this.carregarProfessorId();
   }
 
-  // Getter de conveniência para acessar o FormArray no HTML
   get turmasFormArray() {
     return this.listaForm.get('turmasIds') as FormArray;
   }
 
-  // Controle dinâmico: Adiciona ou remove o ID da turma no array
-  toggleTurma(e: any): void {
-    if (e.target.checked) {
-      this.turmasFormArray.push(new FormControl(e.target.value));
-    } else {
-      let i: number = 0;
-      this.turmasFormArray.controls.forEach((item: any) => {
-        if (item.value == e.target.value) {
-          this.turmasFormArray.removeAt(i);
-          return;
+  carregarTurmas(): void {
+    this.carregandoTurmas = true;
+    this.http.get<Turma[]>(`${this.gatewayUrl}/api/Turma`).subscribe({
+      next: (data) => {
+        this.turmas = data;
+        this.carregandoTurmas = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.turmas = []; this.carregandoTurmas = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  carregarProfessorId(): void {
+    this.http.get<any>(`${this.gatewayUrl}/api/Professor/me`).subscribe({
+      next: (prof) => { this.professorId = prof.id; },
+      error: () => { this.professorId = null; }
+    });
+  }
+
+  private _carregarQuestoesPorIds(ids: number[]): void {
+    ids.forEach(id => {
+      this.http.get<Questao>(`${this.gatewayUrl}/api/Questao/Questoes/${id}`).subscribe({
+        next: (q) => {
+          if (!this.questoesSelecionadas.find(x => x.id === q.id)) {
+            this.questoesSelecionadas = [...this.questoesSelecionadas, q];
+            this.cdr.detectChanges();
+          }
         }
-        i++;
       });
+    });
+  }
+
+  toggleTurma(e: any): void {
+    const val = +e.target.value;
+    if (e.target.checked) {
+      this.turmasFormArray.push(new FormControl(val));
+    } else {
+      const idx = this.turmasFormArray.controls.findIndex(c => c.value === val);
+      if (idx >= 0) this.turmasFormArray.removeAt(idx);
     }
   }
 
-  removerQuestao(idQuestao: string): void {
-    this.questoesSelecionadas = this.questoesSelecionadas.filter(q => q.id !== idQuestao);
+  isTurmaSelecionada(id: number): boolean {
+    return this.turmasFormArray.value.includes(id);
+  }
+
+  removerQuestao(id: number): void {
+    this.questoesSelecionadas = this.questoesSelecionadas.filter(q => q.id !== id);
   }
 
   adicionarMaisQuestoes(): void {
+    // Salva o estado atual antes de navegar
+    sessionStorage.setItem('criar_lista_rascunho', JSON.stringify({
+      titulo: this.listaForm.get('titulo')?.value,
+      dataVencimento: this.listaForm.get('dataVencimento')?.value,
+      turmasIds: this.turmasFormArray.value,
+      questoesIds: this.questoesSelecionadas.map(q => q.id)
+    }));
     this.router.navigate(['/professor/banco-questoes']);
   }
 
   gerarLista(): void {
+    this.mensagem = '';
+    this.erro = '';
+
     if (this.listaForm.invalid) {
       this.listaForm.markAllAsTouched();
-      alert('Preencha o nome da lista e selecione pelo menos uma turma.');
       return;
     }
-
     if (this.questoesSelecionadas.length === 0) {
-      alert('Sua lista não possui nenhuma questão. Adicione questões antes de gerar.');
+      this.erro = 'Adicione pelo menos uma questão antes de gerar a lista.';
+      return;
+    }
+    if (!this.professorId) {
+      this.erro = 'Não foi possível identificar o professor. Tente fazer login novamente.';
       return;
     }
 
-    // Payload estruturado: Note que idTurma agora é um Array!
-    const payloadParaAPI = {
-      nome: this.listaForm.value.nomeLista,
-      idsTurmas: this.listaForm.value.turmasIds,
-      idsQuestoes: this.questoesSelecionadas.map(q => q.id)
+    this.salvando = true;
+    const form = this.listaForm.value;
+
+    const payload = {
+      titulo: form.titulo,
+      professorId: this.professorId,
+      dataVencimento: form.dataVencimento || null,
+      questoesIds: this.questoesSelecionadas.map(q => q.id),
+      turmasIds: form.turmasIds
     };
 
-    console.log('Payload pronto para POST na API:', payloadParaAPI);
-    alert('Lista gerada com sucesso! Verifique o console para ver o Payload JSON.');
-    
-    this.listaForm.reset();
-    this.turmasFormArray.clear();
-    this.questoesSelecionadas = [];
+    this.http.post(`${this.gatewayUrl}/api/Lista`, payload).subscribe({
+      next: () => {
+        this.mensagem = 'Lista criada com sucesso!';
+        sessionStorage.removeItem('criar_lista_rascunho');
+        this.salvando = false;
+        this.listaForm.reset();
+        this.turmasFormArray.clear();
+        this.questoesSelecionadas = [];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.erro = err.error?.message || 'Erro ao criar lista.';
+        this.salvando = false;
+      }
+    });
   }
 }

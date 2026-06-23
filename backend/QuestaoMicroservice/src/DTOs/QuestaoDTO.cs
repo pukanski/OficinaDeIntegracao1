@@ -52,28 +52,25 @@ namespace QuestaoAPI.DTOs
     /// <summary>Dados para cadastrar ou atualizar uma questão.</summary>
     public class QuestaoRequestDTO
     {
-        /// <example>1</example>
-        [Required(ErrorMessage = "O ID da prova é obrigatório.")]
-        public long ProvaId { get; set; }
+        public long? ProvaId { get; set; }
 
-        /// <example>Matemática</example>
         [Required(ErrorMessage = "A disciplina é obrigatória.")]
         [MaxLength(80)]
-        public string Disciplina { get; set; }
+        public string Disciplina { get; set; } // Esta será a sua MACRO-ÁREA da IA
 
-        /// <example>Geometria Plana</example>
-        public string? Materia { get; set; }
+        public string? Materia { get; set; } // Esta será a sua MICRO-ÁREA da IA
 
-        /// <example>Se um triângulo tem lados 3, 4 e 5, qual é a área?</example>
         [Required(ErrorMessage = "O enunciado é obrigatório.")]
         public string Enunciado { get; set; }
 
-        /// <example>Médio</example>
         public string? Dificuldade { get; set; }
 
-        /// <example>1</example>
         [Required(ErrorMessage = "O número da questão é obrigatório.")]
         public int Numero { get; set; }
+
+        [Required]
+        [MinLength(5, ErrorMessage = "A questão deve conter 5 alternativas.")]
+        public List<AlternativaRequestDTO> Alternativas { get; set; } = new();
     }
 
     /// <summary>Dados retornados de uma questão.</summary>
@@ -83,7 +80,7 @@ namespace QuestaoAPI.DTOs
         public long Id { get; set; }
 
         /// <example>1</example>
-        public long ProvaId { get; set; }
+        public long? ProvaId { get; set; }
 
         /// <example>ENEM 2024</example>
         public string ProvaDescricao { get; set; }

@@ -14,9 +14,11 @@ interface DisciplinaDTO { id: string; nome: string; macroArea: string; }
   templateUrl: './painel-admin.html'
 })
 export class PainelAdminComponent implements OnInit {
-  abaAtual: 'usuarios' | 'disciplinas' = 'usuarios';
   usuarioForm!: FormGroup;
   disciplinaForm!: FormGroup;
+
+  modoEdicao: boolean = false;
+  usuarioEmEdicao: any = null;
 
   usuarios: UsuarioDTO[] = [];
   disciplinas: DisciplinaDTO[] = [];
@@ -51,20 +53,18 @@ export class PainelAdminComponent implements OnInit {
   carregarUsuarios(): void {
     this.http.get<any>(`${environment.gatewayUrl}/api/Admin/usuarios`).subscribe({
       next: (data) => {
-        const profs: UsuarioDTO[] = (data.professores || []).map((p: any) => ({
-          id: p.authId || p.id,
+        const profs: any[] = (data.professores || []).map((p: any) => ({
+          idNumerico: p.id, authId: p.authId, // Guardamos os IDs cruciais
           nome: p.primeiroNome ? `${p.primeiroNome} ${p.ultimoNome}` : p.nome,
-          email: p.email,
-          tipo: 'Professor',
-          status: 'Ativo'
+          email: p.email, tipo: 'Professor', status: 'Ativo',
+          siape: p.siape, disciplina: p.disciplina
         }));
 
-        const alunos: UsuarioDTO[] = (data.alunos || []).map((a: any) => ({
-          id: a.authId || a.id,
+        const alunos: any[] = (data.alunos || []).map((a: any) => ({
+          idNumerico: a.id, authId: a.authId,
           nome: a.primeiroNome ? `${a.primeiroNome} ${a.ultimoNome}` : a.nome,
-          email: a.email,
-          tipo: 'Aluno',
-          status: 'Ativo'
+          email: a.email, tipo: 'Aluno', status: 'Ativo',
+          ra: a.ra
         }));
 
         this.usuarios = [...profs, ...alunos];
@@ -79,42 +79,93 @@ export class PainelAdminComponent implements OnInit {
     });
   }
 
-  adicionarUsuario(): void {
+  salvarUsuario(): void {
     if (this.usuarioForm.invalid) {
       this.usuarioForm.markAllAsTouched();
       return;
     }
 
-    const rawValue = this.usuarioForm.value;
+    const rawValue = this.usuarioForm.getRawValue();
     const nomes = rawValue.nome.split(' ');
+    const primeiroNome = nomes[0];
+    const ultimoNome = nomes.slice(1).join(' ') || ' ';
 
-    const payload = {
-      email: rawValue.email,
-      senha: rawValue.senha,
-      primeiroNome: nomes[0],
-      ultimoNome: nomes.slice(1).join(' ') || ' ',
-      tipo: rawValue.tipo,
-      ra: rawValue.tipo === 'Aluno' ? rawValue.ra : null,
-      siape: rawValue.tipo === 'Professor' ? rawValue.siape : null,
-      disciplina: rawValue.tipo === 'Professor' ? rawValue.disciplina : null
-    };
+    if (this.modoEdicao) {
+      const endpoint = rawValue.tipo === 'Aluno'
+        ? `/api/Aluno/${this.usuarioEmEdicao.idNumerico}`
+        : `/api/Professor/atualizar_professor/${this.usuarioEmEdicao.idNumerico}`;
 
-    this.http.post(`${environment.gatewayUrl}/api/Admin/criar-usuario`, payload).subscribe({
-      next: () => {
-        alert('Usuário criado com sucesso no Supabase e no PostgreSQL!');
-        this.usuarioForm.reset({ tipo: 'Aluno' });
-      },
-      error: (err) => {
-        console.error('Erro ao criar usuário', err);
-        alert('Falha ao criar usuário. Verifique o console.');
-      }
-    });
+      const payloadEdit = {
+        authId: this.usuarioEmEdicao.authId,
+        email: rawValue.email,
+        primeiroNome: primeiroNome,
+        ultimoNome: ultimoNome,
+        ra: rawValue.tipo === 'Aluno' ? rawValue.ra : null,
+        siape: rawValue.tipo === 'Professor' ? rawValue.siape : null,
+        disciplina: rawValue.tipo === 'Professor' ? rawValue.disciplina : null
+      };
+
+      this.http.put(`${environment.gatewayUrl}${endpoint}`, payloadEdit).subscribe({
+        next: () => {
+          alert('Dados do usuário atualizados no banco local com sucesso.');
+          this.cancelarEdicao();
+          this.carregarUsuarios();
+        },
+        error: (err) => console.error('Falha ao atualizar usuário:', err)
+      });
+
+    } else {
+      const payloadCreate = {
+        email: rawValue.email,
+        senha: rawValue.senha,
+        primeiroNome: primeiroNome,
+        ultimoNome: ultimoNome,
+        tipo: rawValue.tipo,
+        ra: rawValue.tipo === 'Aluno' ? rawValue.ra : null,
+        siape: rawValue.tipo === 'Professor' ? rawValue.siape : null,
+        disciplina: rawValue.tipo === 'Professor' ? rawValue.disciplina : null
+      };
+
+      this.http.post(`${environment.gatewayUrl}/api/Admin/criar-usuario`, payloadCreate).subscribe({
+        next: () => {
+          alert('Usuário criado com sucesso no Supabase e no PostgreSQL!');
+          this.usuarioForm.reset({ tipo: 'Aluno' });
+          this.carregarUsuarios();
+        },
+        error: (err) => console.error('Erro ao criar usuário', err)
+      });
+    }
   }
 
   prepararEdicao(user: any): void {
-    // Esse método vai pegar os dados da linha clicada e jogar para cima no formulário
-    alert(`A lógica de edição para ${user.nome} será montada aqui. Precisaremos transformar o formulário de "Adicionar" para "Atualizar".`);
-    console.log('Dados para edição:', user);
+    this.modoEdicao = true;
+    this.usuarioEmEdicao = user;
+
+    this.usuarioForm.patchValue({
+      nome: user.nome,
+      email: user.email,
+      senha: 'Nao_editavel_aqui',
+      tipo: user.tipo,
+      ra: user.ra || '',
+      siape: user.siape || '',
+      disciplina: user.disciplina || ''
+    });
+
+
+    this.usuarioForm.get('email')?.disable();
+    this.usuarioForm.get('senha')?.disable();
+    this.usuarioForm.get('tipo')?.disable();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelarEdicao(): void {
+    this.modoEdicao = false;
+    this.usuarioEmEdicao = null;
+    this.usuarioForm.reset({ tipo: 'Aluno' });
+    this.usuarioForm.get('email')?.enable();
+    this.usuarioForm.get('senha')?.enable();
+    this.usuarioForm.get('tipo')?.enable();
   }
 
   excluirUsuario(user: any): void {
@@ -122,34 +173,17 @@ export class PainelAdminComponent implements OnInit {
       return;
     }
 
-    // O C# espera o ID numérico (long), garanta que está passando a propriedade correta
     const endpoint = user.tipo === 'Aluno' ? `/api/Aluno/${user.id}` : `/api/Professor/${user.id}`;
 
     this.http.delete(`${environment.gatewayUrl}${endpoint}`).subscribe({
       next: () => {
         alert('Usuário aniquilado do banco de dados local com sucesso.');
-        this.carregarUsuarios(); // Atualiza a tabela imediatamente
+        this.carregarUsuarios();
       },
       error: (err) => {
         console.error('Falha de exclusão estrutural:', err);
         alert('Falha ao excluir. O usuário possui dependências (listas, respostas) amarradas a ele no banco de dados.');
       }
     });
-  }
-
-  adicionarDisciplina(): void {
-    if (this.disciplinaForm.invalid) {
-      this.disciplinaForm.markAllAsTouched();
-      return;
-    }
-    const val = this.disciplinaForm.value;
-    this.disciplinas.push({ id: Date.now().toString(), nome: val.nome, macroArea: val.macroArea });
-    this.disciplinaForm.reset();
-  }
-
-  excluirDisciplina(id: string): void {
-    if (confirm('Deseja excluir esta disciplina?')) {
-      this.disciplinas = this.disciplinas.filter(d => d.id !== id);
-    }
   }
 }

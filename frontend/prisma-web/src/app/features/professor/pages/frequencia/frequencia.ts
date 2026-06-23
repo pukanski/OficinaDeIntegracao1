@@ -1,54 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; // <-- Adicionado FormsModule
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 
-interface TurmaMock { id: string; nome: string; }
-interface AlunoFrequencia { id: string; nome: string; status: 'Presente' | 'Ausente' | null; }
-
-// --- NOVA INTERFACE PARA O HISTÓRICO CONECTADO AO BACK-END ---
-interface HistoricoFrequencia {
-  id: string;
-  turmaId: string;
-  turmaNome: string;
-  data: string;
-  presentes: number;
-  ausentes: number;
-}
+interface Turma { id: number; nome: string; ano: string; turno: string; alunosIds: number[]; }
+interface Aluno { id: number; primeiroNome: string; ultimoNome: string; ra: string; }
+interface AlunoFrequencia { id: number; nome: string; ra: string; status: boolean | null; }
+interface HistoricoItem { turmaId: number; data: string; presentes: number; ausentes: number; }
 
 @Component({
   selector: 'app-frequencia',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule], // <-- Adicionado FormsModule aqui
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './frequencia.html'
 })
 export class FrequenciaComponent implements OnInit {
   frequenciaForm!: FormGroup;
   abaAtual: 'registrar' | 'historico' = 'registrar';
 
-  // Filtro de estado para a tabela de histórico
-  filtroTurmaHistorico: string = 'Todas';
+  turmas: Turma[] = [];
+  todosAlunos: Aluno[] = [];
+  alunos: AlunoFrequencia[] = [];
+  historico: HistoricoItem[] = [];
+  filtroTurmaHistorico = 'Todas';
 
-  turmas: TurmaMock[] = [
-    { id: 't1', nome: 'Turma A - Matemática (28 alunos)' },
-    { id: 't2', nome: 'Turma B - Física (32 alunos)' }
-  ];
+  carregandoAlunos = false;
+  salvando = false;
+  mensagem = '';
+  erro = '';
 
-  alunos: AlunoFrequencia[] = [
-    { id: 'a1', nome: 'Ana Silva', status: null },
-    { id: 'a2', nome: 'Bruno Santos', status: null },
-    { id: 'a3', nome: 'Carlos Oliveira', status: null },
-    { id: 'a4', nome: 'Diana Costa', status: null },
-    { id: 'a5', nome: 'Eduardo Rocha', status: null }
-  ];
+  private api = environment.gatewayUrl;
 
-  // --- ARRAYS DE MOCK ESTRUTURADOS IGUAL AO RETORNO DA API C# ---
-  historicoChamadas: HistoricoFrequencia[] = [
-    { id: 'h1', turmaId: 't1', turmaNome: 'Turma A - Matemática', data: '2026-06-15', presentes: 25, ausentes: 3 },
-    { id: 'h2', turmaId: 't1', turmaNome: 'Turma A - Matemática', data: '2026-06-08', presentes: 24, ausentes: 4 },
-    { id: 'h3', turmaId: 't2', turmaNome: 'Turma B - Física', data: '2026-06-10', presentes: 30, ausentes: 2 }
-  ];
-
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const hoje = new Date().toISOString().split('T')[0];
@@ -56,54 +40,144 @@ export class FrequenciaComponent implements OnInit {
       turmaId: ['', Validators.required],
       dataChamada: [hoje, Validators.required]
     });
+
+    this.carregarTurmas();
+    this.carregarTodosAlunos();
+
+    // Recarrega alunos e estado da chamada quando turma ou data mudam
+    this.frequenciaForm.valueChanges.subscribe(() => {
+      const turmaId = this.frequenciaForm.get('turmaId')?.value;
+      const data = this.frequenciaForm.get('dataChamada')?.value;
+      if (turmaId && data) {
+        this.carregarAlunosDaTurma(+turmaId, data);
+        this.carregarHistorico(+turmaId);
+      }
+      this.cdr.detectChanges();
+    });
   }
 
-  get presentes(): number { return this.alunos.filter(a => a.status === 'Presente').length; }
-  get ausentes(): number { return this.alunos.filter(a => a.status === 'Ausente').length; }
+  carregarTurmas(): void {
+    this.http.get<Turma[]>(`${this.api}/api/Turma`).subscribe({
+      next: (data) => { this.turmas = data; this.cdr.detectChanges(); },
+      error: () => { this.turmas = []; }
+    });
+  }
+
+  carregarTodosAlunos(): void {
+    this.http.get<Aluno[]>(`${this.api}/api/Aluno/alunos`).subscribe({
+      next: (data) => { this.todosAlunos = data; this.cdr.detectChanges(); },
+      error: () => { this.todosAlunos = []; }
+    });
+  }
+
+  carregarAlunosDaTurma(turmaId: number, data: string): void {
+    this.carregandoAlunos = true;
+    const turma = this.turmas.find(t => t.id === turmaId);
+    const ids = turma?.alunosIds || [];
+
+    // Monta a lista base de alunos
+    const alunosBase = this.todosAlunos
+      .filter(a => ids.includes(a.id))
+      .map(a => ({ id: a.id, nome: `${a.primeiroNome} ${a.ultimoNome}`, ra: a.ra, status: null as boolean | null }));
+
+    // Tenta carregar chamada já existente para essa turma/data
+    const dataFormatada = data; // já está em yyyy-MM-dd
+    this.http.get<any>(`${this.api}/api/Frequencia/chamada/${turmaId}/${dataFormatada}`).subscribe({
+      next: (chamada) => {
+        if (chamada?.registros?.length > 0) {
+          // Pré-preenche o status de cada aluno com o que já foi salvo
+          this.alunos = alunosBase.map(a => {
+            const reg = chamada.registros.find((r: any) => r.alunoId === a.id);
+            return { ...a, status: reg ? reg.presente : null };
+          });
+        } else {
+          this.alunos = alunosBase;
+        }
+        this.carregandoAlunos = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // Se não encontrou chamada, apenas mostra alunos sem status
+        this.alunos = alunosBase;
+        this.carregandoAlunos = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  carregarHistorico(turmaId: number): void {
+    this.http.get<HistoricoItem[]>(`${this.api}/api/Frequencia/historico/${turmaId}`).subscribe({
+      next: (data) => { this.historico = data; this.cdr.detectChanges(); },
+      error: () => { this.historico = []; }
+    });
+  }
+
+  get presentes(): number { return this.alunos.filter(a => a.status === true).length; }
+  get ausentes(): number { return this.alunos.filter(a => a.status === false).length; }
   get naoMarcados(): number { return this.alunos.filter(a => a.status === null).length; }
 
-  // --- FILTRO REATIVO DO HISTÓRICO ---
-  get historicoFiltrado(): HistoricoFrequencia[] {
-    if (this.filtroTurmaHistorico === 'Todas') {
-      return this.historicoChamadas;
-    }
-    return this.historicoChamadas.filter(h => h.turmaId === this.filtroTurmaHistorico);
+  get historicoFiltrado(): HistoricoItem[] {
+    if (this.filtroTurmaHistorico === 'Todas') return this.historico;
+    return this.historico.filter(h => h.turmaId === +this.filtroTurmaHistorico);
   }
 
-  marcarStatus(alunoId: string, status: 'Presente' | 'Ausente'): void {
+  marcarStatus(alunoId: number, status: boolean): void {
     const aluno = this.alunos.find(a => a.id === alunoId);
     if (aluno) {
       aluno.status = aluno.status === status ? null : status;
+      this.cdr.detectChanges();
     }
   }
 
-  marcarTodosPresentes(): void { this.alunos.forEach(a => a.status = 'Presente'); }
-  limparMarcacoes(): void { this.alunos.forEach(a => a.status = null); }
+  marcarTodosPresentes(): void {
+    this.alunos.forEach(a => a.status = true);
+    this.cdr.detectChanges();
+  }
 
-  // --- GATILHO PARA CARREGAR DETALHES DE UMA CHAMADA PASSADA ---
-  visualizarDetalhesHistorico(id: string): void {
-    console.log('Solicitando ao back-end o espelho completo da chamada ID:', id);
-    alert(`Preparado pro Back: Isso disparará um GET /api/frequencia/${id} para carregar a lista completa de alunos daquele dia para auditoria.`);
+  limparMarcacoes(): void {
+    this.alunos.forEach(a => a.status = null);
+    this.cdr.detectChanges();
   }
 
   salvarChamada(): void {
     if (this.frequenciaForm.invalid) {
-      alert('Selecione uma turma e uma data antes de salvar.');
+      this.frequenciaForm.markAllAsTouched();
       return;
     }
     if (this.naoMarcados > 0) {
-      const confirma = confirm(`Existem ${this.naoMarcados} alunos não marcados. Deseja salvar mesmo assim?`);
-      if (!confirma) return;
+      if (!confirm(`${this.naoMarcados} aluno(s) não marcados. Deseja salvar mesmo assim? Eles serão registrados como ausentes.`)) return;
+      // Marca não marcados como ausentes
+      this.alunos.filter(a => a.status === null).forEach(a => a.status = false);
     }
 
+    this.salvando = true;
+    this.erro = '';
+    this.mensagem = '';
+
+    const turmaId = +this.frequenciaForm.value.turmaId;
     const payload = {
-      turmaId: this.frequenciaForm.value.turmaId,
+      turmaId,
       data: this.frequenciaForm.value.dataChamada,
-      registros: this.alunos.map(a => ({ alunoId: a.id, status: a.status }))
+      registros: this.alunos.map(a => ({ alunoId: a.id, presente: a.status ?? false }))
     };
 
-    console.log('Payload pronto para o C#:', payload);
-    alert('Chamada salva com sucesso! Verifique o console.');
-    this.limparMarcacoes();
+    this.http.post(`${this.api}/api/Frequencia/chamada`, payload).subscribe({
+      next: () => {
+        this.mensagem = 'Chamada salva com sucesso!';
+        this.salvando = false;
+        this.limparMarcacoes();
+        this.carregarHistorico(turmaId);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.erro = err.error?.message || 'Erro ao salvar chamada.';
+        this.salvando = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  formatarData(data: string): string {
+    return data.split('-').reverse().join('/');
   }
 }

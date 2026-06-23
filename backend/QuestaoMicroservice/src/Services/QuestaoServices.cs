@@ -17,7 +17,7 @@ namespace QuestaoAPI.Services
             if (await _repository.ExisteProvaAsync(dto.Vestibular.ToUpper(), dto.Ano, dto.Edicao))
                 throw new InvalidOperationException("Já existe uma prova com esse vestibular, ano e edição.");
 
-            var prova  = ProvaMapper.ToModel(dto);
+            var prova = ProvaMapper.ToModel(dto);
             var criada = await _repository.CreateAsync(prova);
             return ProvaMapper.ToResponse(criada);
         }
@@ -68,29 +68,49 @@ namespace QuestaoAPI.Services
     public class QuestaoService : IQuestaoService
     {
         private readonly IQuestaoRepository _repository;
-        private readonly IProvaRepository   _provaRepository;
+        private readonly IProvaRepository _provaRepository;
+        private readonly IAlternativaRepository _alternativaRepository; // NOVA INJEÇÃO
 
-        public QuestaoService(IQuestaoRepository repository, IProvaRepository provaRepository)
+        // Atualize o construtor para receber o repositório de alternativas
+        public QuestaoService(
+            IQuestaoRepository repository,
+            IProvaRepository provaRepository,
+            IAlternativaRepository alternativaRepository)
         {
-            _repository      = repository;
+            _repository = repository;
             _provaRepository = provaRepository;
+            _alternativaRepository = alternativaRepository;
         }
 
         public async Task<QuestaoResponseDTO> CreateAsync(QuestaoRequestDTO dto)
         {
-            // Verifica se a prova existe
-            var prova = await _provaRepository.GetByIdAsync(dto.ProvaId);
-            if (prova == null)
-                throw new KeyNotFoundException($"Prova com ID {dto.ProvaId} não encontrada.");
+            // Verifica prova apenas se ProvaId foi informado
+            if (dto.ProvaId.HasValue)
+            {
+                var prova = await _provaRepository.GetByIdAsync(dto.ProvaId.Value);
+                if (prova == null)
+                    throw new KeyNotFoundException($"Prova com ID {dto.ProvaId} não encontrada.");
 
-            // Verifica se o número da questão já existe nessa prova
-            if (await _repository.ExisteNumeroNaProvaAsync(dto.ProvaId, dto.Numero))
-                throw new InvalidOperationException($"Já existe a questão de número {dto.Numero} nessa prova.");
+                if (await _repository.ExisteNumeroNaProvaAsync(dto.ProvaId.Value, dto.Numero))
+                    throw new InvalidOperationException($"Já existe a questão de número {dto.Numero} nessa prova.");
+            }
 
+            // 1. Salva a questão principal no banco e gera o ID
             var questao = QuestaoMapper.ToModel(dto);
-            var criada  = await _repository.CreateAsync(questao);
+            var criada = await _repository.CreateAsync(questao);
 
-            // Recarrega com includes para o response completo
+            // 2. Transação vinculada: Salva as alternativas
+            if (dto.Alternativas != null && dto.Alternativas.Any())
+            {
+                foreach (var altDto in dto.Alternativas)
+                {
+                    altDto.QuestaoId = criada.Id; // Vincula a alternativa à questão recém-nascida
+                    var alternativa = AlternativaMapper.ToModel(altDto);
+                    await _alternativaRepository.CreateAsync(alternativa);
+                }
+            }
+
+            // 3. Recarrega com includes (agora com as alternativas no banco) para o response completo
             var completa = await _repository.GetByIdAsync(criada.Id);
             return QuestaoMapper.ToResponse(completa!);
         }
@@ -132,12 +152,15 @@ namespace QuestaoAPI.Services
             if (existe == null)
                 throw new KeyNotFoundException($"Questão com ID {id} não encontrada.");
 
-            var prova = await _provaRepository.GetByIdAsync(dto.ProvaId);
-            if (prova == null)
-                throw new KeyNotFoundException($"Prova com ID {dto.ProvaId} não encontrada.");
+            if (dto.ProvaId.HasValue)
+            {
+                var prova = await _provaRepository.GetByIdAsync(dto.ProvaId.Value);
+                if (prova == null)
+                    throw new KeyNotFoundException($"Prova com ID {dto.ProvaId} não encontrada.");
 
-            if (await _repository.ExisteNumeroNaProvaAsync(dto.ProvaId, dto.Numero, ignorarId: id))
-                throw new InvalidOperationException($"Já existe outra questão de número {dto.Numero} nessa prova.");
+                if (await _repository.ExisteNumeroNaProvaAsync(dto.ProvaId.Value, dto.Numero, ignorarId: id))
+                    throw new InvalidOperationException($"Já existe outra questão de número {dto.Numero} nessa prova.");
+            }
 
             var dadosNovos = QuestaoMapper.ToModel(dto);
             var atualizada = await _repository.UpdateAsync(id, dadosNovos);
@@ -162,11 +185,11 @@ namespace QuestaoAPI.Services
     public class AlternativaService : IAlternativaService
     {
         private readonly IAlternativaRepository _repository;
-        private readonly IQuestaoRepository     _questaoRepository;
+        private readonly IQuestaoRepository _questaoRepository;
 
         public AlternativaService(IAlternativaRepository repository, IQuestaoRepository questaoRepository)
         {
-            _repository        = repository;
+            _repository = repository;
             _questaoRepository = questaoRepository;
         }
 
@@ -190,7 +213,7 @@ namespace QuestaoAPI.Services
             }
 
             var alternativa = AlternativaMapper.ToModel(dto);
-            var criada      = await _repository.CreateAsync(alternativa);
+            var criada = await _repository.CreateAsync(alternativa);
             return AlternativaMapper.ToResponse(criada);
         }
 
@@ -229,8 +252,8 @@ namespace QuestaoAPI.Services
                     throw new InvalidOperationException("Essa questão já possui uma alternativa correta.");
             }
 
-            var dadosNovos  = AlternativaMapper.ToModel(dto);
-            var atualizada  = await _repository.UpdateAsync(id, dadosNovos);
+            var dadosNovos = AlternativaMapper.ToModel(dto);
+            var atualizada = await _repository.UpdateAsync(id, dadosNovos);
             return AlternativaMapper.ToResponse(atualizada!);
         }
 

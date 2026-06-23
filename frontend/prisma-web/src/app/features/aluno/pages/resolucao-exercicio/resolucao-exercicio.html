@@ -27,9 +27,7 @@
 
                 <div class="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <span class="text-blue-600 font-bold text-sm">Questão {{ indiceAtual + 1 }} de {{
-                            questoes.length }}</span>
-                        <button class="text-slate-400 hover:text-blue-600" title="Salvar para depois">🔖</button>
+                        <span class="text-blue-600 font-bold text-sm">Questão {{ indiceAtual + 1 }} de {{ questoes.length }}</span>
                     </div>
 
                     <h2 class="text-xl font-bold text-slate-800 mb-8 leading-relaxed">
@@ -39,13 +37,13 @@
                     <p class="text-sm text-slate-500 mb-4">Selecione uma alternativa:</p>
 
                     <div class="space-y-3">
-                        <div *ngFor="let alt of questaoAtual.alternativas" (click)="selecionarAlternativa(alt.letra)"
-                            [ngClass]="alternativaEstaSelecionada(alt.letra) ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-slate-200 hover:border-slate-300'"
+                        <div *ngFor="let alt of questaoAtual.alternativas" (click)="selecionarAlternativa(alt.id)"
+                            [ngClass]="estaSelecionada(questaoAtual.id, alt.id) ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-slate-200 hover:border-slate-300'"
                             class="p-4 border rounded-lg cursor-pointer transition-all flex items-center">
 
                             <div class="w-5 h-5 rounded-full border flex items-center justify-center mr-4 shrink-0 transition-colors"
-                                [ngClass]="alternativaEstaSelecionada(alt.letra) ? 'border-blue-600 bg-white' : 'border-slate-300 bg-white'">
-                                <div *ngIf="alternativaEstaSelecionada(alt.letra)"
+                                [ngClass]="estaSelecionada(questaoAtual.id, alt.id) ? 'border-blue-600 bg-white' : 'border-slate-300 bg-white'">
+                                <div *ngIf="estaSelecionada(questaoAtual.id, alt.id)"
                                     class="w-3 h-3 bg-blue-600 rounded-full"></div>
                             </div>
 
@@ -61,9 +59,9 @@
 
                         <div class="grid grid-cols-4 gap-2 mb-6">
                             <button *ngFor="let q of questoes; let i = index" (click)="irPara(i)" [ngClass]="{
-                                        'bg-blue-600 text-white font-bold shadow-md': obterStatusNavegador(i) === 'atual',
-                                        'bg-green-100 text-green-700 border border-green-200': obterStatusNavegador(i) === 'respondida',
-                                        'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200': obterStatusNavegador(i) === 'pendente'
+                                        'bg-blue-600 text-white font-bold shadow-md': obterStatus(i) === 'atual',
+                                        'bg-green-100 text-green-700 border border-green-200': obterStatus(i) === 'respondida',
+                                        'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200': obterStatus(i) === 'pendente'
                                     }"
                                 class="h-12 rounded-lg flex items-center justify-center text-sm transition-colors">
                                 {{ i + 1 }}

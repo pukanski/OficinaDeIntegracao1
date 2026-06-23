@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
+
+interface ProvaDTO { id: number; vestibular: string; ano: number; edicao?: string; }
 
 @Component({
   selector: 'app-cadastrar-questao',
@@ -10,114 +14,171 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 export class CadastrarQuestaoComponent implements OnInit {
   questaoForm!: FormGroup;
+  provaForm!: FormGroup;
 
-  // Controle de estado para a Inteligência Artificial
-  isGerandoIA: boolean = false;
-  iaSugeriu: boolean = false;
+  provas: ProvaDTO[] = [];
+  isGerandoIA = false;
+  iaSugeriu = false;
+  criandoProva = false;
+  carregandoProvas = false;
+  salvandoProva = false;
+  mensagem = '';
+  erro = '';
 
-  // Controle de estado para o Upload de Imagem
-  imagemPrevia: string | null = null;
-  imagemArquivo: File | null = null;
+  macroAreasFixas: string[] = [
+    'Matemática', 'Química', 'Física', 'Biologia', 'História',
+    'Geografia', 'Linguagens', 'Filosofia', 'Sociologia'
+  ];
 
-  constructor(private fb: FormBuilder) { }
+  private apiQuestao = `${environment.gatewayUrl}/api/Questao`;
+
+  constructor(private fb: FormBuilder, private http: HttpClient) { }
 
   ngOnInit(): void {
-    // Inicializa o formulário com todos os campos necessários (RF01 e RF03)
     this.questaoForm = this.fb.group({
+      provaId: [''],  // opcional — questão avulsa se vazio
+      numero: [1, [Validators.required, Validators.min(1)]],
       enunciado: ['', Validators.required],
       alternativaA: ['', Validators.required],
       alternativaB: ['', Validators.required],
       alternativaC: ['', Validators.required],
       alternativaD: ['', Validators.required],
       alternativaE: ['', Validators.required],
-      gabarito: ['A', Validators.required], // Qual a correta
-      // Campos da IA (iniciam vazios e bloqueados)
-      disciplina: [{ value: '', disabled: true }, Validators.required],
-      macroArea: [{ value: '', disabled: true }, Validators.required],
-      microArea: [{ value: '', disabled: true }, Validators.required],
-      dificuldade: [{ value: '', disabled: true }, Validators.required],
+      gabarito: ['A', Validators.required],
+      macroArea: ['', Validators.required],
+      microArea: [''],
+      dificuldade: ['', Validators.required]
+    });
+
+    this.provaForm = this.fb.group({
+      vestibular: ['', Validators.required],
+      ano: [new Date().getFullYear(), [Validators.required, Validators.min(1900), Validators.max(2100)]],
+      edicao: ['']
+    });
+
+    this.carregarProvas();
+  }
+
+  carregarProvas(): void {
+    this.carregandoProvas = true;
+    this.http.get<ProvaDTO[]>(`${this.apiQuestao}/Provas`).subscribe({
+      next: (provas) => {
+        this.provas = provas;
+        this.carregandoProvas = false;
+      },
+      error: () => {
+        this.provas = [];
+        this.carregandoProvas = false;
+      }
     });
   }
 
-  // --- Lógica de Imagem Adicionada ---
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      // Validação de segurança básica de tamanho (10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        alert('A imagem excede o limite de 10MB.');
-        return;
-      }
-
-      this.imagemArquivo = file;
-
-      // Lê o arquivo para gerar o Preview em base64 na tela
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imagemPrevia = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+  get provaLabel(): string {
+    const id = this.questaoForm.get('provaId')?.value;
+    const prova = this.provas.find(p => p.id === +id);
+    if (!prova) return '';
+    return `${prova.vestibular} ${prova.ano}${prova.edicao ? ' - ' + prova.edicao : ''}`;
   }
 
-  removerImagem(): void {
-    this.imagemPrevia = null;
-    this.imagemArquivo = null;
-  }
-  // -----------------------------------
-
-  // Simula a requisição para a API FastAPI (Ollama)
-  gerarSugestoesIA(): void {
-    if (this.questaoForm.get('enunciado')?.invalid) {
-      alert('Por favor, preencha o enunciado antes de chamar a IA.');
+  salvarProva(): void {
+    if (this.provaForm.invalid) {
+      this.provaForm.markAllAsTouched();
       return;
     }
-
-    this.isGerandoIA = true;
-
-    // Timeout simulando os 2 segundos de processamento do Ollama
-    setTimeout(() => {
-      this.isGerandoIA = false;
-      this.iaSugeriu = true;
-
-      // Habilita os campos para a revisão humana (RF03)
-      this.questaoForm.get('disciplina')?.enable();
-      this.questaoForm.get('macroArea')?.enable();
-      this.questaoForm.get('microArea')?.enable();
-      this.questaoForm.get('dificuldade')?.enable();
-
-      // Preenche com o Mock retornado pela "IA"
-      this.questaoForm.patchValue({
-        disciplina: 'Física',
-        macroArea: 'Mecânica',
-        microArea: 'Cinemática',
-        dificuldade: '3'
-      });
-    }, 2000);
+    this.salvandoProva = true;
+    const payload = {
+      vestibular: this.provaForm.value.vestibular,
+      ano: +this.provaForm.value.ano,
+      edicao: this.provaForm.value.edicao || null
+    };
+    this.http.post<ProvaDTO>(`${this.apiQuestao}/Provas`, payload).subscribe({
+      next: (prova) => {
+        this.provas.push(prova);
+        this.questaoForm.patchValue({ provaId: prova.id });
+        this.provaForm.reset({ ano: new Date().getFullYear() });
+        this.criandoProva = false;
+        this.salvandoProva = false;
+      },
+      error: (err) => {
+        this.erro = err.error?.erro || 'Erro ao criar prova.';
+        this.salvandoProva = false;
+      }
+    });
   }
 
-  // Função disparada ao clicar no botão final de salvar
-  salvarQuestao(): void {
-    if (this.questaoForm.valid) {
-      // Monta o pacote final incluindo o arquivo físico, se existir
-      const payloadFinal = {
-        ...this.questaoForm.getRawValue(),
-        imagemNomeArquivo: this.imagemArquivo ? this.imagemArquivo.name : null
-      };
-
-      console.log('Payload pronto para o C# (A imagem iria via FormData):', payloadFinal);
-      alert('Questão salva com sucesso! Verifique o console.');
-      
-      // Reseta os estados da tela
-      this.questaoForm.reset({ gabarito: 'A' });
-      this.removerImagem();
-      this.iaSugeriu = false;
-      this.questaoForm.get('disciplina')?.disable();
-      this.questaoForm.get('macroArea')?.disable();
-      this.questaoForm.get('microArea')?.disable();
-      this.questaoForm.get('dificuldade')?.disable();
-    } else {
-      this.questaoForm.markAllAsTouched();
+  gerarSugestoesIA(): void {
+    if (this.questaoForm.get('enunciado')?.invalid) {
+      alert('Preencha o enunciado antes de pedir sugestões à IA.');
+      return;
     }
+    this.isGerandoIA = true;
+    this.iaSugeriu = false;
+
+    const payload = {
+      statement: this.questaoForm.get('enunciado')?.value,
+      available_disciplines: this.macroAreasFixas,
+      available_subjects: {
+        'Matemática': ['Álgebra', 'Geometria Plana', 'Geometria Espacial', 'Trigonometria', 'Funções', 'Estatística', 'Probabilidade', 'Aritmética'],
+        'Física': ['Mecânica', 'Termodinâmica', 'Óptica', 'Eletromagnetismo', 'Ondulatória', 'Cinemática', 'Dinâmica'],
+        'Química': ['Química Orgânica', 'Química Inorgânica', 'Físico-Química', 'Reações Químicas', 'Estequiometria', 'Termoquímica'],
+        'Biologia': ['Citologia', 'Genética', 'Ecologia', 'Evolução', 'Fisiologia', 'Botânica', 'Zoologia'],
+        'História': ['História do Brasil', 'História Geral', 'Segunda Guerra Mundial', 'Revolução Industrial', 'Idade Média', 'Antiguidade'],
+        'Geografia': ['Geografia Física', 'Geografia Humana', 'Geopolítica', 'Climatologia', 'Cartografia', 'Urbanização'],
+        'Linguagens': ['Interpretação de Texto', 'Gramática', 'Literatura', 'Redação', 'Língua Estrangeira'],
+        'Filosofia': ['Filosofia Antiga', 'Filosofia Moderna', 'Ética', 'Lógica', 'Epistemologia'],
+        'Sociologia': ['Sociologia Clássica', 'Movimentos Sociais', 'Cultura', 'Política', 'Estratificação Social']
+      }
+    };
+
+    this.http.post<any>(`${environment.gatewayUrl}/api/ia/classify`, payload).subscribe({
+      next: (res) => {
+        this.isGerandoIA = false;
+        this.iaSugeriu = true;
+        this.questaoForm.patchValue({
+          macroArea: res.discipline || '',
+          microArea: res.subject || '',
+          dificuldade: res.difficulty || ''
+        });
+      },
+      error: () => {
+        this.isGerandoIA = false;
+        this.erro = 'Serviço de IA indisponível. Classifique manualmente.';
+      }
+    });
+  }
+
+  salvarQuestao(): void {
+    if (this.questaoForm.invalid) {
+      this.questaoForm.markAllAsTouched();
+      return;
+    }
+    this.mensagem = '';
+    this.erro = '';
+    const form = this.questaoForm.getRawValue();
+    const payload = {
+      provaId: form.provaId ? +form.provaId : null,
+      numero: +form.numero,
+      disciplina: form.macroArea,
+      materia: form.microArea || null,
+      enunciado: form.enunciado,
+      dificuldade: form.dificuldade,
+      alternativas: [
+        { letra: 'A', texto: form.alternativaA, correta: form.gabarito === 'A', questaoId: 0 },
+        { letra: 'B', texto: form.alternativaB, correta: form.gabarito === 'B', questaoId: 0 },
+        { letra: 'C', texto: form.alternativaC, correta: form.gabarito === 'C', questaoId: 0 },
+        { letra: 'D', texto: form.alternativaD, correta: form.gabarito === 'D', questaoId: 0 },
+        { letra: 'E', texto: form.alternativaE, correta: form.gabarito === 'E', questaoId: 0 }
+      ]
+    };
+    this.http.post(`${this.apiQuestao}/Questoes`, payload).subscribe({
+      next: () => {
+        this.mensagem = 'Questão salva com sucesso!';
+        this.questaoForm.patchValue({ enunciado: '', alternativaA: '', alternativaB: '', alternativaC: '', alternativaD: '', alternativaE: '', gabarito: 'A', macroArea: '', microArea: '', dificuldade: '', numero: +form.numero + 1 });
+        this.iaSugeriu = false;
+      },
+      error: (err) => {
+        this.erro = err.error?.erro || 'Erro ao salvar a questão.';
+      }
+    });
   }
 }

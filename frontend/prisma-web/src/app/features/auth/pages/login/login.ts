@@ -26,6 +26,14 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.authService.restoreSession()) {
+      const role = this.authService.role;
+      if (role === 'admin') this.router.navigate(['/admin/painel']);
+      else if (role === 'professor') this.router.navigate(['/professor/dashboard']);
+      else if (role === 'aluno') this.router.navigate(['/aluno/dashboard']);
+      return;
+    }
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]]
