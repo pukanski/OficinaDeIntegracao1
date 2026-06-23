@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
 
 interface ProvaDTO { id: number; vestibular: string; ano: number; edicao?: string; }
@@ -9,7 +9,7 @@ interface ProvaDTO { id: number; vestibular: string; ano: number; edicao?: strin
 @Component({
   selector: 'app-cadastrar-questao',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './cadastrar-questao.html'
 })
 export class CadastrarQuestaoComponent implements OnInit {
@@ -17,6 +17,10 @@ export class CadastrarQuestaoComponent implements OnInit {
   provaForm!: FormGroup;
 
   provas: ProvaDTO[] = [];
+  buscaProva = '';
+  provasFiltradas: ProvaDTO[] = [];
+  mostrarSugestoes = false;
+  provaSelecionada: ProvaDTO | null = null;
   isGerandoIA = false;
   iaSugeriu = false;
   criandoProva = false;
@@ -64,13 +68,37 @@ export class CadastrarQuestaoComponent implements OnInit {
     this.http.get<ProvaDTO[]>(`${this.apiQuestao}/Provas`).subscribe({
       next: (provas) => {
         this.provas = provas;
+        this.provasFiltradas = provas;
         this.carregandoProvas = false;
       },
       error: () => {
         this.provas = [];
+        this.provasFiltradas = [];
         this.carregandoProvas = false;
       }
     });
+  }
+
+  filtrarProvas(): void {
+    const busca = this.buscaProva.toLowerCase();
+    this.provasFiltradas = this.provas.filter(p =>
+      `${p.vestibular} ${p.ano} ${p.edicao || ''}`.toLowerCase().includes(busca)
+    );
+    this.mostrarSugestoes = true;
+  }
+
+  selecionarProva(prova: ProvaDTO | null): void {
+    this.provaSelecionada = prova;
+    this.buscaProva = prova ? `${prova.vestibular} ${prova.ano}${prova.edicao ? ' — ' + prova.edicao : ''}` : '';
+    this.questaoForm.patchValue({ provaId: prova ? prova.id : '' });
+    this.mostrarSugestoes = false;
+  }
+
+  limparProva(): void {
+    this.provaSelecionada = null;
+    this.buscaProva = '';
+    this.questaoForm.patchValue({ provaId: '' });
+    this.provasFiltradas = this.provas;
   }
 
   get provaLabel(): string {
@@ -94,7 +122,8 @@ export class CadastrarQuestaoComponent implements OnInit {
     this.http.post<ProvaDTO>(`${this.apiQuestao}/Provas`, payload).subscribe({
       next: (prova) => {
         this.provas.push(prova);
-        this.questaoForm.patchValue({ provaId: prova.id });
+        this.provasFiltradas = [...this.provas];
+        this.selecionarProva(prova);
         this.provaForm.reset({ ano: new Date().getFullYear() });
         this.criandoProva = false;
         this.salvandoProva = false;

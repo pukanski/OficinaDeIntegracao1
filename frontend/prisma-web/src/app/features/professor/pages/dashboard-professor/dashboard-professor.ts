@@ -1,76 +1,149 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { ProfessorService } from '../../services/professor.service';
-import { DadosGraficosProfessor } from '../../../../core/models/dashboard.model'; // Importe o modelo
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
+
+interface Turma { id: number; nome: string; ano: string; turno: string; qtdAlunos: number; alunosIds: number[]; }
+interface DesempenhoAluno { percentualAcerto: number; totalRespondidas: number; }
+interface DisciplinaStats { disciplina: string; totalRespondidas: number; totalAcertos: number; percentualAcerto: number; }
+interface AlunoRisco { id: number; nome: string; percentual: number; }
 
 @Component({
   selector: 'app-dashboard-professor',
   standalone: true,
-  imports: [CommonModule, BaseChartDirective],
-  templateUrl: './dashboard-professor.html',
-  styleUrls: ['./dashboard-professor.css']
+  imports: [CommonModule, DecimalPipe, RouterModule],
+  templateUrl: './dashboard-professor.html'
 })
 export class DashboardProfessorComponent implements OnInit {
-  
-  // Variável para guardar os dados dos cards
-  public dadosGerais?: DadosGraficosProfessor;
+  nomeProfessor = '';
+  totalAlunos = 0;
+  totalQuestoes = 0;
+  totalListas = 0;
+  mediaDesempenho = 0;
 
-  public lineChartData: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
-  public lineChartOptions: ChartOptions<'line'> = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } };
+  turmas: Turma[] = [];
+  turmaSelecionadaId: number | null = null;
+  turmaSelecionada: Turma | null = null;
 
-  public doughnutChartData: ChartConfiguration<'doughnut'>['data'] = { labels: [], datasets: [] };
-  public doughnutChartOptions: ChartOptions<'doughnut'> = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } };
+  disciplinasStats: DisciplinaStats[] = [];
+  alunosRisco: AlunoRisco[] = [];
+  todosAlunos: any[] = [];
 
-  constructor(private professorService: ProfessorService) {}
+  carregando = true;
+  carregandoTurma = false;
 
-  ngOnInit(): void {
-    this.carregarGraficos();
+  private api = environment.gatewayUrl;
+  private professorId: number | null = null;
+
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone) {}
+
+  private atualizar(fn: () => void): void {
+    this.zone.run(() => { fn(); this.cdr.detectChanges(); });
   }
 
-  private carregarGraficos(): void {
-    this.professorService.getEstatisticasDashboard().subscribe({
-      next: (dados) => {
-        // Salvamos todos os dados na variável para o HTML usar
-        this.dadosGerais = dados;
-
-        this.lineChartData = {
-          labels: dados.linhaLabels,
-          datasets: [
-            {
-              data: dados.linhaSuaTurma,
-              label: 'Sua Turma',
-              borderColor: '#3b82f6',
-              backgroundColor: 'rgba(59, 130, 246, 0.5)',
-              tension: 0.4,
-              pointBackgroundColor: '#3b82f6'
-            },
-            {
-              data: dados.linhaMediaGeral,
-              label: 'Média Geral',
-              borderColor: '#9ca3af',
-              borderDash: [5, 5],
-              pointRadius: 0,
-              tension: 0.4
-            }
-          ]
-        };
-
-        this.doughnutChartData = {
-          labels: dados.roscaLabels,
-          datasets: [
-            {
-              data: dados.roscaDados,
-              backgroundColor: ['#60a5fa', '#3b82f6', '#1e3a8a'],
-              hoverBackgroundColor: ['#3b82f6', '#2563eb', '#1e40af']
-            }
-          ]
-        };
-      },
-      error: (erro) => {
-        console.error('Erro ao buscar dados do dashboard', erro);
+  ngOnInit(): void {
+    this.http.get<any>(`${this.api}/api/Professor/me`).subscribe({
+      next: (prof) => {
+        this.professorId = prof.id;
+        this.atualizar(() => { this.nomeProfessor = `${prof.primeiroNome} ${prof.ultimoNome}`; });
+        this.carregarDados();
       }
+    });
+  }
+
+  carregarDados(): void {
+    // Turmas
+    this.http.get<Turma[]>(`${this.api}/api/Turma`).subscribe({
+      next: (turmas) => {
+        this.atualizar(() => {
+          this.turmas = turmas;
+          const todosIds = new Set(turmas.flatMap(t => t.alunosIds || []));
+          this.totalAlunos = todosIds.size;
+        });
+        if (turmas.length > 0) this.selecionarTurma(turmas[0].id);
+      }
+    });
+
+    // Total de questões no banco
+    this.http.get<any[]>(`${this.api}/api/Questao/Questoes`).subscribe({
+      next: (q) => this.atualizar(() => { this.totalQuestoes = q.length; })
+    });
+
+    // Total de listas do professor
+    if (this.professorId) {
+      this.http.get<any[]>(`${this.api}/api/Lista/professor/${this.professorId}`).subscribe({
+        next: (l) => this.atualizar(() => { this.totalListas = l.length; this.carregando = false; }),
+        error: () => this.atualizar(() => { this.carregando = false; })
+      });
+    } else {
+      this.atualizar(() => { this.carregando = false; });
+    }
+
+    // Todos os alunos para lookup de nome
+    this.http.get<any[]>(`${this.api}/api/Aluno/alunos`).subscribe({
+      next: (a) => this.atualizar(() => { this.todosAlunos = a; })
+    });
+  }
+
+  selecionarTurma(turmaId: number): void {
+    this.turmaSelecionadaId = turmaId;
+    this.turmaSelecionada = this.turmas.find(t => t.id === turmaId) || null;
+    this.carregandoTurma = true;
+    this.disciplinasStats = [];
+    this.alunosRisco = [];
+    this.mediaDesempenho = 0;
+    this.cdr.detectChanges();
+
+    const alunosIds = this.turmaSelecionada?.alunosIds || [];
+    if (alunosIds.length === 0) {
+      this.atualizar(() => { this.carregandoTurma = false; });
+      return;
+    }
+
+    // Busca desempenho de cada aluno
+    const disciplinaMap = new Map<string, { acertos: number; total: number }>();
+    const alunosDesempenho: { id: number; percentual: number }[] = [];
+    let pendentes = alunosIds.length;
+    let somaMedia = 0;
+
+    alunosIds.forEach(alunoId => {
+      this.http.get<any>(`${this.api}/api/Dados/${alunoId}/desempenho`).subscribe({
+        next: (d) => {
+          somaMedia += d.percentualAcerto || 0;
+          alunosDesempenho.push({ id: alunoId, percentual: d.percentualAcerto || 0 });
+          pendentes--;
+          if (pendentes === 0) this._finalizarCarregamentoTurma(alunosDesempenho, somaMedia, alunosIds.length);
+        },
+        error: () => {
+          alunosDesempenho.push({ id: alunoId, percentual: 0 });
+          pendentes--;
+          if (pendentes === 0) this._finalizarCarregamentoTurma(alunosDesempenho, somaMedia, alunosIds.length);
+        }
+      });
+    });
+
+    // Desempenho por disciplina de um aluno representativo
+    this.http.get<any>(`${this.api}/api/Dados/${alunosIds[0]}/desempenho/disciplinas`).subscribe({
+      next: (d) => this.atualizar(() => { this.disciplinasStats = d.disciplinas || []; })
+    });
+  }
+
+  private _finalizarCarregamentoTurma(desempenhos: { id: number; percentual: number }[], soma: number, total: number): void {
+    const media = total > 0 ? Math.round(soma / total) : 0;
+    const emRisco = desempenhos
+      .filter(a => a.percentual < 60)
+      .map(a => {
+        const aluno = this.todosAlunos.find(x => x.id === a.id);
+        return { id: a.id, nome: aluno ? `${aluno.primeiroNome} ${aluno.ultimoNome}` : `Aluno #${a.id}`, percentual: a.percentual };
+      })
+      .sort((a, b) => a.percentual - b.percentual)
+      .slice(0, 5);
+
+    this.atualizar(() => {
+      this.mediaDesempenho = media;
+      this.alunosRisco = emRisco;
+      this.carregandoTurma = false;
     });
   }
 }

@@ -1,20 +1,20 @@
 <div class="mb-6 flex items-center justify-between">
   <div>
     <h1 class="text-2xl font-bold text-slate-800">Gerenciar Turmas</h1>
-    <p class="text-slate-500 text-sm mt-1">Crie turmas e gerencie os alunos matriculados</p>
+    <p class="text-slate-500 text-sm mt-1">Crie, edite e gerencie os alunos matriculados</p>
   </div>
-  <button (click)="criandoTurma = !criandoTurma"
+  <button (click)="abrirCriar()"
     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors text-sm">
-    {{ criandoTurma ? '✕ Cancelar' : '+ Nova Turma' }}
+    + Nova Turma
   </button>
 </div>
 
 <div *ngIf="mensagem" class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">{{ mensagem }}</div>
 <div *ngIf="erro" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{{ erro }}</div>
 
-<!-- Form nova turma -->
-<div *ngIf="criandoTurma" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6" [formGroup]="turmaForm">
-  <h3 class="font-bold text-slate-800 mb-4">Nova Turma</h3>
+<!-- Formulário criar/editar -->
+<div *ngIf="modoFormulario" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6" [formGroup]="turmaForm">
+  <h3 class="font-bold text-slate-800 mb-4">{{ modoFormulario === 'criar' ? 'Nova Turma' : 'Editar Turma' }}</h3>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
     <div>
       <label class="block text-sm font-semibold text-slate-700 mb-1">Nome *</label>
@@ -35,10 +35,15 @@
       </select>
     </div>
   </div>
-  <button (click)="salvarTurma()" [disabled]="salvando"
-    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50">
-    {{ salvando ? 'Salvando...' : 'Criar Turma' }}
-  </button>
+  <div class="flex gap-3">
+    <button (click)="salvarTurma()" [disabled]="salvando"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50">
+      {{ salvando ? 'Salvando...' : (modoFormulario === 'criar' ? 'Criar Turma' : 'Salvar Alterações') }}
+    </button>
+    <button (click)="cancelarFormulario()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm transition-colors">
+      Cancelar
+    </button>
+  </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -46,36 +51,43 @@
   <!-- Lista de turmas -->
   <div class="space-y-3">
     <h2 class="font-bold text-slate-700 text-sm uppercase tracking-wide">Turmas ({{ turmas.length }})</h2>
-
     <div *ngIf="turmas.length === 0" class="text-slate-400 text-sm py-4">Nenhuma turma cadastrada.</div>
 
     <div *ngFor="let turma of turmas"
       (click)="selecionarTurma(turma)"
       class="bg-white rounded-xl border p-4 shadow-sm cursor-pointer transition-all"
       [class.border-blue-500]="turmaSelecionada?.id === turma.id"
-      [class.border-slate-200]="turmaSelecionada?.id !== turma.id"
-      [class.bg-blue-50]="turmaSelecionada?.id === turma.id">
+      [class.bg-blue-50]="turmaSelecionada?.id === turma.id"
+      [class.border-slate-200]="turmaSelecionada?.id !== turma.id">
       <div class="flex items-center justify-between">
         <div>
           <p class="font-bold text-slate-800">{{ turma.nome }}</p>
           <p class="text-sm text-slate-500">{{ turma.ano }} · {{ turma.turno }} · {{ turma.qtdAlunos }} alunos</p>
         </div>
-        <button (click)="$event.stopPropagation(); excluirTurma(turma.id)"
-          class="text-slate-300 hover:text-red-500 transition-colors p-1">🗑️</button>
+        <div class="flex gap-2">
+          <button (click)="$event.stopPropagation(); abrirEditar(turma)"
+            class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Editar">✏️</button>
+          <button (click)="$event.stopPropagation(); excluirTurma(turma.id)"
+            class="p-2 text-slate-400 hover:text-red-500 transition-colors" title="Excluir">🗑️</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Gerenciar alunos da turma selecionada -->
-  <div *ngIf="turmaSelecionada" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-    <h2 class="font-bold text-slate-800 mb-4">{{ turmaSelecionada.nome }} — Alunos</h2>
+  <!-- Gerenciar alunos -->
+  <div *ngIf="turmaSelecionada" class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+    <h2 class="font-bold text-slate-800">{{ turmaSelecionada.nome }} — Alunos</h2>
 
-    <!-- Alunos na turma -->
-    <div class="mb-6">
-      <h3 class="text-sm font-semibold text-slate-600 mb-2">Matriculados ({{ alunosDaTurma.length }})</h3>
-      <div *ngIf="alunosDaTurma.length === 0" class="text-slate-400 text-xs">Nenhum aluno matriculado.</div>
-      <div class="space-y-2 max-h-48 overflow-y-auto">
-        <div *ngFor="let aluno of alunosDaTurma"
+    <!-- Matriculados -->
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-sm font-semibold text-slate-600">Matriculados ({{ alunosDaTurma.length }})</h3>
+      </div>
+      <input type="text" [(ngModel)]="buscaDesmatricular" placeholder="Buscar por nome ou RA..."
+        class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm mb-2 focus:ring-2 focus:ring-blue-500 outline-none">
+      <div *ngIf="alunosDaTurma.length === 0" class="text-slate-400 text-xs py-2">Nenhum aluno matriculado.</div>
+      <div class="space-y-2 max-h-44 overflow-y-auto">
+        <div *ngFor="let aluno of alunosDaTurmaFiltrados"
           class="flex items-center justify-between p-3 bg-green-50 border border-green-100 rounded-lg">
           <div>
             <p class="text-sm font-medium text-slate-800">{{ aluno.primeiroNome }} {{ aluno.ultimoNome }}</p>
@@ -84,15 +96,25 @@
           <button (click)="desmatricularAluno(aluno.id)"
             class="text-xs text-red-500 hover:text-red-700 font-semibold transition-colors">Remover</button>
         </div>
+        <div *ngIf="buscaDesmatricular && alunosDaTurmaFiltrados.length === 0" class="text-slate-400 text-xs py-2">
+          Nenhum resultado para "{{ buscaDesmatricular }}".
+        </div>
       </div>
     </div>
 
-    <!-- Alunos disponíveis para matricular -->
+    <div class="border-t border-slate-100"></div>
+
+    <!-- Adicionar aluno -->
     <div>
       <h3 class="text-sm font-semibold text-slate-600 mb-2">Adicionar Aluno</h3>
-      <div *ngIf="alunosForaDaTurma().length === 0" class="text-slate-400 text-xs">Todos os alunos já estão matriculados.</div>
-      <div class="space-y-2 max-h-48 overflow-y-auto">
-        <div *ngFor="let aluno of alunosForaDaTurma()"
+      <input type="text" [(ngModel)]="buscaMatricular" placeholder="Buscar por nome ou RA..."
+        class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm mb-2 focus:ring-2 focus:ring-blue-500 outline-none">
+      <div *ngIf="todosAlunos.length === 0" class="text-slate-400 text-xs py-2">Nenhum aluno cadastrado no sistema.</div>
+      <div *ngIf="alunosForaDaTurma.length === 0 && todosAlunos.length > 0" class="text-slate-400 text-xs py-2">
+        {{ buscaMatricular ? 'Nenhum resultado para "' + buscaMatricular + '".' : 'Todos os alunos já estão matriculados.' }}
+      </div>
+      <div class="space-y-2 max-h-44 overflow-y-auto">
+        <div *ngFor="let aluno of alunosForaDaTurma"
           class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg">
           <div>
             <p class="text-sm font-medium text-slate-800">{{ aluno.primeiroNome }} {{ aluno.ultimoNome }}</p>
@@ -105,7 +127,8 @@
     </div>
   </div>
 
-  <div *ngIf="!turmaSelecionada" class="bg-slate-50 rounded-xl border border-dashed border-slate-200 p-6 flex items-center justify-center">
+  <div *ngIf="!turmaSelecionada"
+    class="bg-slate-50 rounded-xl border border-dashed border-slate-200 p-6 flex items-center justify-center">
     <p class="text-slate-400 text-sm">Selecione uma turma para gerenciar os alunos</p>
   </div>
 </div>

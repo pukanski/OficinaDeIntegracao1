@@ -1,44 +1,41 @@
-<div class="flex h-screen bg-slate-50 font-sans overflow-hidden">
+<div class="flex h-screen bg-slate-100 font-sans overflow-hidden">
 
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex">
+    <aside class="w-64 bg-slate-800 flex flex-col justify-between hidden md:flex">
         <div>
-            <div class="h-16 flex items-center px-6 border-b border-slate-100">
-                <div class="w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center font-bold mr-3">P
-                </div>
-                <span class="text-xl font-bold text-slate-800">Prisma</span>
+            <div class="h-16 flex items-center px-5 border-b border-slate-700">
+                <div class="w-8 h-8 bg-white text-slate-800 rounded flex items-center justify-center font-bold mr-3 text-sm">P</div>
+                <span class="text-xl font-bold text-white">Prisma</span>
             </div>
-            <nav class="p-4 space-y-2">
-                <a routerLink="/admin/painel" routerLinkActive="bg-blue-600 text-white shadow-sm"
-                    class="flex items-center px-4 py-3 rounded-lg font-medium transition-colors text-slate-600 hover:bg-slate-50">
-                    <span class="mr-3">👥</span> Administrador
+            <nav class="p-3 space-y-1">
+                <a routerLink="/admin/painel" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+                    class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+                    <span class="mr-3">👥</span> Usuários
+                </a>
+                <a routerLink="/admin/logs" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+                    class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+                    <span class="mr-3">📋</span> Logs
                 </a>
             </nav>
         </div>
-        <div class="p-4 border-t border-slate-100">
-            <a routerLink="/login"
-                class="flex items-center px-4 py-2 text-slate-500 hover:text-red-600 transition-colors font-medium">
-                <button (click)="sair()"
-                    class="w-full flex items-center space-x-3 px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                    <span class="font-medium">Sair</span>
-                </button>
-            </a>
+        <div class="p-3 border-t border-slate-700">
+            <button (click)="sair()"
+                class="w-full flex items-center px-3 py-2.5 text-slate-400 hover:bg-red-600 hover:text-white rounded-lg transition-colors font-medium">
+                <span class="mr-3">🚪</span> Sair
+            </button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col overflow-hidden">
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6">
-            <button class="text-slate-500 hover:text-slate-700 focus:outline-none md:hidden">☰</button>
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm">
             <div class="flex-1"></div>
             <div class="flex items-center">
-                <div class="text-right mr-3 hidden sm:block">
-                    <p class="text-sm font-bold text-slate-700 leading-none">Administrador</p>
-                    <p class="text-xs text-green-500 mt-1">Online</p>
-                </div>
-                <div class="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm"></div>
-            </div>
-        </header>
-
-        <div class="flex-1 overflow-y-auto">
+          <div class="text-right">
+            <p class="text-sm font-bold text-slate-800 leading-none">{{ nomeUsuario || '...' }}</p>
+            <p class="text-xs text-slate-400 mt-1 font-medium">{{ tipoUsuario }}</p>
+          </div>
+        </div>
+      </header>
+        <div class="flex-1 overflow-y-auto pl-2">
             <router-outlet></router-outlet>
         </div>
     </main>

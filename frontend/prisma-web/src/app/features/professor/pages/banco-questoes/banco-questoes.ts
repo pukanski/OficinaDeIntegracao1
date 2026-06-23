@@ -27,6 +27,17 @@ export class BancoQuestoesComponent implements OnInit {
   filtroDificuldade = 'Todas';
   filtroProva = 'Todas';
 
+  // Autocomplete de prova
+  buscaProvaFiltro = '';
+  mostrarSugestoesProva = false;
+
+  // Modal de edição
+  modalEdicaoAberto = false;
+  questaoEditando: any = null;
+  salvandoEdicao = false;
+  macroAreasFixas = ['Matemática','Química','Física','Biologia','História','Geografia','Linguagens','Filosofia','Sociologia'];
+  dificuldadesFixas = ['Muito Fácil','Fácil','Médio','Difícil','Muito Difícil'];
+
   modalAberto = false;
   modoModal: 'visualizar' | 'excluir' = 'visualizar';
   questaoFoco: Questao | null = null;
@@ -77,6 +88,62 @@ export class BancoQuestoesComponent implements OnInit {
     )];
   }
 
+  get provasFiltroSugestoes(): string[] {
+    const busca = this.buscaProvaFiltro.toLowerCase();
+    return this.provasUnicas.filter(p => p.toLowerCase().includes(busca));
+  }
+
+  selecionarProvaFiltro(prova: string): void {
+    this.filtroProva = prova;
+    this.buscaProvaFiltro = prova;
+    this.mostrarSugestoesProva = false;
+    this.cdr.detectChanges();
+  }
+
+  limparFiltroProva(): void {
+    this.filtroProva = 'Todas';
+    this.buscaProvaFiltro = '';
+    this.cdr.detectChanges();
+  }
+
+  abrirEdicao(): void {
+    const id = Array.from(this.questoesSelecionadas)[0];
+    this.questaoEditando = JSON.parse(JSON.stringify(this.questoes.find(q => q.id === id)));
+    this.modalEdicaoAberto = true;
+    this.cdr.detectChanges();
+  }
+
+  fecharEdicao(): void {
+    this.modalEdicaoAberto = false;
+    this.questaoEditando = null;
+    this.cdr.detectChanges();
+  }
+
+  salvarEdicao(): void {
+    if (!this.questaoEditando) return;
+    this.salvandoEdicao = true;
+    const payload = {
+      provaId: this.questaoEditando.provaId || null,
+      numero: this.questaoEditando.numero || 1,
+      disciplina: this.questaoEditando.disciplina,
+      materia: this.questaoEditando.materia || null,
+      enunciado: this.questaoEditando.enunciado,
+      dificuldade: this.questaoEditando.dificuldade || null,
+      alternativas: this.questaoEditando.alternativas
+    };
+    this.http.put(`${this.apiUrl}/${this.questaoEditando.id}`, payload).subscribe({
+      next: () => {
+        const idx = this.questoes.findIndex(q => q.id === this.questaoEditando.id);
+        if (idx >= 0) this.questoes[idx] = { ...this.questoes[idx], ...this.questaoEditando };
+        this.questoesSelecionadas.clear();
+        this.salvandoEdicao = false;
+        this.fecharEdicao();
+        this.cdr.detectChanges();
+      },
+      error: () => { this.salvandoEdicao = false; this.cdr.detectChanges(); }
+    });
+  }
+
   get questoesFiltradas(): Questao[] {
     return this.questoes.filter(q => {
       const matchBusca = !this.termoBusca ||
@@ -87,8 +154,9 @@ export class BancoQuestoesComponent implements OnInit {
         (q.materia || '').toLowerCase().includes(this.filtroMicroArea.toLowerCase());
       const matchDificuldade = this.filtroDificuldade === 'Todas' ||
         q.dificuldade === this.filtroDificuldade;
-      const matchProva = this.filtroProva === 'Todas' ||
-        (this.filtroProva === 'Avulsa' ? !q.provaDescricao : q.provaDescricao === this.filtroProva);
+      const matchProva = !this.buscaProvaFiltro ||
+        (this.buscaProvaFiltro === 'Avulsa' ? !q.provaDescricao :
+        (q.provaDescricao || '').toLowerCase().includes(this.buscaProvaFiltro.toLowerCase()));
       return matchBusca && matchDisciplina && matchMicro && matchDificuldade && matchProva;
     });
   }

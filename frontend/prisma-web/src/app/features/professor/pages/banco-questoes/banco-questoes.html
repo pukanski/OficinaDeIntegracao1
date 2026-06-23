@@ -23,14 +23,25 @@
         <option *ngFor="let disc of disciplinasUnicas" [value]="disc">{{ disc }}</option>
       </select>
     </div>
-    <div>
+    <div class="relative">
       <label class="block text-sm font-semibold text-slate-700 mb-2">Prova</label>
-      <select [(ngModel)]="filtroProva"
-        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-        <option value="Todas">Todas</option>
-        <option value="Avulsa">Avulsas</option>
-        <option *ngFor="let p of provasUnicas" [value]="p">{{ p }}</option>
-      </select>
+      <div class="flex gap-2">
+        <input type="text" [(ngModel)]="buscaProvaFiltro"
+          (input)="mostrarSugestoesProva = true"
+          (focus)="mostrarSugestoesProva = true"
+          placeholder="Buscar prova..."
+          class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm">
+        <button *ngIf="buscaProvaFiltro" (click)="limparFiltroProva()"
+          class="px-3 text-slate-400 hover:text-red-500 border border-slate-200 rounded-lg">✕</button>
+      </div>
+      <div *ngIf="mostrarSugestoesProva && buscaProvaFiltro"
+        class="absolute z-10 w-full bg-white border border-slate-200 rounded-lg shadow-lg mt-1 max-h-40 overflow-y-auto">
+        <div (click)="limparFiltroProva()" class="px-3 py-2 text-xs text-slate-400 hover:bg-slate-50 cursor-pointer border-b">Todas</div>
+        <div (click)="selecionarProvaFiltro('Avulsa')" class="px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 cursor-pointer border-b">Avulsas</div>
+        <div *ngFor="let p of provasFiltroSugestoes" (click)="selecionarProvaFiltro(p)"
+          class="px-3 py-2 text-sm text-slate-700 hover:bg-blue-50 cursor-pointer">{{ p }}</div>
+        <div *ngIf="provasFiltroSugestoes.length === 0" class="px-3 py-2 text-xs text-slate-400">Nenhuma prova encontrada.</div>
+      </div>
     </div>
     <div>
       <label class="block text-sm font-semibold text-slate-700 mb-2">Micro Área</label>
@@ -113,6 +124,11 @@
     <span class="mr-1">👁️</span> Visualizar
   </button>
 
+  <button *ngIf="questoesSelecionadas.size === 1" (click)="abrirEdicao()"
+    class="hover:text-yellow-300 flex items-center transition-colors">
+    <span class="mr-1">✏️</span> Editar
+  </button>
+
   <button (click)="abrirModal('excluir')" class="hover:text-red-400 flex items-center transition-colors">
     <span class="mr-1">🗑️</span> Excluir
   </button>
@@ -177,6 +193,78 @@
       <button *ngIf="modoModal === 'excluir'" (click)="confirmarExclusao()"
         class="px-5 py-2.5 font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors">
         Excluir Definitivamente
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Edição -->
+<div *ngIf="modalEdicaoAberto && questaoEditando"
+  class="fixed inset-0 bg-slate-900 bg-opacity-40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+
+    <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+      <h2 class="text-xl font-bold text-slate-800">Editar Questão</h2>
+      <button (click)="fecharEdicao()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+    </div>
+
+    <div class="p-6 overflow-y-auto space-y-4">
+
+      <!-- Disciplina e dificuldade -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Disciplina</label>
+          <select [(ngModel)]="questaoEditando.disciplina"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+            <option *ngFor="let m of macroAreasFixas" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Matéria</label>
+          <input type="text" [(ngModel)]="questaoEditando.materia" placeholder="Ex: Cinemática"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Dificuldade</label>
+          <select [(ngModel)]="questaoEditando.dificuldade"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+            <option value="">Sem classificação</option>
+            <option *ngFor="let d of dificuldadesFixas" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Enunciado -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Enunciado</label>
+        <textarea [(ngModel)]="questaoEditando.enunciado" rows="4"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y">
+        </textarea>
+      </div>
+
+      <!-- Alternativas -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-2">Alternativas e Gabarito</label>
+        <div class="space-y-2">
+          <div *ngFor="let alt of questaoEditando.alternativas" class="flex items-center gap-3">
+            <input type="radio" name="gabarito_edicao" [checked]="alt.correta"
+              (change)="questaoEditando.alternativas.forEach(a => a.correta = false); alt.correta = true"
+              class="w-5 h-5 text-blue-600 cursor-pointer" title="Marcar como correta">
+            <span class="font-bold text-slate-700 w-6">{{ alt.letra }})</span>
+            <input type="text" [(ngModel)]="alt.texto"
+              class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 border-t border-slate-200 flex justify-between bg-slate-50">
+      <button (click)="fecharEdicao()" class="px-5 py-2.5 font-medium text-slate-600 hover:bg-slate-200 rounded-xl transition-colors">
+        Cancelar
+      </button>
+      <button (click)="salvarEdicao()" [disabled]="salvandoEdicao"
+        class="px-5 py-2.5 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-50">
+        {{ salvandoEdicao ? 'Salvando...' : 'Salvar Alterações' }}
       </button>
     </div>
   </div>

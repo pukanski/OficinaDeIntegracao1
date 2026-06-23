@@ -1,47 +1,51 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { AuthService, UserRole } from '../../../../core/services/auth.service';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../../../environments/environment';
-import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  perfilSelecionado: 'aluno' | 'professor' | 'admin' = 'professor';
+  perfilSelecionado: UserRole = 'professor';
+  carregando = false;
+  erro = '';
+
+  // Reset de senha
+  modalSenhaAberto = false;
+  emailReset = '';
+  enviandoReset = false;
+  msgReset = '';
+  erroReset = false;
+
+  private supabase: SupabaseClient;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService,
-    private http: HttpClient
-  ) { }
+    private authService: AuthService
+  ) {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
+  }
 
   ngOnInit(): void {
-    if (this.authService.restoreSession()) {
-      const role = this.authService.role;
-      if (role === 'admin') this.router.navigate(['/admin/painel']);
-      else if (role === 'professor') this.router.navigate(['/professor/dashboard']);
-      else if (role === 'aluno') this.router.navigate(['/aluno/dashboard']);
-      return;
-    }
-
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  alterarPerfil(perfil: 'aluno' | 'professor' | 'admin'): void {
+  alterarPerfil(perfil: UserRole): void {
     this.perfilSelecionado = perfil;
+    this.erro = '';
     this.loginForm.reset();
   }
 
@@ -50,35 +54,53 @@ export class LoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
       return;
     }
-
-    const { email, senha } = this.loginForm.value;
-
+    this.carregando = true;
+    this.erro = '';
     try {
-      await this.authService.login(email, senha, this.perfilSelecionado);
+      const role = await this.authService.login(
+        this.loginForm.value.email,
+        this.loginForm.value.senha,
+        this.perfilSelecionado
+      );
+      if (role === 'professor') this.router.navigate(['/professor/dashboard']);
+      else if (role === 'aluno') this.router.navigate(['/aluno/dashboard']);
+      else this.router.navigate(['/admin/painel']);
+    } catch {
+      this.erro = 'Credenciais inválidas. Verifique seu e-mail e senha.';
+    } finally {
+      this.carregando = false;
+    }
+  }
 
-      if (this.perfilSelecionado === 'admin') {
-        this.router.navigate(['/admin/painel']);
-        return;
-      }
+  abrirEsqueciSenha(): void {
+    this.emailReset = this.loginForm.value.email || '';
+    this.msgReset = '';
+    this.erroReset = false;
+    this.modalSenhaAberto = true;
+  }
 
-      const endpoint = this.perfilSelecionado === 'aluno' ? '/api/Aluno/me' : '/api/Professor/me';
+  fecharEsqueciSenha(): void {
+    this.modalSenhaAberto = false;
+    this.emailReset = '';
+    this.msgReset = '';
+  }
 
-      await firstValueFrom(this.http.get(`${environment.gatewayUrl}${endpoint}`));
+  async enviarResetSenha(): Promise<void> {
+    if (!this.emailReset) return;
+    this.enviandoReset = true;
+    this.msgReset = '';
 
-      const rotaDash = this.perfilSelecionado === 'aluno' ? '/aluno/dashboard' : '/professor/dashboard';
-      this.router.navigate([rotaDash]);
+    const { error } = await this.supabase.auth.resetPasswordForEmail(this.emailReset, {
+      redirectTo: `${window.location.origin}/redefinir-senha`
+    });
 
-    } catch (error: any) {
-      console.error('Falha no login ou validação de perfil:', error);
-      this.authService.logout();
-
-      if (error.message && error.message.includes('Acesso negado')) {
-        alert(error.message);
-      } else if (error.status === 404) {
-        alert(`O usuário não está cadastrado como ${this.perfilSelecionado} no banco de dados.`);
-      } else {
-        alert('Credenciais rejeitadas pelo Supabase.');
-      }
+    this.enviandoReset = false;
+    if (error) {
+      this.erroReset = true;
+      this.msgReset = 'Erro ao enviar e-mail. Verifique o endereço e tente novamente.';
+    } else {
+      this.erroReset = false;
+      this.msgReset = 'Link enviado! Verifique sua caixa de entrada.';
     }
   }
 }

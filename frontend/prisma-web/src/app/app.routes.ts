@@ -14,8 +14,9 @@ import { BancoQuestoesComponent } from './features/professor/pages/banco-questoe
 import { CadastrarQuestaoComponent } from './features/professor/pages/cadastrar-questao/cadastrar-questao';
 import { CriarListaComponent } from './features/professor/pages/criar-lista/criar-lista';
 import { DashboardProfessorComponent } from './features/professor/pages/dashboard-professor/dashboard-professor';
-import { GerenciarTurmasComponent } from './features/professor/pages/gerenciar-turmas/gerenciar-turmas';
+import { LogsComponent } from './features/admin/pages/logs/logs';
 import { FrequenciaComponent } from './features/professor/pages/frequencia/frequencia';
+import { GerenciarTurmasComponent } from './features/professor/pages/gerenciar-turmas/gerenciar-turmas';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -59,7 +60,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { role: 'admin' },
     children: [
-      { path: 'painel', component: PainelAdminComponent }
+      { path: 'painel', component: PainelAdminComponent },
+      { path: 'logs', component: LogsComponent }
     ]
   }
 ];
