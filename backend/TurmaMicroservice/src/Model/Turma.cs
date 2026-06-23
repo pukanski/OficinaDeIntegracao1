@@ -21,5 +21,8 @@ namespace TurmaAPI.Model
         [MaxLength(20)]
         [Column("Turno")]
         public string Turno { get; set; }
+
+        [Column("Principal")]
+        public bool Principal { get; set; } = false;
     }
 }

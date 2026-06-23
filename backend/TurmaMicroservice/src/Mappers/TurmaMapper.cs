@@ -9,7 +9,8 @@ namespace TurmaAPI.Mappers
         {
             Nome = dto.Nome.Trim(),
             Ano = dto.Ano.Trim(),
-            Turno = dto.Turno.Trim()
+            Turno = dto.Turno.Trim(),
+            Principal = dto.Principal
         };
 
         public static TurmaResponseDTO ToResponse(
@@ -25,6 +26,7 @@ namespace TurmaAPI.Mappers
                 Nome = turma.Nome,
                 Ano = turma.Ano,
                 Turno = turma.Turno,
+                Principal = turma.Principal,
                 QtdAlunos = qtdAlunos,
                 QtdProfessores = qtdProfessores,
                 AlunosIds = alunosIds ?? new List<long>(),

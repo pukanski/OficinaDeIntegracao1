@@ -74,46 +74,69 @@ export class DashboardAlunoComponent implements OnInit {
   }
 
   carregarFrequencia(alunoId: number): void {
-    // Busca turmas do aluno e calcula frequência média
     this.http.get<any[]>(`${this.api}/api/Turma`).subscribe({
       next: (turmas) => {
-        const minhas = turmas.filter(t => t.alunosIds?.includes(alunoId));
-        if (minhas.length === 0) return;
-
-        let totalPercentual = 0;
-        let count = 0;
-        minhas.forEach(t => {
-          this.http.get<any>(`${this.api}/api/Frequencia/percentual/${alunoId}/${t.id}`).subscribe({
-            next: (f) => {
-              totalPercentual += f.percentual || 0;
-              count++;
-              if (count === minhas.length) {
-                this.atualizar(() => { this.percentualFrequencia = Math.round(totalPercentual / count); });
-              }
-            }
-          });
-        });
+        const minhas = turmas.filter(t =>
+          (t.alunosIds ?? t.AlunosIds ?? []).includes(alunoId)
+        );
+        const principais = minhas.filter(t => t.Principal === true || t.principal === true);
+        const alvo = principais.length > 0 ? principais : minhas;
+        if (alvo.length === 0) return;
+        this._calcularFrequencia(alunoId, alvo);
       }
+    });
+  }
+
+  private _calcularFrequencia(alunoId: number, turmas: any[]): void {
+    const resultados: number[] = [];
+    let pendentes = turmas.length;
+
+    turmas.forEach(t => {
+      const turmaId = t.id ?? t.Id ?? t.ID;
+      this.http.get<any>(`${this.api}/api/Frequencia/percentual/${alunoId}/${turmaId}`).subscribe({
+        next: (f) => {
+          const total = f.totalAulas ?? f.TotalAulas ?? 0;
+          // Só inclui na média se houver aulas registradas para essa turma
+          if (total > 0) {
+            resultados.push(f.percentual ?? f.Percentual ?? 0);
+          }
+          pendentes--;
+          if (pendentes === 0) {
+            const media = resultados.length > 0
+              ? Math.round(resultados.reduce((a, b) => a + b, 0) / resultados.length)
+              : 0;
+            this.atualizar(() => { this.percentualFrequencia = media; });
+          }
+        },
+        error: () => {
+          pendentes--;
+          if (pendentes === 0) this.atualizar(() => {});
+        }
+      });
     });
   }
 
   carregarListas(alunoId: number): void {
     this.http.get<any[]>(`${this.api}/api/Turma`).subscribe({
       next: (turmas) => {
-        const minhas = turmas.filter(t => t.alunosIds?.includes(alunoId));
-        const listasSet = new Map<number, ListaDTO>();
-        let pendentes = minhas.length;
-        if (pendentes === 0) return;
+        const turmaIds = turmas
+          .filter(t => (t.alunosIds ?? t.AlunosIds ?? []).includes(alunoId))
+          .map(t => t.id ?? t.Id ?? t.ID);
 
-        minhas.forEach(t => {
-          this.http.get<ListaDTO[]>(`${this.api}/api/Lista/turma/${t.id}`).subscribe({
-            next: (ls) => {
-              ls.forEach(l => listasSet.set(l.id, l));
-              pendentes--;
-              if (pendentes === 0) this.atualizar(() => { this.listas = Array.from(listasSet.values()); });
-            },
-            error: () => { pendentes--; }
+        if (turmaIds.length === 0) return;
+
+        Promise.all(
+          turmaIds.map(id =>
+            this.http.get<any[]>(`${this.api}/api/Lista/turma/${id}`)
+              .toPromise().catch(() => [] as any[])
+          )
+        ).then(resultados => {
+          const listasSet = new Map<number, any>();
+          (resultados as any[][]).flat().forEach((l: any) => {
+            const lid = l.id ?? l.Id ?? l.ID;
+            listasSet.set(lid, l);
           });
+          this.atualizar(() => { this.listas = Array.from(listasSet.values()); });
         });
       }
     });

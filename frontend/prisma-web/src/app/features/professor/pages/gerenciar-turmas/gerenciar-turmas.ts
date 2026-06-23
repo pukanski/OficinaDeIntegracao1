@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } 
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 
-interface Turma { id: number; nome: string; ano: string; turno: string; qtdAlunos: number; alunosIds: number[]; }
+interface Turma { id: number; nome: string; ano: string; turno: string; qtdAlunos: number; alunosIds: number[]; principal: boolean; }
 interface Aluno { id: number; primeiroNome: string; ultimoNome: string; email: string; ra: string; }
 
 @Component({
@@ -42,7 +42,8 @@ export class GerenciarTurmasComponent implements OnInit {
     this.turmaForm = this.fb.group({
       nome: ['', Validators.required],
       ano: [new Date().getFullYear().toString(), Validators.required],
-      turno: ['Noturno', Validators.required]
+      turno: ['Noturno', Validators.required],
+      principal: [false]
     });
     this.carregarTurmas();
     this.carregarAlunos();
@@ -72,7 +73,7 @@ export class GerenciarTurmasComponent implements OnInit {
   abrirEditar(turma: Turma): void {
     this.modoFormulario = 'editar';
     this.turmaSelecionada = turma;
-    this.turmaForm.patchValue({ nome: turma.nome, ano: turma.ano, turno: turma.turno });
+    this.turmaForm.patchValue({ nome: turma.nome, ano: turma.ano, turno: turma.turno, principal: turma.principal });
     this.mensagem = '';
     this.erro = '';
   }

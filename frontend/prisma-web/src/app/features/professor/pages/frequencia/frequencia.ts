@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -19,6 +19,42 @@ export class FrequenciaComponent implements OnInit {
   frequenciaForm!: FormGroup;
   abaAtual: 'registrar' | 'historico' = 'registrar';
 
+  alterarAba(aba: 'registrar' | 'historico'): void {
+    this.abaAtual = aba;
+    if (aba === 'historico') this.carregarTodoHistorico();
+  }
+
+  carregarTodoHistorico(): void {
+    this.historico = [];
+    this.cdr.detectChanges();
+
+    const carregarDeTodasTurmas = (turmas: Turma[]) => {
+      if (turmas.length === 0) return;
+      Promise.all(
+        turmas.map(t =>
+          this.http.get<HistoricoItem[]>(`${this.api}/api/Frequencia/historico/${t.id}`)
+            .toPromise().catch(() => [] as HistoricoItem[])
+        )
+      ).then(resultados => {
+        const todos = (resultados as HistoricoItem[][]).flat()
+          .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+        this.zone.run(() => { this.historico = todos; this.cdr.detectChanges(); });
+      });
+    };
+
+    if (this.turmas.length > 0) {
+      carregarDeTodasTurmas(this.turmas);
+    } else {
+      // Turmas ainda não carregadas — busca primeiro
+      this.http.get<Turma[]>(`${this.api}/api/Turma`).subscribe({
+        next: (turmas) => {
+          this.zone.run(() => { this.turmas = turmas; });
+          carregarDeTodasTurmas(turmas);
+        }
+      });
+    }
+  }
+
   turmas: Turma[] = [];
   todosAlunos: Aluno[] = [];
   alunos: AlunoFrequencia[] = [];
@@ -32,7 +68,7 @@ export class FrequenciaComponent implements OnInit {
 
   private api = environment.gatewayUrl;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
   ngOnInit(): void {
     const hoje = new Date().toISOString().split('T')[0];
@@ -118,7 +154,7 @@ export class FrequenciaComponent implements OnInit {
 
   get historicoFiltrado(): HistoricoItem[] {
     if (this.filtroTurmaHistorico === 'Todas') return this.historico;
-    return this.historico.filter(h => h.turmaId === +this.filtroTurmaHistorico);
+    return this.historico.filter(h => String(h.turmaId) === String(this.filtroTurmaHistorico));
   }
 
   marcarStatus(alunoId: number, status: boolean): void {

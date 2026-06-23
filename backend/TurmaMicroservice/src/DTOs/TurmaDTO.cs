@@ -15,6 +15,8 @@ namespace TurmaAPI.DTOs
         [Required(ErrorMessage = "O turno é obrigatório.")]
         [MaxLength(20)]
         public string Turno { get; set; }
+
+        public bool Principal { get; set; } = false;
     }
 
     public class TurmaResponseDTO
@@ -23,6 +25,7 @@ namespace TurmaAPI.DTOs
         public string Nome { get; set; }
         public string Ano { get; set; }
         public string Turno { get; set; }
+        public bool Principal { get; set; }
         public int QtdAlunos { get; set; }
         public int QtdProfessores { get; set; }
         public List<long> AlunosIds { get; set; } = new();
