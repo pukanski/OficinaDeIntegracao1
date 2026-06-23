@@ -315,27 +315,28 @@ Por fim, o registro de frequência escolar, detalhando a presença por turma e d
 
 ## 6.1 Descrição do Código
 
-O sistema foi projetado seguindo uma arquitetura de microsserviços, o que permite o desenvolvimento independente de cada funcionalidade.
+O sistema foi desenvolvido utilizando uma arquitetura de Microsserviços para o back-end, uma aplicação single page application (SPA) modularizada no front-end e um serviço isolado para a inteligência artificial. O repositório opera como um monorepo, dividido em três diretórios principais: backend, frontend e ia . O sistema foi representado pelo diagrama de componentes da 
+Figura 22.
 
-## Estrutura de Microsserviços (Backend)
+### Estrutura de componentes e pacotes
+1. Back-End (.NET9-C#): Composto por um API Gateway (GatewayMicroservice) construído com YARP para o roteamento, e seis microsserviços de domínio (AlunoMicroservice, ProfessorMicroservice, QuestaoMicroservice, TurmaMicroservice, ListaMicroservice e DadosMicroservice). Cada microsserviço adota uma arquitetura em camadas isolada e estruturada nos seguintes pacotes lógicos:
+* * Controllers: Exposição dos endpoints REST
+* * Services: Regras de negócio
+* * Repositories: Isolamento do acesso a dados
+* * DTOs: Objetos de transferência de dados para blindar as entidades de domínio
+* * Model: Entidades mapeadas para o banco de dados PostgreSQL
+* * Mappers: Conversores entre Models e DTOs.
 
-Os serviços de negócio (como *AlunoMicroservice* e *ProfessorMicroservice*) foram desenvolvidos em ASP.NET, estruturados em **Controllers**, **Services**, **Repositories** **Models**, **DTOs** e **Mappers** para garantir a separação de responsabilidades.
+2. Front-End(Angular17+)
+Aplica a abordagem de Standalone Components e a estrutura obedece ao padrão Feature-Based:
+* * src/app/core/: Abriga artefatos globais como guards, interceptors, services de autenticação e os layouts base estruturais.
+  * src/app/features/: Divide o sistema por domínios de negócio isolados: admin, aluno, auth e professor. Cada domínio possui suas próprias páginas e serviços específicos.
 
-## Módulo de Inteligência Artificial (`ia/`)
-
-Este módulo funciona como uma API independente em Python utilizando FastAPI. A estrutura de arquivos dentro de `ia/` reflete sua especialização técnica:
-
-- **main.py**: Ponto de entrada da API que gerencia as requisições.
-- **classifier.py** e **validator.py**: Implementam a lógica principal para processamento e validação das sugestões semânticas.
-- **prompt_builder.py**: Responsável pela construção dos *prompts* enviados ao modelo Ollama.
-- **schemas.py**: Define os modelos de dados (JSON) utilizados na comunicação entre os serviços.
-
-## Frontend (Angular)
-
-A aplicação web está organizada sob a pasta `frontend/prisma-web`, utilizando uma estrutura modular composta por:
-
-- **core/**: Serviços globais e *interceptors*.
-- **features/**: Páginas e módulos de negócio, como `admin`, `auth`, `professor` e `aluno`.
+3. Inteligência Artificial (Python / FastAPI / Ollama3.2:3b):
+Serviço focado em processamento de linguagem natural.
+* * main.py: Ponto de entrada da API REST.
+  * classifier.py: Lógica de integração com modelos de LLM (Ollama) para classificação de enunciados.
+  * prompt_builder.py e schemas.py: Engenharia de prompts e validação de contratos de dados.
 
 ##Implantação
 
