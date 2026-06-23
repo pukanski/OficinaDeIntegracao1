@@ -1,0 +1,196 @@
+<div class="p-6 max-w-7xl mx-auto w-full space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Dashboard</h1>
+      <p class="text-slate-400 text-sm mt-1">Olá, {{ nomeProfessor || 'Professor' }} 👋</p>
+    </div>
+    <a routerLink="/professor/cadastrar-questao"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow-sm">
+      + Nova Questão
+    </a>
+  </div>
+
+  <div *ngIf="carregando" class="text-center py-20 text-slate-400">Carregando dados...</div>
+
+  <ng-container *ngIf="!carregando">
+
+    <!-- Cards de métricas globais -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Total de Alunos</span>
+          <span class="text-2xl">👥</span>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ totalAlunos }}</p>
+        <p class="text-xs text-slate-400 mt-1">em {{ turmas.length }} turma(s)</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Banco de Questões</span>
+          <span class="text-2xl">📖</span>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ totalQuestoes }}</p>
+        <p class="text-xs text-slate-400 mt-1">questões cadastradas</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Média da Turma</span>
+          <span class="text-2xl">🏅</span>
+        </div>
+        <p class="text-3xl font-extrabold"
+          [class.text-green-600]="mediaDesempenho >= 70"
+          [class.text-yellow-500]="mediaDesempenho >= 50 && mediaDesempenho < 70"
+          [class.text-red-500]="mediaDesempenho < 50 && mediaDesempenho > 0"
+          [class.text-slate-300]="mediaDesempenho === 0">
+          {{ mediaDesempenho > 0 ? (mediaDesempenho | number:'1.0-0') + '%' : '—' }}
+        </p>
+        <p class="text-xs text-slate-400 mt-1">{{ turmaSelecionada?.nome || 'nenhuma turma' }}</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Listas Criadas</span>
+          <span class="text-2xl">📋</span>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ totalListas }}</p>
+        <p class="text-xs text-slate-400 mt-1">no total</p>
+      </div>
+    </div>
+
+    <!-- Seletor de turma -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-wrap gap-2 items-center">
+      <span class="text-sm font-bold text-slate-600 mr-2">Ver turma:</span>
+      <button *ngFor="let t of turmas"
+        (click)="selecionarTurma(t.id)"
+        class="px-4 py-1.5 rounded-full text-sm font-semibold transition-colors border"
+        [class.bg-blue-600]="turmaSelecionadaId === t.id"
+        [class.text-white]="turmaSelecionadaId === t.id"
+        [class.border-blue-600]="turmaSelecionadaId === t.id"
+        [class.bg-white]="turmaSelecionadaId !== t.id"
+        [class.text-slate-600]="turmaSelecionadaId !== t.id"
+        [class.border-slate-200]="turmaSelecionadaId !== t.id">
+        {{ t.nome }} <span class="ml-1 opacity-70">({{ t.qtdAlunos }})</span>
+      </button>
+      <span *ngIf="turmas.length === 0" class="text-sm text-slate-400">Nenhuma turma cadastrada.</span>
+    </div>
+
+    <div *ngIf="carregandoTurma" class="text-center py-8 text-slate-400">Carregando dados da turma...</div>
+
+    <ng-container *ngIf="!carregandoTurma && turmaSelecionada">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Desempenho por disciplina da turma -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h3 class="font-bold text-slate-800 mb-1">Desempenho por Disciplina</h3>
+          <p class="text-xs text-slate-400 mb-5">Baseado nas respostas dos alunos da turma</p>
+
+          <div *ngIf="disciplinasStats.length === 0" class="text-slate-400 text-sm py-4 text-center">
+            Nenhum dado disponível ainda para esta turma.
+          </div>
+
+          <div class="space-y-4">
+            <div *ngFor="let d of disciplinasStats">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-700">{{ d.disciplina }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-slate-400">{{ d.totalAcertos }}/{{ d.totalRespondidas }}</span>
+                  <span class="text-sm font-bold w-12 text-right"
+                    [class.text-green-600]="d.percentualAcerto >= 70"
+                    [class.text-yellow-500]="d.percentualAcerto >= 50 && d.percentualAcerto < 70"
+                    [class.text-red-500]="d.percentualAcerto < 50">
+                    {{ d.percentualAcerto | number:'1.0-0' }}%
+                  </span>
+                </div>
+              </div>
+              <div class="h-2 bg-slate-100 rounded-full">
+                <div class="h-2 rounded-full"
+                  [class.bg-green-500]="d.percentualAcerto >= 70"
+                  [class.bg-yellow-400]="d.percentualAcerto >= 50 && d.percentualAcerto < 70"
+                  [class.bg-red-400]="d.percentualAcerto < 50"
+                  [style.width.%]="d.percentualAcerto">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alunos em risco -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h3 class="font-bold text-slate-800 mb-1">Alunos em Atenção</h3>
+          <p class="text-xs text-slate-400 mb-5">Alunos com menos de 60% de acerto</p>
+
+          <div *ngIf="alunosRisco.length === 0" class="py-8 text-center">
+            <span class="text-3xl block mb-2">✅</span>
+            <p class="text-slate-500 text-sm font-medium">Todos os alunos estão bem!</p>
+            <p class="text-slate-400 text-xs mt-1">Nenhum aluno abaixo de 60%</p>
+          </div>
+
+          <div class="space-y-3">
+            <div *ngFor="let aluno of alunosRisco"
+              class="flex items-center gap-4 p-3 bg-red-50 border border-red-100 rounded-xl">
+              <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center font-bold text-red-600 text-sm shrink-0">
+                {{ aluno.nome.charAt(0) }}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-slate-800 text-sm truncate">{{ aluno.nome }}</p>
+                <div class="h-1.5 bg-red-100 rounded-full mt-1">
+                  <div class="h-1.5 bg-red-400 rounded-full" [style.width.%]="aluno.percentual"></div>
+                </div>
+              </div>
+              <span class="text-sm font-bold text-red-600 shrink-0">{{ aluno.percentual | number:'1.0-0' }}%</span>
+            </div>
+          </div>
+
+          <!-- Resumo da turma -->
+          <div *ngIf="turmaSelecionada" class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-3 gap-3 text-center">
+            <div>
+              <p class="text-2xl font-extrabold text-slate-800">{{ turmaSelecionada.qtdAlunos }}</p>
+              <p class="text-xs text-slate-400">Total</p>
+            </div>
+            <div>
+              <p class="text-2xl font-extrabold text-red-500">{{ alunosRisco.length }}</p>
+              <p class="text-xs text-slate-400">Em risco</p>
+            </div>
+            <div>
+              <p class="text-2xl font-extrabold text-green-600">{{ turmaSelecionada.qtdAlunos - alunosRisco.length }}</p>
+              <p class="text-xs text-slate-400">No prazo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações rápidas -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <a routerLink="/professor/banco-questoes"
+          class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-blue-300 hover:shadow-md transition-all flex items-center gap-4">
+          <span class="text-3xl">📚</span>
+          <div>
+            <p class="font-bold text-slate-800">Banco de Questões</p>
+            <p class="text-xs text-slate-400">{{ totalQuestoes }} questões disponíveis</p>
+          </div>
+        </a>
+        <a routerLink="/professor/criar-lista"
+          class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-blue-300 hover:shadow-md transition-all flex items-center gap-4">
+          <span class="text-3xl">📋</span>
+          <div>
+            <p class="font-bold text-slate-800">Criar Lista</p>
+            <p class="text-xs text-slate-400">Monte exercícios para a turma</p>
+          </div>
+        </a>
+        <a routerLink="/professor/frequencia"
+          class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-blue-300 hover:shadow-md transition-all flex items-center gap-4">
+          <span class="text-3xl">✅</span>
+          <div>
+            <p class="font-bold text-slate-800">Registrar Presença</p>
+            <p class="text-xs text-slate-400">Fazer chamada da turma</p>
+          </div>
+        </a>
+      </div>
+    </ng-container>
+
+  </ng-container>
+</div>

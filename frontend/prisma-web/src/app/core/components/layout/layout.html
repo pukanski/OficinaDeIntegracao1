@@ -1,0 +1,60 @@
+<div class="flex h-screen bg-slate-100 font-sans overflow-hidden">
+
+  <aside class="w-64 bg-slate-800 flex flex-col justify-between hidden md:flex">
+    <div>
+      <div class="h-16 flex items-center px-5 border-b border-slate-700">
+        <div class="w-8 h-8 bg-white text-slate-800 rounded flex items-center justify-center font-bold mr-3 text-sm">P</div>
+        <span class="text-xl font-bold text-white">Prisma</span>
+      </div>
+      <nav class="p-3 space-y-1">
+        <a routerLink="/professor/dashboard" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+          [routerLinkActiveOptions]="{exact: true}"
+          class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+          <span class="mr-3">📊</span> Dashboard
+        </a>
+        <a routerLink="/professor/cadastrar-questao" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+          class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+          <span class="mr-3">📝</span> Cadastrar Questão
+        </a>
+        <a routerLink="/professor/banco-questoes" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+          class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+          <span class="mr-3">📚</span> Banco de Questões
+        </a>
+        <a routerLink="/professor/criar-lista" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+          class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+          <span class="mr-3">📑</span> Criar Lista
+        </a>
+        <a routerLink="/professor/turmas" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+          class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+          <span class="mr-3">🏫</span> Turmas
+        </a>
+        <a routerLink="/professor/frequencia" routerLinkActive="bg-white text-slate-800 shadow-sm font-bold"
+          class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors text-slate-300 hover:bg-white hover:text-slate-800">
+          <span class="mr-3">👥</span> Frequência
+        </a>
+      </nav>
+    </div>
+    <div class="p-3 border-t border-slate-700">
+      <button (click)="sair()"
+        class="w-full flex items-center px-3 py-2.5 text-slate-400 hover:bg-red-600 hover:text-white rounded-lg transition-colors font-medium">
+        <span class="mr-3">🚪</span> Sair
+      </button>
+    </div>
+  </aside>
+
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm">
+      <button class="text-slate-500 hover:text-slate-700 focus:outline-none md:hidden">☰</button>
+      <div class="flex-1"></div>
+      <div class="flex items-center">
+          <div class="text-right">
+            <p class="text-sm font-bold text-slate-800 leading-none">{{ nomeUsuario || '...' }}</p>
+            <p class="text-xs text-slate-400 mt-1 font-medium">{{ tipoUsuario }}</p>
+          </div>
+        </div>
+      </header>
+    <div class="flex-1 overflow-y-auto pl-2">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

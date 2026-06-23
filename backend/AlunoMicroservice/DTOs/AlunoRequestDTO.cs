@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AlunoAPI.DTOs
 {
     public class AlunoRequestDTO
     {
+        [Required(ErrorMessage = "O AuthId (Supabase) é obrigatório.")]
+        public Guid AuthId { get; set; }
+
         [Required(ErrorMessage = "O primeiro nome deve ser informado obrigatoriamente.")]
         [MaxLength(80)]
         public string PrimeiroNome { get; set; }

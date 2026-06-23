@@ -1,0 +1,166 @@
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">Cadastrar Questão</h1>
+    <p class="text-slate-500 text-sm mt-1">Crie novas questões com assistência de IA</p>
+</div>
+
+<!-- Mensagens -->
+<div *ngIf="mensagem" class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">{{ mensagem }}</div>
+<div *ngIf="erro" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{{ erro }}</div>
+
+<!-- Seleção de Prova -->
+<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-slate-800">Prova de Origem</h3>
+        <button type="button" (click)="criandoProva = !criandoProva"
+            class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 px-3 rounded-lg transition-colors">
+            {{ criandoProva ? '✕ Cancelar' : '+ Nova Prova' }}
+        </button>
+    </div>
+
+    <!-- Formulário nova prova (inline) -->
+    <div *ngIf="criandoProva" class="mb-4 p-4 bg-slate-50 rounded-lg border border-slate-200" [formGroup]="provaForm">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Vestibular *</label>
+                <input type="text" formControlName="vestibular" placeholder="Ex: ENEM, FUVEST"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Ano *</label>
+                <input type="number" formControlName="ano" placeholder="Ex: 2024"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Edição (opcional)</label>
+                <input type="text" formControlName="edicao" placeholder="Ex: 1º Dia, 2º Semestre"
+                    class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+        </div>
+        <button type="button" (click)="salvarProva()" [disabled]="salvandoProva"
+            class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors disabled:opacity-50">
+            {{ salvandoProva ? 'Salvando...' : 'Criar Prova' }}
+        </button>
+    </div>
+
+    <!-- Autocomplete de provas -->
+    <div [formGroup]="questaoForm" class="relative">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Buscar prova</label>
+        <div class="flex gap-2">
+          <input type="text" [(ngModel)]="buscaProva" [ngModelOptions]="{standalone: true}"
+            (input)="filtrarProvas()" (focus)="filtrarProvas()"
+            placeholder="Digite vestibular, ano ou edição..."
+            class="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+          <button *ngIf="provaSelecionada" type="button" (click)="limparProva()"
+            class="px-3 py-2 text-slate-400 hover:text-red-500 border border-slate-200 rounded-lg text-sm">✕</button>
+        </div>
+
+        <!-- Badge da prova selecionada -->
+        <div *ngIf="provaSelecionada" class="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700 font-semibold">
+          ✓ {{ provaSelecionada.vestibular }} {{ provaSelecionada.ano }}{{ provaSelecionada.edicao ? ' — ' + provaSelecionada.edicao : '' }}
+        </div>
+        <p *ngIf="!provaSelecionada" class="text-xs text-slate-400 mt-1">Deixe em branco para questão avulsa.</p>
+
+        <!-- Lista de sugestões -->
+        <div *ngIf="mostrarSugestoes && provasFiltradas.length > 0"
+          class="absolute z-10 w-full bg-white border border-slate-200 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto">
+          <div (click)="selecionarProva(null)"
+            class="px-4 py-2 text-sm text-slate-400 hover:bg-slate-50 cursor-pointer border-b border-slate-100">
+            Nenhuma (questão avulsa)
+          </div>
+          <div *ngFor="let p of provasFiltradas"
+            (click)="selecionarProva(p)"
+            class="px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 cursor-pointer">
+            <span class="font-semibold">{{ p.vestibular }}</span> {{ p.ano }}
+            <span *ngIf="p.edicao" class="text-slate-400"> — {{ p.edicao }}</span>
+          </div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulário principal -->
+<form [formGroup]="questaoForm" (ngSubmit)="salvarQuestao()" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+
+            <!-- Número da questão -->
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Número da questão *</label>
+                <input type="number" formControlName="numero" min="1"
+                    class="w-32 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+            </div>
+
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Enunciado *</label>
+            <textarea formControlName="enunciado" rows="5" placeholder="Digite o enunciado da questão..."
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-y"></textarea>
+
+            <div class="mt-6">
+                <label class="block text-sm font-semibold text-slate-700 mb-4">Alternativas e Gabarito *</label>
+                <div class="space-y-3">
+                    <div *ngFor="let letra of ['A', 'B', 'C', 'D', 'E']" class="flex items-center space-x-3">
+                        <input type="radio" formControlName="gabarito" [value]="letra"
+                            class="w-5 h-5 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            title="Marcar como correta">
+                        <div class="flex-1 flex">
+                            <span class="inline-flex items-center px-4 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-500 font-bold">{{ letra }}</span>
+                            <input type="text" [formControlName]="'alternativa' + letra"
+                                [placeholder]="'Alternativa ' + letra"
+                                class="flex-1 px-4 py-2 border border-slate-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col">
+
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800">Classificação</h3>
+                <button type="button" (click)="gerarSugestoesIA()" [disabled]="isGerandoIA"
+                    class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-bold py-1.5 px-3 rounded-lg transition-colors flex items-center disabled:opacity-50">
+                    <span *ngIf="!isGerandoIA" class="mr-1">🤖</span>
+                    <span *ngIf="!isGerandoIA">Sugerir IA</span>
+                    <div *ngIf="isGerandoIA" class="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-700 mr-1"></div>
+                    <span *ngIf="isGerandoIA">Pensando...</span>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 mb-4">Classifique manualmente ou clique em Sugerir IA.</p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Macro-área (Disciplina) *</label>
+                    <select formControlName="macroArea"
+                        class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-700 bg-white">
+                        <option value="" disabled>Selecione a macro-área</option>
+                        <option *ngFor="let area of macroAreasFixas" [value]="area">{{ area }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Micro-área (Matéria)</label>
+                    <input type="text" formControlName="microArea" placeholder="Ex: Cinemática"
+                        class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Dificuldade *</label>
+                    <select formControlName="dificuldade"
+                        class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm text-slate-700 bg-white">
+                        <option value="" disabled>Selecione a dificuldade</option>
+                        <option value="Muito Fácil">1 - Muito Fácil</option>
+                        <option value="Fácil">2 - Fácil</option>
+                        <option value="Médio">3 - Médio</option>
+                        <option value="Difícil">4 - Difícil</option>
+                        <option value="Muito Difícil">5 - Muito Difícil</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm transition-colors text-lg">
+            Salvar Questão
+        </button>
+    </div>
+</form>

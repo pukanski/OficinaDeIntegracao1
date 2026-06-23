@@ -7,6 +7,9 @@ namespace ProfessorAPI.src.Model
     public class Professor : Base.BaseEntity
     {
 
+        [Required]
+        [Column("AuthId")]
+        public Guid AuthId { get; set; }
         [Required(ErrorMessage = "Siape obrigatório!")]
         [MaxLength(7)]
         public string Siape { get; set; }

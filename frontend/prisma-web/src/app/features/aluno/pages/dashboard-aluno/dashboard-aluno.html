@@ -1,0 +1,156 @@
+<div class="p-6 max-w-7xl mx-auto w-full space-y-6">
+
+  <!-- Header -->
+  <div>
+    <h1 class="text-2xl font-bold text-slate-800">Olá, {{ nomeAluno || 'Aluno' }} 👋</h1>
+    <p class="text-slate-400 text-sm mt-1">Aqui está um resumo do seu desempenho</p>
+  </div>
+
+  <div *ngIf="carregando" class="text-center py-20 text-slate-400">Carregando dados...</div>
+
+  <ng-container *ngIf="!carregando">
+
+    <!-- Linha 1: 4 cards de métricas -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <!-- Média geral -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Média Geral</span>
+          <span class="text-2xl">🏆</span>
+        </div>
+        <p class="text-3xl font-extrabold"
+          [class.text-green-600]="mediaGeral >= 70"
+          [class.text-yellow-500]="mediaGeral >= 50 && mediaGeral < 70"
+          [class.text-red-500]="mediaGeral < 50">
+          {{ mediaGeral | number:'1.0-0' }}%
+        </p>
+        <div class="mt-2 h-1.5 bg-slate-100 rounded-full">
+          <div class="h-1.5 rounded-full"
+            [class.bg-green-500]="mediaGeral >= 70"
+            [class.bg-yellow-400]="mediaGeral >= 50 && mediaGeral < 70"
+            [class.bg-red-400]="mediaGeral < 50"
+            [style.width.%]="mediaGeral"></div>
+        </div>
+      </div>
+
+      <!-- Questões respondidas -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Respondidas</span>
+          <span class="text-2xl">📝</span>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ totalRespondidas }}</p>
+        <p class="text-xs text-slate-400 mt-2">questões no total</p>
+      </div>
+
+      <!-- Frequência -->
+      <div class="rounded-2xl border p-5 shadow-sm"
+        [class.bg-green-50]="percentualFrequencia >= 75"
+        [class.border-green-200]="percentualFrequencia >= 75"
+        [class.bg-red-50]="percentualFrequencia < 75"
+        [class.border-red-200]="percentualFrequencia < 75">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase tracking-wide"
+            [class.text-green-600]="percentualFrequencia >= 75"
+            [class.text-red-500]="percentualFrequencia < 75">Frequência</span>
+          <span class="text-2xl">{{ percentualFrequencia >= 75 ? '✅' : '⚠️' }}</span>
+        </div>
+        <p class="text-3xl font-extrabold"
+          [class.text-green-700]="percentualFrequencia >= 75"
+          [class.text-red-600]="percentualFrequencia < 75">
+          {{ percentualFrequencia }}%
+        </p>
+        <p class="text-xs mt-2"
+          [class.text-green-600]="percentualFrequencia >= 75"
+          [class.text-red-400]="percentualFrequencia < 75">
+          {{ percentualFrequencia >= 75 ? 'Dentro do exigido' : 'Abaixo dos 75% mínimos' }}
+        </p>
+      </div>
+
+      <!-- Melhor disciplina -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Destaque</span>
+          <span class="text-2xl">⭐</span>
+        </div>
+        <p class="text-lg font-extrabold text-slate-800 leading-tight">{{ melhorDisciplina }}</p>
+        <p class="text-xs text-slate-400 mt-2">{{ melhorAcerto | number:'1.0-0' }}% de acerto</p>
+      </div>
+    </div>
+
+    <!-- Linha 2: Desempenho + Listas lado a lado -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Desempenho por disciplina -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="font-bold text-slate-800 mb-5">Desempenho por Disciplina</h3>
+
+        <div *ngIf="disciplinas.length === 0" class="text-slate-400 text-sm py-4 text-center">
+          Responda questões para ver seu desempenho por disciplina.
+        </div>
+
+        <div class="space-y-4">
+          <div *ngFor="let d of disciplinas">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-semibold text-slate-700">{{ d.disciplina }}</span>
+              <span class="text-sm font-bold"
+                [class.text-green-600]="d.percentualAcerto >= 70"
+                [class.text-yellow-500]="d.percentualAcerto >= 50 && d.percentualAcerto < 70"
+                [class.text-red-500]="d.percentualAcerto < 50">
+                {{ d.percentualAcerto | number:'1.0-0' }}%
+              </span>
+            </div>
+            <div class="h-2 bg-slate-100 rounded-full">
+              <div class="h-2 rounded-full transition-all duration-500"
+                [class.bg-green-500]="d.percentualAcerto >= 70"
+                [class.bg-yellow-400]="d.percentualAcerto >= 50 && d.percentualAcerto < 70"
+                [class.bg-red-400]="d.percentualAcerto < 50"
+                [style.width.%]="d.percentualAcerto">
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">{{ d.totalAcertos }}/{{ d.totalRespondidas }} acertos</p>
+          </div>
+        </div>
+
+        <!-- Atalho banco livre -->
+        <div class="mt-6 pt-5 border-t border-slate-100">
+          <button (click)="irParaBanco()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition-colors text-sm">
+            📚 Praticar no Banco Livre
+          </button>
+        </div>
+      </div>
+
+      <!-- Minhas Listas -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+        <div class="p-6 border-b border-slate-100">
+          <h3 class="font-bold text-slate-800">Minhas Listas</h3>
+          <p class="text-xs text-slate-400 mt-1">Listas atribuídas pelas suas turmas</p>
+        </div>
+
+        <div class="flex-1 divide-y divide-slate-50 overflow-y-auto max-h-96">
+          <div *ngFor="let lista of listas"
+            class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+            <div class="flex-1 mr-4">
+              <p class="font-semibold text-slate-800 text-sm">{{ lista.titulo }}</p>
+              <p class="text-xs text-slate-400 mt-0.5">
+                {{ lista.questoesIds.length }} questões
+                <span *ngIf="lista.dataVencimento"> · {{ lista.dataVencimento | date:'dd/MM' }}</span>
+              </p>
+            </div>
+            <button (click)="iniciarLista(lista)"
+              class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors shrink-0">
+              Iniciar
+            </button>
+          </div>
+
+          <div *ngIf="listas.length === 0" class="p-8 text-center text-slate-400 text-sm">
+            Nenhuma lista atribuída ainda.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

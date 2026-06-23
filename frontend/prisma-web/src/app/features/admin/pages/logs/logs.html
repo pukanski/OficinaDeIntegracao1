@@ -1,0 +1,67 @@
+<div class="p-6 max-w-6xl mx-auto w-full space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-800">Logs do Sistema</h1>
+    <p class="text-slate-400 text-sm mt-1">Registros de criação e atualização de dados</p>
+  </div>
+
+  <!-- Abas -->
+  <div class="flex gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200 w-fit">
+    <button *ngFor="let aba of abas"
+      (click)="alterarAba(aba.id)"
+      class="px-5 py-2 rounded-lg text-sm font-semibold transition-all"
+      [class.bg-slate-800]="abaAtual === aba.id"
+      [class.text-white]="abaAtual === aba.id"
+      [class.shadow-sm]="abaAtual === aba.id"
+      [class.text-slate-500]="abaAtual !== aba.id"
+      [class.hover:text-slate-800]="abaAtual !== aba.id">
+      {{ aba.label }}
+    </button>
+  </div>
+
+  <!-- Busca e contador -->
+  <div class="flex items-center gap-4">
+    <div class="relative flex-1 max-w-sm">
+      <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 text-sm">🔍</span>
+      <input type="text" [(ngModel)]="busca" placeholder="Buscar..."
+        class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 outline-none text-sm">
+    </div>
+    <span class="text-sm text-slate-400 font-medium">{{ logsFiltrados.length }} registro(s)</span>
+  </div>
+
+  <!-- Tabela -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div *ngIf="carregando" class="text-center py-12 text-slate-400">Carregando...</div>
+
+    <table *ngIf="!carregando" class="w-full text-left text-sm">
+      <thead>
+        <tr class="bg-slate-50 border-b border-slate-200">
+          <th class="p-4 font-bold text-slate-600 w-8">#</th>
+          <th class="p-4 font-bold text-slate-600">Tipo</th>
+          <th class="p-4 font-bold text-slate-600">Descrição</th>
+          <th class="p-4 font-bold text-slate-600">Detalhe</th>
+          <th class="p-4 font-bold text-slate-600">Criado em</th>
+          <th class="p-4 font-bold text-slate-600">Atualizado em</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <tr *ngFor="let log of logsFiltrados" class="hover:bg-slate-50 transition-colors">
+          <td class="p-4 text-slate-400 font-mono text-xs">{{ log.id }}</td>
+          <td class="p-4">
+            <span class="px-2 py-1 rounded-full text-xs font-bold" [ngClass]="badgeColor(log.tipo)">
+              {{ log.tipo }}
+            </span>
+          </td>
+          <td class="p-4 font-medium text-slate-800 max-w-xs truncate">{{ log.descricao }}</td>
+          <td class="p-4 text-slate-500 text-xs">{{ log.detalhe }}</td>
+          <td class="p-4 text-slate-500 text-xs whitespace-nowrap">{{ formatarData(log.criadoEm) }}</td>
+          <td class="p-4 text-slate-400 text-xs whitespace-nowrap">
+            {{ log.atualizadoEm ? formatarData(log.atualizadoEm) : '—' }}
+          </td>
+        </tr>
+        <tr *ngIf="logsFiltrados.length === 0">
+          <td colspan="6" class="p-10 text-center text-slate-400">Nenhum registro encontrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

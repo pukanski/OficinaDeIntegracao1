@@ -1,0 +1,131 @@
+<div class="p-8 max-w-6xl mx-auto w-full space-y-6 pb-20">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-slate-800">Painel Administrativo</h1>
+        <p class="text-slate-500 text-sm mt-1">Gerenciamento de usuários</p>
+    </div>
+
+    <div class="space-y-6">
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-800 mb-4">Adicionar Novo Usuário</h3>
+            <form [formGroup]="usuarioForm" (ngSubmit)="salvarUsuario()">
+
+                <div *ngIf="mensagem"
+                    class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">{{ mensagem
+                    }}</div>
+                <div *ngIf="erro" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{{
+                    erro }}</div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Nome completo</label>
+                        <input type="text" formControlName="nome" placeholder="Ex: João Silva"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                        <input type="email" formControlName="email" placeholder="email@exemplo.com"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Senha</label>
+                        <input type="password" formControlName="senha" placeholder="Mínimo 6 caracteres"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Tipo</label>
+                        <select formControlName="tipo" class="w-full px-4 py-2 border rounded-lg">
+                            <option value="Aluno">Aluno</option>
+                            <option value="Professor">Professor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+                    *ngIf="usuarioForm.get('tipo')?.value === 'Aluno'">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">RA</label>
+                        <input type="text" formControlName="ra" placeholder="Registro Acadêmico"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+                    *ngIf="usuarioForm.get('tipo')?.value === 'Professor'">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Siape</label>
+                        <input type="text" formControlName="siape" placeholder="Número Siape"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Disciplina</label>
+                        <input type="text" formControlName="disciplina" placeholder="Nome da disciplina"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" class="w-full font-bold py-2.5 rounded-lg transition-colors"
+                        [ngClass]="modoEdicao ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'">
+                        {{ modoEdicao ? 'Salvar Alterações' : '+ Adicionar Usuário' }}
+                    </button>
+
+                    <button *ngIf="modoEdicao" type="button" (click)="cancelarEdicao()"
+                        class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800">Usuários Cadastrados</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 border-b border-slate-100 font-bold">
+                        <tr>
+                            <th class="p-4">Nome</th>
+                            <th class="p-4">Email</th>
+                            <th class="p-4 text-center">Tipo</th>
+                            <th class="p-4 text-center">Status</th>
+                            <th class="p-4 text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr *ngFor="let user of usuarios" class="hover:bg-slate-50">
+                            <td class="p-4 font-medium text-slate-800">{{ user.nome }}</td>
+                            <td class="p-4">{{ user.email }}</td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                                    [ngClass]="user.tipo === 'Professor' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'">
+                                    {{ user.tipo }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                                    [ngClass]="user.status === 'Ativo' ? 'bg-green-50 text-green-600 border border-green-200' : 'bg-red-50 text-red-600 border border-red-200'">
+                                    {{ user.status }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center space-x-2">
+                                <button (click)="prepararEdicao(user)"
+                                    class="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100 text-xs font-bold transition-colors text-blue-600">
+                                    Editar
+                                </button>
+                                <button (click)="excluirUsuario(user)"
+                                    class="px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100 border border-red-200 transition-colors"
+                                    title="Excluir">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

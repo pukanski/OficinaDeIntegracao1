@@ -1,8 +1,11 @@
 ﻿using AlunoAPI.DTOs;
 using AlunoAPI.Model;
 using AlunoAPI.Services;
+using AlunoAPI.Data; // Correção
+using AlunoAPI.Mappers; // Correção
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore; // Correção
 
 namespace AlunoAPI.Controllers
 {
@@ -15,7 +18,12 @@ namespace AlunoAPI.Controllers
     public class AlunoController : ControllerBase
     {
         private readonly IAlunoService _service;
-        public AlunoController(IAlunoService service) => _service = service;
+        private readonly AppDbContext _context;
+        public AlunoController(IAlunoService service, AppDbContext context)
+        {
+            _service = service;
+            _context = context;
+        }
 
 
         /// <summary>Cadastra um novo aluno.</summary>
@@ -50,7 +58,7 @@ namespace AlunoAPI.Controllers
         public async Task<IActionResult> Update(long id, [FromBody] AlunoRequestDTO dto)
         {
             var alunoAtualizado = await _service.UpdateAlunoByIdAsync(id, dto);
-            if(alunoAtualizado == null)
+            if (alunoAtualizado == null)
             {
                 return NotFound();
             }
@@ -61,11 +69,26 @@ namespace AlunoAPI.Controllers
         public async Task<IActionResult> Delete(long id)
         {
             var alunoDeletado = await _service.DeleteAlunoByIdAsync(id);
-            if(alunoDeletado == null)
+            if (alunoDeletado == null)
             {
                 return NotFound();
             }
             return NoContent();
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<ActionResult<AlunoResponseDTO>> GetMe()
+        {
+            var authIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(authIdClaim)) return Unauthorized("Token inválido ou sem sub claim.");
+
+            var authId = Guid.Parse(authIdClaim);
+            var aluno = await _context.Alunos.FirstOrDefaultAsync(a => a.AuthId == authId);
+
+            if (aluno == null) return NotFound("Perfil de aluno não encontrado no banco de dados.");
+
+            return Ok(AlunoMapper.ToResponse(aluno));
         }
 
     }

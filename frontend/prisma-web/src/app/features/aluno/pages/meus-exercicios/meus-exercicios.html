@@ -1,0 +1,33 @@
+<main class="flex-1 flex flex-col h-screen overflow-y-auto p-8">
+    <div class="max-w-5xl mx-auto w-full">
+        <h1 class="text-2xl font-bold text-slate-800">Meus Exercícios</h1>
+        <p class="text-slate-500 text-sm mt-1 mb-8">Listas atribuídas à sua turma</p>
+
+        <div *ngIf="carregando" class="text-center py-12 text-slate-400">Carregando listas...</div>
+        <div *ngIf="erro" class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm mb-4">{{ erro }}</div>
+
+        <div *ngIf="!carregando && listas.length === 0 && !erro"
+            class="text-center py-12 text-slate-400">Nenhuma lista atribuída ainda.</div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div *ngFor="let lista of listas"
+                class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between hover:border-blue-300 transition-colors">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2 py-1 rounded">
+                            {{ lista.questoesIds.length }} questões
+                        </span>
+                        <span *ngIf="lista.dataVencimento" class="text-xs text-slate-400">
+                            Prazo: {{ lista.dataVencimento | date:'dd/MM/yyyy' }}
+                        </span>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">{{ lista.titulo }}</h2>
+                </div>
+                <button (click)="iniciarResolucao(lista)"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors mt-4">
+                    Iniciar
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
