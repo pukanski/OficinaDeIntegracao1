@@ -1,0 +1,1921 @@
+{
+  "info": {
+    "name": "Collections - Projeto Oficina Integração",
+    "description": null,
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Aluno",
+      "item": [
+        {
+          "name": "Listar Aluno Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Aluno/1",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Listar todos alunos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Aluno/alunos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "alunos"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Registrar Aluno",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Aluno/criar-aluno",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "criar-aluno"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"PrimeiroNome\": \"Lucas\",\n  \"UltimoNome\": \"Felipe\",\n  \"Email\": \"LucasAlunos@yahoo.com\",\n  \"RA\": \"901\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Aluno",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Aluno/6",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "6"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"PrimeiroNome\": \"João\",\n  \"UltimoNome\": \"teste\",\n  \"Email\": \"joão@live.com.br\",\n  \"RA\": \"1002\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Inativar Aluno",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Aluno/6",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "6"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sistema",
+      "item": [
+        {
+          "name": "Ping",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/ping",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "ping"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Front CORS",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://localhost:4200",
+                "disabled": false,
+                "type": "default"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Aluno/alunos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "alunos"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Timeout na 8080",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:8080/api/Aluno/alunos",
+              "protocol": "http",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": [
+                "api",
+                "Aluno",
+                "alunos"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login Supabase",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "sb_publishable_qlncldtta-4YouvRPTz60A_wWtfheJj",
+                "disabled": false,
+                "type": "default"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false,
+                "type": "default"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "https://rjygpcapmeyffuttdgjr.supabase.co/auth/v1/token?grant_type=password",
+              "protocol": "https",
+              "host": [
+                "rjygpcapmeyffuttdgjr",
+                "supabase",
+                "co"
+              ],
+              "path": [
+                "auth",
+                "v1",
+                "token"
+              ],
+              "query": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@oficina.com\",\n  \"password\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Professor",
+      "item": [
+        {
+          "name": "Listar todos professores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Professor/professores",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Professor",
+                "professores"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Zero-Trust",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Professor/professores",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Professor",
+                "professores"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Criar Professor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false,
+                "type": "default"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Professor/criar_professor",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Professor",
+                "criar_professor"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"primeiroNome\": \"foi\",\n  \"ultimoNome\": \"por favor 3\",\n  \"email\": \"tomara3234@email.com\",\n  \"siape\": \"4417\",\n  \"disciplina\": \"física\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar Professor Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Professor/professor/5",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Professor",
+                "professor",
+                "5"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Professor",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Professor/atualizar_professor/31",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Professor",
+                "atualizar_professor",
+                "31"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"siape\": \"7123\",\n    \"primeiroNome\": \"Ta\",\n    \"ultimoNome\": \"Estranoh\",\n    \"email\": \"bizarro@email.com\",\n    \"disciplina\": \"química\"\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Desativar Professor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5050/api/Professor/31",
+              "protocol": "http",
+              "host": [
+                "localhost:5050"
+              ],
+              "path": [
+                "api",
+                "Professor",
+                "31"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Questao",
+      "item": [
+        {
+          "name": "Prova",
+          "item": [
+            {
+              "name": "Criação Prova",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"vestibular\": \"FUVEST\",\n  \"ano\": 2026,\n  \"edicao\": \"1ª Fase\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "GET Prova",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas/3",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas",
+                    "3"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "Lista todas as provas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "Update PRova",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas/2",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas",
+                    "2"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"vestibular\": \"ENEM\",\n  \"ano\": 2025,\n  \"edicao\": \"2ª Fase\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "DEL Prova",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas/2",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas",
+                    "2"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Questão",
+          "item": [
+            {
+              "name": "Criação de Questão",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Questoes",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Questoes"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"provaId\": 3,\n  \"disciplina\": \"Química\",\n  \"materia\": \"Mecânica\",\n  \"enunciado\": \"Um corpo de massa 5kg é submetido a uma força de 20N. Qual é a aceleração?\",\n  \"dificuldade\": \"Fácil\",\n  \"numero\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Update Questao",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Questoes/2",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Questoes",
+                    "2"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"provaId\": 3,\n  \"disciplina\": \"Física\",\n  \"materia\": \"Termodinâmica\",\n  \"enunciado\": \"Enunciado atualizado após revisão do professor.\",\n  \"dificuldade\": \"Média\",\n  \"numero\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "GET Questao",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Questoes/2",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Questoes",
+                    "2"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "DEL Questao",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Questoes/2",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Questoes",
+                    "2"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "GET ALL Questoes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Questoes",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Questoes"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Alternativa",
+          "item": [
+            {
+              "name": "Criação de Alternativa Correta",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Alternativas",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Alternativas"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"questaoId\": 3,\n  \"letra\": \"A\",\n  \"texto\": \"4 m/s²\",\n  \"correta\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Criação de Alternativa Incorreta",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Alternativas",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Alternativas"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"questaoId\": 3,\n  \"letra\": \"D\",\n  \"texto\": \"15 m/s²\",\n  \"correta\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "GET Alternativas por Questao",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Alternativas/questao/3",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Alternativas",
+                    "questao",
+                    "3"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "UPDATE Alternativa",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Alternativas/2",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Alternativas",
+                    "2"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"questaoId\": 1,\n  \"letra\": \"C\",\n  \"texto\": \"Texto da alternativa corrigido.\",\n  \"correta\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "DEL Alternativa",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Alternativas/3",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Alternativas",
+                    "3"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Testes sistema",
+          "item": [
+            {
+              "name": "Deleção em Cascata",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas/3",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas",
+                    "3"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "Filtro Complexo de Questões",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Questoes/filtrar?disciplina=Física&ano=2026&vestibular=FUVEST",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Questoes",
+                    "filtrar"
+                  ],
+                  "query": [
+                    {
+                      "key": "disciplina",
+                      "value": "Física"
+                    },
+                    {
+                      "key": "ano",
+                      "value": "2026"
+                    },
+                    {
+                      "key": "vestibular",
+                      "value": "FUVEST"
+                    }
+                  ],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "Zero-Trust",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "Teste de Validação de Payload",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "key": "token",
+                    "value": "{{jwt_token}}",
+                    "type": "string"
+                  }
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Questao/Provas",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Questao",
+                    "Provas"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"vestibular\": \"ENEM\",\n  \"ano\": 2025\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IA",
+      "item": [
+        {
+          "name": "Teste de Vida",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/ia/health",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "ia",
+                "health"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "POST Classify Question (IA)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/ia/classify",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "ia",
+                "classify"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"statement\": \"Durante a Revolução Industrial, a substituição do trabalho manual pela máquina a vapor alterou profundamente as relações sociais e o espaço geográfico europeu. Qual foi o principal combustível responsável por mover essas máquinas na primeira fase da revolução?\",\n    \"available_disciplines\": [\"História\", \"Geografia\", \"Química\", \"Biologia\"],\n    \"available_subjects\": {\n        \"História\": [\"Revolução Industrial\", \"Guerra Fria\", \"Brasil Colônia\"],\n        \"Geografia\": [\"Urbanização\", \"Geopolítica\"],\n        \"Química\": [\"Termodinâmica\", \"Combustíveis Fossois\"]\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dados",
+      "item": [
+        {
+          "name": "Registro da resposta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Dados/responder",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Dados",
+                "responder"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alunoId\": 1,\n  \"questaoId\": 3,\n  \"alternativaId\": 1,\n  \"disciplina\": \"História\",\n  \"vestibular\": \"FUVEST\",\n  \"anoProva\": 2026,\n  \"dificuldade\": \"Difícil\",\n  \"acertou\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Motor Analitico",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Dados/1/desempenho",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Dados",
+                "1",
+                "desempenho"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Paginação histórico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Dados/1/historico?pagina=1&tamanhoPagina=10",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Dados",
+                "1",
+                "historico"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "1"
+                },
+                {
+                  "key": "tamanhoPagina",
+                  "value": "10"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Turmas",
+      "item": [
+        {
+          "name": "gestao alunos",
+          "item": [
+            {
+              "name": "Matricular Aluno",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Turma/3/matricular",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Turma",
+                    "3",
+                    "matricular"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alunoId\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Desmatricular Aluno",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://127.0.0.1:5050/api/Turma/1/desmatricular/1",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1:5050"
+                  ],
+                  "path": [
+                    "api",
+                    "Turma",
+                    "1",
+                    "desmatricular",
+                    "1"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Criar Turma",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Extensivo Medicina - Turma D\",\n  \"ano\": \"2026\",\n  \"turno\": \"Matutino\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar Todas as Turmas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Buscar Turma por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Atualizar Turma",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma",
+                "2"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Extensivo Medicina - Turma C\",\n  \"ano\": \"2026\",\n  \"turno\": \"Vespertino\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir Turma",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma/3",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma",
+                "3"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Vincular Professor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma/1/vincular-professor/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma",
+                "1",
+                "vincular-professor",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Desvincular Professor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Turma/1/desvincular-professor/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Turma",
+                "1",
+                "desvincular-professor",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listas",
+      "item": [
+        {
+          "name": "POST Create Lista",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Lista",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Lista"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Revisão de Termodinâmica - 2º Ano\",\n  \"professorId\": 1,\n  \"dataVencimento\": \"2026-07-30T23:59:59Z\",\n  \"questoesIds\": [9999],\n  \"turmasIds\": [1]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET Lista by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Lista/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Lista",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "GET por Turma",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Lista/turma/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Lista",
+                "turma",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "PUT Atualização",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Lista/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Lista",
+                "2"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Revisão de Mecânica - 3º Ano\",\n  \"professorId\": 1,\n  \"dataVencimento\": \"2026-07-30T23:59:59Z\",\n  \"questoesIds\": [1],\n  \"turmasIds\": [1]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Exclusão",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://127.0.0.1:5050/api/Lista/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1:5050"
+              ],
+              "path": [
+                "api",
+                "Lista",
+                "2"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
